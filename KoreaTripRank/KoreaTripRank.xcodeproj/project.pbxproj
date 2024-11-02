@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2B946A5706E83B3AA9B500CE /* Pods_KoreaTripRank_KoreaTripRankUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FB949475C528B7DC07DF4001 /* Pods_KoreaTripRank_KoreaTripRankUITests.framework */; };
+		73D7FA1D6A5903585F6FE760 /* Pods_KoreaTripRankTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2921D781453A3348D78704E4 /* Pods_KoreaTripRankTests.framework */; };
+		B056E3C42D24C3625DBD4014 /* Pods_KoreaTripRank.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D844309077A7649B010B68B /* Pods_KoreaTripRank.framework */; };
 		B59124942CD62375008A13F2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59124932CD62375008A13F2 /* AppDelegate.swift */; };
 		B59124962CD62375008A13F2 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59124952CD62375008A13F2 /* SceneDelegate.swift */; };
 		B59124982CD62375008A13F2 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59124972CD62375008A13F2 /* ViewController.swift */; };
@@ -36,6 +39,13 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2921D781453A3348D78704E4 /* Pods_KoreaTripRankTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_KoreaTripRankTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		5722C61BB9A916F83BE64C28 /* Pods-KoreaTripRankTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KoreaTripRankTests.debug.xcconfig"; path = "Target Support Files/Pods-KoreaTripRankTests/Pods-KoreaTripRankTests.debug.xcconfig"; sourceTree = "<group>"; };
+		6AF0C8087824CBDE387EA135 /* Pods-KoreaTripRank.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KoreaTripRank.release.xcconfig"; path = "Target Support Files/Pods-KoreaTripRank/Pods-KoreaTripRank.release.xcconfig"; sourceTree = "<group>"; };
+		83D2BAD0D5D4EFF319862734 /* Pods-KoreaTripRankTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KoreaTripRankTests.release.xcconfig"; path = "Target Support Files/Pods-KoreaTripRankTests/Pods-KoreaTripRankTests.release.xcconfig"; sourceTree = "<group>"; };
+		99CCEA8F04803BE5DBA382AD /* Pods-KoreaTripRank.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KoreaTripRank.debug.xcconfig"; path = "Target Support Files/Pods-KoreaTripRank/Pods-KoreaTripRank.debug.xcconfig"; sourceTree = "<group>"; };
+		9D844309077A7649B010B68B /* Pods_KoreaTripRank.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_KoreaTripRank.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A7D15C65AD72FA5ED1F0FCDA /* Pods-KoreaTripRank-KoreaTripRankUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KoreaTripRank-KoreaTripRankUITests.release.xcconfig"; path = "Target Support Files/Pods-KoreaTripRank-KoreaTripRankUITests/Pods-KoreaTripRank-KoreaTripRankUITests.release.xcconfig"; sourceTree = "<group>"; };
 		B59124902CD62375008A13F2 /* KoreaTripRank.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KoreaTripRank.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B59124932CD62375008A13F2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B59124952CD62375008A13F2 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -49,6 +59,8 @@
 		B59124B02CD62378008A13F2 /* KoreaTripRankUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = KoreaTripRankUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B59124B42CD62378008A13F2 /* KoreaTripRankUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KoreaTripRankUITests.swift; sourceTree = "<group>"; };
 		B59124B62CD62378008A13F2 /* KoreaTripRankUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KoreaTripRankUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		DC4644F2A2FAEF5EC94675E8 /* Pods-KoreaTripRank-KoreaTripRankUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KoreaTripRank-KoreaTripRankUITests.debug.xcconfig"; path = "Target Support Files/Pods-KoreaTripRank-KoreaTripRankUITests/Pods-KoreaTripRank-KoreaTripRankUITests.debug.xcconfig"; sourceTree = "<group>"; };
+		FB949475C528B7DC07DF4001 /* Pods_KoreaTripRank_KoreaTripRankUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_KoreaTripRank_KoreaTripRankUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,6 +68,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B056E3C42D24C3625DBD4014 /* Pods_KoreaTripRank.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -63,6 +76,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				73D7FA1D6A5903585F6FE760 /* Pods_KoreaTripRankTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -70,6 +84,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2B946A5706E83B3AA9B500CE /* Pods_KoreaTripRank_KoreaTripRankUITests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -83,6 +98,8 @@
 				B59124A92CD62378008A13F2 /* KoreaTripRankTests */,
 				B59124B32CD62378008A13F2 /* KoreaTripRankUITests */,
 				B59124912CD62375008A13F2 /* Products */,
+				C815BD431B588499ABB76166 /* Pods */,
+				CA613DD91752F87B61409D52 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -127,6 +144,30 @@
 			path = KoreaTripRankUITests;
 			sourceTree = "<group>";
 		};
+		C815BD431B588499ABB76166 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				99CCEA8F04803BE5DBA382AD /* Pods-KoreaTripRank.debug.xcconfig */,
+				6AF0C8087824CBDE387EA135 /* Pods-KoreaTripRank.release.xcconfig */,
+				DC4644F2A2FAEF5EC94675E8 /* Pods-KoreaTripRank-KoreaTripRankUITests.debug.xcconfig */,
+				A7D15C65AD72FA5ED1F0FCDA /* Pods-KoreaTripRank-KoreaTripRankUITests.release.xcconfig */,
+				5722C61BB9A916F83BE64C28 /* Pods-KoreaTripRankTests.debug.xcconfig */,
+				83D2BAD0D5D4EFF319862734 /* Pods-KoreaTripRankTests.release.xcconfig */,
+			);
+			name = Pods;
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		CA613DD91752F87B61409D52 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				9D844309077A7649B010B68B /* Pods_KoreaTripRank.framework */,
+				FB949475C528B7DC07DF4001 /* Pods_KoreaTripRank_KoreaTripRankUITests.framework */,
+				2921D781453A3348D78704E4 /* Pods_KoreaTripRankTests.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -134,9 +175,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = B59124BA2CD62378008A13F2 /* Build configuration list for PBXNativeTarget "KoreaTripRank" */;
 			buildPhases = (
+				A0A27D4BA405F1E343FCDD1F /* [CP] Check Pods Manifest.lock */,
 				B591248C2CD62375008A13F2 /* Sources */,
 				B591248D2CD62375008A13F2 /* Frameworks */,
 				B591248E2CD62375008A13F2 /* Resources */,
+				D74ED9DE596E4604534B3418 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -151,6 +194,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = B59124BD2CD62378008A13F2 /* Build configuration list for PBXNativeTarget "KoreaTripRankTests" */;
 			buildPhases = (
+				A09500C2BB551E859BF0FF7D /* [CP] Check Pods Manifest.lock */,
 				B59124A22CD62378008A13F2 /* Sources */,
 				B59124A32CD62378008A13F2 /* Frameworks */,
 				B59124A42CD62378008A13F2 /* Resources */,
@@ -169,9 +213,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = B59124C02CD62378008A13F2 /* Build configuration list for PBXNativeTarget "KoreaTripRankUITests" */;
 			buildPhases = (
+				703A5BF344471F323488D005 /* [CP] Check Pods Manifest.lock */,
 				B59124AC2CD62378008A13F2 /* Sources */,
 				B59124AD2CD62378008A13F2 /* Frameworks */,
 				B59124AE2CD62378008A13F2 /* Resources */,
+				460E97EC68F49F85B5B28684 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -252,6 +298,109 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		460E97EC68F49F85B5B28684 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-KoreaTripRank-KoreaTripRankUITests/Pods-KoreaTripRank-KoreaTripRankUITests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-KoreaTripRank-KoreaTripRankUITests/Pods-KoreaTripRank-KoreaTripRankUITests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-KoreaTripRank-KoreaTripRankUITests/Pods-KoreaTripRank-KoreaTripRankUITests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		703A5BF344471F323488D005 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-KoreaTripRank-KoreaTripRankUITests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		A09500C2BB551E859BF0FF7D /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-KoreaTripRankTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		A0A27D4BA405F1E343FCDD1F /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-KoreaTripRank-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		D74ED9DE596E4604534B3418 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-KoreaTripRank/Pods-KoreaTripRank-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-KoreaTripRank/Pods-KoreaTripRank-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-KoreaTripRank/Pods-KoreaTripRank-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		B591248C2CD62375008A13F2 /* Sources */ = {
@@ -437,6 +586,7 @@
 		};
 		B59124BB2CD62378008A13F2 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 99CCEA8F04803BE5DBA382AD /* Pods-KoreaTripRank.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -465,6 +615,7 @@
 		};
 		B59124BC2CD62378008A13F2 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6AF0C8087824CBDE387EA135 /* Pods-KoreaTripRank.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -493,6 +644,7 @@
 		};
 		B59124BE2CD62378008A13F2 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5722C61BB9A916F83BE64C28 /* Pods-KoreaTripRankTests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -513,6 +665,7 @@
 		};
 		B59124BF2CD62378008A13F2 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 83D2BAD0D5D4EFF319862734 /* Pods-KoreaTripRankTests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -533,6 +686,7 @@
 		};
 		B59124C12CD62378008A13F2 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = DC4644F2A2FAEF5EC94675E8 /* Pods-KoreaTripRank-KoreaTripRankUITests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
@@ -551,6 +705,7 @@
 		};
 		B59124C22CD62378008A13F2 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A7D15C65AD72FA5ED1F0FCDA /* Pods-KoreaTripRank-KoreaTripRankUITests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
