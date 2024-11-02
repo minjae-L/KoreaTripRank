@@ -1,0 +1,6 @@
+framework module Pods_KoreaTripRank_KoreaTripRankUITests {
+  umbrella header "Pods-KoreaTripRank-KoreaTripRankUITests-umbrella.h"
+
+  export *
+  module * { export * }
+}
