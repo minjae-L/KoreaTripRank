@@ -6,24 +6,33 @@
 //
 
 import UIKit
+import SnapKit
 
 class SearchViewController: UIViewController {
 
+    lazy var searchBar: UISearchBar = {
+        let sb = UISearchBar()
+        sb.delegate = self
+        return sb
+    }()
+    
+    private func addView() {
+        view.addSubview(searchBar)
+    }
+    private func configureLayout() {
+        searchBar.snp.makeConstraints { make in
+            make.top.equalTo(self.view.layoutMarginsGuide)
+            make.leading.trailing.equalTo(self.view)
+        }
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .cyan
-        // Do any additional setup after loading the view.
+        addView()
+        configureLayout()
     }
+}
+
+extension SearchViewController: UISearchBarDelegate {
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }
