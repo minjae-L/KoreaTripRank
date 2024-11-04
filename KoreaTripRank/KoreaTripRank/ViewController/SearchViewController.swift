@@ -17,7 +17,7 @@ class SearchViewController: UIViewController {
     }()
     
     //MARK: UI Property
-    lazy var collectionView: UICollectionView = {
+    private lazy var collectionView: UICollectionView = {
         let flowlayout = UICollectionViewFlowLayout()
         flowlayout.scrollDirection = .vertical
         let cv = UICollectionView(frame: .zero, collectionViewLayout: flowlayout)
@@ -26,25 +26,32 @@ class SearchViewController: UIViewController {
         cv.register(SearchCollectionViewCell.self, forCellWithReuseIdentifier: SearchCollectionViewCell.identifier)
         return cv
     }()
-    lazy var searchBar: UISearchBar = {
-        let sb = UISearchBar()
+    private lazy var searchBar: UISearchBar = {
+        let sb = UISearchBar(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 50))
         sb.delegate = self
         return sb
     }()
-    lazy var searchContainView: UIView = {
+    private var titleLabel: UILabel = {
+        let lb = UILabel()
+        lb.text = "한국 관광지 랭킹"
+        lb.font = .boldSystemFont(ofSize: 20)
+        lb.translatesAutoresizingMaskIntoConstraints = false
+        return lb
+    }()
+    private lazy var searchContainView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = UIColor.gray.withAlphaComponent(0.3)
+        view.backgroundColor = UIColor.white    .withAlphaComponent(0.3)
         return view
     }()
-    lazy var searchButton: UIButton = {
+    private lazy var searchButton: UIButton = {
         let btn = UIButton()
         btn.setImage(UIImage(systemName: "magnifyingglass"), for: .normal)
         btn.translatesAutoresizingMaskIntoConstraints = false
         btn.addTarget(self, action: #selector(searchButtonTapped), for: .touchUpInside)
         return btn
     }()
-    lazy var addressSearchResultView: UITableView = {
+    private lazy var addressSearchResultView: UITableView = {
         let tb = UITableView()
         tb.delegate = self
         tb.dataSource = self
@@ -56,20 +63,29 @@ class SearchViewController: UIViewController {
     private func addView() {
         view.addSubview(collectionView)
         view.addSubview(searchContainView)
-//        searchContainVew.addSubview(searchButton)
+        searchContainView.addSubview(titleLabel)
+        searchContainView.addSubview(searchButton)
         searchContainView.addSubview(searchBar)
         searchContainView.addSubview(addressSearchResultView)
 
     }
     private func configureLayout() {
+        titleLabel.snp.makeConstraints { make in
+            make.centerX.centerY.equalTo(self.searchContainView)
+        }
         searchContainView.snp.makeConstraints { make in
             make.top.equalTo(self.view.layoutMarginsGuide)
             make.trailing.leading.equalTo(self.view)
             make.height.equalTo(50)
         }
+        searchButton.snp.makeConstraints { make in
+            make.top.equalTo(self.searchContainView)
+            make.trailing.equalTo(self.searchContainView).offset(-10)
+            make.height.equalTo(50)
+        }
         searchBar.snp.makeConstraints { make in
             make.top.leading.trailing.equalTo(self.searchContainView)
-            make.height.equalTo(50)
+            make.height.equalTo(0)
         }
         collectionView.snp.makeConstraints { make in
             make.trailing.leading.equalTo(self.view)
@@ -80,18 +96,29 @@ class SearchViewController: UIViewController {
     }
     private func normalLayouot() {
         addressSearchResultView.isHidden = true
+        titleLabel.isHidden = false
+        titleLabel.snp.makeConstraints { make in
+            make.centerX.centerY.equalTo(self.searchContainView)
+        }
         searchContainView.snp.updateConstraints { make in
+            make.height.equalTo(50)
+        }
+        searchButton.snp.updateConstraints { make in
             make.height.equalTo(50)
         }
         searchBar.snp.updateConstraints { make in
             make.top.leading.trailing.equalTo(self.searchContainView)
-            make.height.equalTo(50)
+            make.height.equalTo(0)
         }
     }
     private func searchingLayout() {
         addressSearchResultView.isHidden = false
+        titleLabel.isHidden = true
         searchContainView.snp.updateConstraints { make in
             make.height.equalTo(self.view.frame.height)
+        }
+        searchButton.snp.updateConstraints { make in
+            make.height.equalTo(0)
         }
         searchBar.snp.updateConstraints { make in
             make.top.equalTo(self.searchContainView.snp.top)
@@ -112,13 +139,13 @@ class SearchViewController: UIViewController {
     }
     @objc func searchButtonTapped() {
         print(#function)
+        searchingLayout()
     }
     
 }
 
 extension SearchViewController: SearchViewModelDelegate {
     func addressSearching() {
-        print("addressSearching")
         DispatchQueue.main.async { [weak self] in
             self?.addressSearchResultView.reloadData()
         }
@@ -129,17 +156,17 @@ extension SearchViewController: SearchViewModelDelegate {
 // MARK: -  SearchBarDelegate
 extension SearchViewController: UISearchBarDelegate {
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-        searchingLayout()
         searchBar.showsCancelButton = true
     }
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        searchingLayout()
         searchBar.showsCancelButton = true
         viewModel.filtering(text: searchBar.text!)
     }
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.text = ""
         normalLayouot()
         searchBar.showsCancelButton = false
+        searchBar.endEditing(true)
     }
 }
 

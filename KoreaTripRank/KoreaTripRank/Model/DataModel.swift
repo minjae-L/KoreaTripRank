@@ -275,7 +275,7 @@ class AreaDatabase {
         for element in array {
             let arr = element.components(separatedBy: " ")
             for j in 12..<arr.count {
-                data.append(LocationDataModel(areaName: arr[j], signguName: arr[4], areaCode: Int(arr[0])!, signguCode: Int(arr[8])!))
+                data.append(LocationDataModel(areaName: arr[4], signguName: arr[j], areaCode: Int(arr[0])!, signguCode: Int(arr[8])!))
             }
         }
     }

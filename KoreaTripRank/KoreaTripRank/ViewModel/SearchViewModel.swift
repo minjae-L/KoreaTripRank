@@ -14,8 +14,6 @@ class SearchViewModel {
     
     var filteredAddressArray: [LocationDataModel] = [] {
         didSet {
-            print("filteredArray didSet")
-            print(filteredAddressArray)
             delegate?.addressSearching()
         }
     }
