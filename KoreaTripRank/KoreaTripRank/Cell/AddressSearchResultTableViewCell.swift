@@ -10,13 +10,13 @@ import SnapKit
 
 class AddressSearchResultTableViewCell: UITableViewCell {
     static let identifier = "AddressSearchResultTableViewCell"
-    var areaLabel: UILabel = {
+    private var areaLabel: UILabel = {
         let lb = UILabel()
         lb.font = UIFont(name: "", size: 25)
         lb.textColor = .black
         return lb
     }()
-    var areaDetailLabel: UILabel = {
+    private var areaDetailLabel: UILabel = {
         let lb = UILabel()
         lb.font = UIFont(name: "", size: 15)
         lb.textColor = .lightGray

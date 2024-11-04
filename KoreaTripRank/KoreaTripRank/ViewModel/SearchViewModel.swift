@@ -10,7 +10,7 @@ import Foundation
 protocol SearchViewModelDelegate: AnyObject {
     func addressSearching()
 }
-class SearchViewModel {
+final class SearchViewModel {
     
     var filteredAddressArray: [LocationDataModel] = [] {
         didSet {

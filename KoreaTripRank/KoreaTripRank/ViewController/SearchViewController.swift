@@ -178,8 +178,7 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SearchCollectionViewCell.identifier, for: indexPath) as? SearchCollectionViewCell else { return UICollectionViewCell() }
-        cell.areaLabel.text = "\(indexPath.row)"
-        cell.areaDetailLabel.text = "서울특별시 관악구"
+        cell.configure(model: indexPath.row)
         return cell
     }
 }

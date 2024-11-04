@@ -11,7 +11,7 @@ import SnapKit
 class MainViewController: UIViewController {
     
     // Navigation Toolbar Setup
-    lazy var toolbar: UIToolbar = {
+    private lazy var toolbar: UIToolbar = {
         let tb = UIToolbar(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
         tb.isTranslucent = false
         tb.translatesAutoresizingMaskIntoConstraints = false
@@ -36,7 +36,7 @@ class MainViewController: UIViewController {
         pageView.setViewControllers([searchVC], direction: .forward, animated: false)
     }
     // PageView Set up
-    let containerView: UIView = {
+    private let containerView: UIView = {
         let view = UIView()
         view.backgroundColor = .gray
         view.translatesAutoresizingMaskIntoConstraints = false
