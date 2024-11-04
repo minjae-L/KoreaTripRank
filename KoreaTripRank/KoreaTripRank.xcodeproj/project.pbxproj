@@ -15,6 +15,7 @@
 		B569C6AD2CD8C59A007386E0 /* StringExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B569C6AC2CD8C59A007386E0 /* StringExtensions.swift */; };
 		B569C6B42CD8C600007386E0 /* DataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B569C6B32CD8C600007386E0 /* DataModel.swift */; };
 		B569C6B92CD8C87A007386E0 /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B569C6B82CD8C87A007386E0 /* SearchViewModel.swift */; };
+		B569C6BD2CD903E8007386E0 /* AreaCode.json in Resources */ = {isa = PBXBuildFile; fileRef = B569C6BC2CD903E8007386E0 /* AreaCode.json */; };
 		B56AD67B2CD7378E00F2FC8E /* FavoriteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56AD67A2CD7378E00F2FC8E /* FavoriteViewController.swift */; };
 		B56AD67D2CD797BE00F2FC8E /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56AD67C2CD797BE00F2FC8E /* SearchViewController.swift */; };
 		B59124942CD62375008A13F2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59124932CD62375008A13F2 /* AppDelegate.swift */; };
@@ -57,6 +58,7 @@
 		B569C6AC2CD8C59A007386E0 /* StringExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtensions.swift; sourceTree = "<group>"; };
 		B569C6B32CD8C600007386E0 /* DataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataModel.swift; sourceTree = "<group>"; };
 		B569C6B82CD8C87A007386E0 /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
+		B569C6BC2CD903E8007386E0 /* AreaCode.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = AreaCode.json; sourceTree = "<group>"; };
 		B56AD67A2CD7378E00F2FC8E /* FavoriteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteViewController.swift; sourceTree = "<group>"; };
 		B56AD67C2CD797BE00F2FC8E /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		B59124902CD62375008A13F2 /* KoreaTripRank.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KoreaTripRank.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -150,6 +152,7 @@
 		B569C6B52CD8C641007386E0 /* Files */ = {
 			isa = PBXGroup;
 			children = (
+				B569C6BC2CD903E8007386E0 /* AreaCode.json */,
 			);
 			path = Files;
 			sourceTree = "<group>";
@@ -350,6 +353,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B569C6BD2CD903E8007386E0 /* AreaCode.json in Resources */,
 				B59124A02CD62377008A13F2 /* LaunchScreen.storyboard in Resources */,
 				B591249D2CD62377008A13F2 /* Assets.xcassets in Resources */,
 			);
