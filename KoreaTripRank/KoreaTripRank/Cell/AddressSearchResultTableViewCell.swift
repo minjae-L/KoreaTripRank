@@ -47,7 +47,7 @@ class AddressSearchResultTableViewCell: UITableViewCell {
     }
     
     func configure(model: LocationDataModel) {
-        self.areaLabel.text = model.signguName
-        self.areaDetailLabel.text = "\(model.areaName) \(model.signguName)"
+        self.areaLabel.text = model.sigunguName
+        self.areaDetailLabel.text = "\(model.areaName) \(model.sigunguName)"
     }
 }

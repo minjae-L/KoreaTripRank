@@ -24,7 +24,7 @@ final class SearchViewModel {
         var output = [LocationDataModel]()
         for element in areaDatabase.data {
             let areaArray = String.separatingString(text: element.areaName, length: text.count)
-            let signguArray = String.separatingString(text: element.signguName, length: text.count)
+            let signguArray = String.separatingString(text: element.sigunguName, length: text.count)
             if areaArray.contains(text) || signguArray.contains(text) {
                 output.append(element)
             }
