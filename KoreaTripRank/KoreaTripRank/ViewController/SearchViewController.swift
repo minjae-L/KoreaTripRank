@@ -10,12 +10,21 @@ import SnapKit
 
 class SearchViewController: UIViewController {
     
-    lazy private var viewModel: SearchViewModel = {
+    private lazy var viewModel: SearchViewModel = {
         let vm = SearchViewModel()
         vm.delegate = self
         return vm
     }()
-    
+    private var isSearching: Bool = false {
+        didSet {
+            if isSearching {
+                searchingLayout()
+            } else {
+                defualtLayout()
+            }
+            changedLayout()
+        }
+    }
     //MARK: UI Property
     private lazy var collectionView: UICollectionView = {
         let flowlayout = UICollectionViewFlowLayout()
