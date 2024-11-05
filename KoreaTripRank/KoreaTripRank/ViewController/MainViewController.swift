@@ -11,19 +11,22 @@ import SnapKit
 class MainViewController: UIViewController {
     
     // Navigation Toolbar Setup
+    private lazy var toolbar: UIToolbar = {
+        let tb = UIToolbar(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
+        tb.isTranslucent = false
+        tb.translatesAutoresizingMaskIntoConstraints = false
+        return tb
+    }()
     private func setUpNavigationToolbar() {
-        self.navigationController?.isToolbarHidden = false
-        
         let appearance = UIToolbarAppearance()
         appearance.backgroundColor = .white
         
         let favoriteButton = UIBarButtonItem(image: UIImage(systemName: "star"), style: .done, target: self, action: #selector(favoriteButtonTapped))
         let mainViewButton = UIBarButtonItem(image: UIImage(systemName: "list.bullet"), style: .done, target: self, action: #selector(listButtonTapped))
         let space = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        self.navigationController?.toolbar.scrollEdgeAppearance = appearance
-        self.navigationController?.toolbar.isTranslucent = false
-        let items = [space, mainViewButton, space, space, favoriteButton, space]
-        self.toolbarItems = items
+        toolbar.scrollEdgeAppearance = appearance
+        let items = [space, mainViewButton,space, space, favoriteButton, space]
+        toolbar.setItems(items, animated: false)
     }
     // Toolbar Button Event
     @objc func favoriteButtonTapped() {
@@ -33,6 +36,13 @@ class MainViewController: UIViewController {
         pageView.setViewControllers([searchVC], direction: .forward, animated: false)
     }
     // PageView Set up
+    private let containerView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .gray
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
     lazy var searchVC = SearchViewController()
     lazy var favoriteVC = FavoriteViewController()
     lazy var viewControllers = [self.searchVC, self.favoriteVC]
@@ -40,18 +50,38 @@ class MainViewController: UIViewController {
         let vc = UIPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
         vc.delegate = self
         vc.dataSource = self
+        vc.view.translatesAutoresizingMaskIntoConstraints = false
         return vc
     }()
     
     private func addView() {
+        view.addSubview(toolbar)
+        view.addSubview(containerView)
+        containerView.addSubview(pageView.view)
         addChild(pageView)
-        view.addSubview(pageView.view)
+    }
+    private func configureLayout() {
+        toolbar.snp.makeConstraints { make in
+            make.leading.trailing.equalTo(self.view)
+            make.bottom.equalTo(self.view.layoutMarginsGuide)
+        }
+        containerView.snp.makeConstraints { make in
+            make.top.equalTo(self.view.layoutMarginsGuide)
+            make.bottom.equalTo(self.toolbar.snp.top)
+            make.leading.trailing.equalTo(self.view)
+            make.trailing.equalTo(self.view)
+        }
+        pageView.view.snp.makeConstraints { make in
+            make.top.bottom.leading.trailing.equalTo(self.containerView)
+        }
+        
     }
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
         addView()
         setUpNavigationToolbar()
+        configureLayout()
         if let firstVC = viewControllers.first {
             pageView.setViewControllers([firstVC], direction: .forward, animated: true)
         }
