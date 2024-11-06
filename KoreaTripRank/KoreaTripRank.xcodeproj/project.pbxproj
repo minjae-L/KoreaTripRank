@@ -26,6 +26,7 @@
 		B59124AB2CD62378008A13F2 /* KoreaTripRankTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59124AA2CD62378008A13F2 /* KoreaTripRankTests.swift */; };
 		B59124B52CD62378008A13F2 /* KoreaTripRankUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59124B42CD62378008A13F2 /* KoreaTripRankUITests.swift */; };
 		B59124B72CD62378008A13F2 /* KoreaTripRankUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59124B62CD62378008A13F2 /* KoreaTripRankUITestsLaunchTests.swift */; };
+		B5BA4DC52CDB108400477410 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BA4DC42CDB108400477410 /* NetworkManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -73,6 +74,7 @@
 		B59124B02CD62378008A13F2 /* KoreaTripRankUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = KoreaTripRankUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B59124B42CD62378008A13F2 /* KoreaTripRankUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KoreaTripRankUITests.swift; sourceTree = "<group>"; };
 		B59124B62CD62378008A13F2 /* KoreaTripRankUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KoreaTripRankUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		B5BA4DC42CDB108400477410 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		DC4644F2A2FAEF5EC94675E8 /* Pods-KoreaTripRank-KoreaTripRankUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KoreaTripRank-KoreaTripRankUITests.debug.xcconfig"; path = "Target Support Files/Pods-KoreaTripRank-KoreaTripRankUITests/Pods-KoreaTripRank-KoreaTripRankUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		FB949475C528B7DC07DF4001 /* Pods_KoreaTripRank_KoreaTripRankUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_KoreaTripRank_KoreaTripRankUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -200,6 +202,7 @@
 				B591249C2CD62377008A13F2 /* Assets.xcassets */,
 				B591249E2CD62377008A13F2 /* LaunchScreen.storyboard */,
 				B59124A12CD62377008A13F2 /* Info.plist */,
+				B5BA4DC42CDB108400477410 /* NetworkManager.swift */,
 			);
 			path = KoreaTripRank;
 			sourceTree = "<group>";
@@ -487,6 +490,7 @@
 				B569C6AB2CD8BCFA007386E0 /* AddressSearchResultTableViewCell.swift in Sources */,
 				B56AD67D2CD797BE00F2FC8E /* SearchViewController.swift in Sources */,
 				B59124982CD62375008A13F2 /* MainViewController.swift in Sources */,
+				B5BA4DC52CDB108400477410 /* NetworkManager.swift in Sources */,
 				B59124942CD62375008A13F2 /* AppDelegate.swift in Sources */,
 				B569C6A92CD869CC007386E0 /* SearchCollectionViewCell.swift in Sources */,
 				B569C6B92CD8C87A007386E0 /* SearchViewModel.swift in Sources */,
