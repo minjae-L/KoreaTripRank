@@ -7,6 +7,58 @@
 
 import Foundation
 
+// MARK: - HTTP 통신 데이터 모델
+struct NetworkResponse: Decodable {
+    let response: Response
+}
+struct Response: Decodable {
+    let responseHeader: ResponseHeader
+    let responseBody: ResponseBody
+
+    enum CodingKeys: String, CodingKey {
+        case responseHeader = "header"
+        case responseBody = "body"
+    }
+}
+struct ResponseBody: Decodable {
+    let items: Items
+    let numOfRows: Int
+    let pageNo: Int
+    let totalCount: Int
+}
+struct Items: Decodable {
+    let item: [Item]
+}
+struct Item: Decodable {
+    let areaName: String
+    let relatedAreaName: String
+    let relatedAreaAddress: String
+    let relatedLargeCategoryName: String
+    let relatedMediumCategoryName: String
+    let relatedSmallCategoryName: String
+    let rankNum: String
+
+    enum CodingKeys: String, CodingKey {
+        case areaName = "tAtsNm"
+        case relatedAreaName = "rlteTatsNm"
+        case relatedAreaAddress = "rlteBsicAdres"
+        case relatedLargeCategoryName = "rlteCtgryLclsNm"
+        case relatedMediumCategoryName = "rlteCtgryMclsNm"
+        case relatedSmallCategoryName = "rlteCtgrySclsNm"
+        case rankNum = "rlteRank"
+    }
+}
+struct ResponseHeader: Decodable {
+    let resultCode: String
+    let resultMessage: String
+
+    enum CodingKeys : String, CodingKey {
+        case resultCode
+        case resultMessage = "resultMsg"
+    }
+}
+
+// MARK: - 지역 모델
 struct LocationModel: Decodable {
     let data: [LocationDataModel]
 }
