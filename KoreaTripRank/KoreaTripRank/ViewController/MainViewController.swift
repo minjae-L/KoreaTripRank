@@ -85,6 +85,15 @@ class MainViewController: UIViewController {
         if let firstVC = viewControllers.first {
             pageView.setViewControllers([firstVC], direction: .forward, animated: true)
         }
+        let manager = NetworkManager(components: URLComponentHandler(), decoder: DecodeHandler())
+        Task {
+            do {
+                try await print(manager.fetchData(type: NetworkResponse.self))
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
+        
     }
     
 }
