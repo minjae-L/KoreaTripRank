@@ -43,6 +43,13 @@ class NetworkManager {
             }
         }
     }
+    func fetchData2<T: Decodable>(type: T.Type) async throws -> T? {
+        guard let url = components.getURLComponents().url else {
+            print("url Error")
+            return nil
+        }
+        return try await AF.request(url).serializingDecodable(T.self).value
+    }
 }
 class DecodeHandler {
     func decode<T: Decodable>(type: T.Type, data: Data?) -> T? {
