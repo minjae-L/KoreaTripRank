@@ -17,9 +17,9 @@ import Alamofire
  */
 class NetworkManager {
     let components: URLComponentable
-    let decoder: DecodeHandler
+    let decoder: DataDecodable
     
-    init(components: URLComponentable, decoder: DecodeHandler) {
+    init(components: URLComponentable, decoder: DataDecodable) {
         self.components = components
         self.decoder = decoder
     }
@@ -51,7 +51,10 @@ class NetworkManager {
         return try await AF.request(url).serializingDecodable(T.self).value
     }
 }
-class DecodeHandler {
+protocol DataDecodable {
+    func decode<T: Decodable>(type: T.Type, data: Data?) -> T?
+}
+class DecodeHandler: DataDecodable {
     func decode<T: Decodable>(type: T.Type, data: Data?) -> T? {
         guard let data = data else { return nil }
         do {
