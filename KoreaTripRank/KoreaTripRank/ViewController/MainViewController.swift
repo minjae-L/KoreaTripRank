@@ -87,7 +87,11 @@ class MainViewController: UIViewController {
         }
         let manager = NetworkManager(components: URLComponentHandler(), decoder: DecodeHandler())
         Task {
-            try await print(manager.fetchData(type: NetworkResponse.self))
+            do {
+                try await print(manager.fetchData(type: NetworkResponse.self))
+            } catch {
+                print(error.localizedDescription)
+            }
         }
         
     }
