@@ -15,6 +15,14 @@ import Alamofire
  - 네트워크 통신
  - 디코딩
  */
+struct APIKEY {
+    func getKey() {
+        guard let url = Bundle.main.url(forResource: "Info", withExtension: "plist") else { return }
+        guard let dict = NSDictionary(contentsOf: url) else { return }
+        print("APIKEY")
+        print(dict["APIKEY"] as? String)
+    }
+}
 class NetworkManager {
     let components: URLComponentable
     let decoder: DataDecodable
