@@ -86,14 +86,33 @@ class MainViewController: UIViewController {
             pageView.setViewControllers([firstVC], direction: .forward, animated: true)
         }
         let manager = NetworkManager(components: URLComponentHandler(), decoder: DecodeHandler())
+        
         Task {
-            do {
-                try await print(manager.fetchData(type: NetworkResponse.self))
-            } catch {
+            let response = try await manager.fetchData(type: NetworkResponse.self)
+            switch response {
+            case .success(let data):
+//                print(data.response.responseBody.items.item)
+                print("Success")
+            case .failure(.invalidURL(let url)):
+                print("invalidURL")
+            case .failure(.sessionTaskFailed(let error)):
+                print("sessionTaskFailed")
+            case .failure(.createURLRequestFailed(error: let error)):
                 print(error.localizedDescription)
+            case .failure(.responseSerializationFailed(reason: let reason)):
+                print(reason)
+                print("responseSerializationFailed")
+            case .failure(.sessionInvalidated(error: let error)):
+                print("sessionInvalidated")
+                print(error?.localizedDescription)
+            case .failure(.urlRequestValidationFailed(reason: let reason)):
+                print("urlRequestValidationFailed")
+            default:
+                print("unknown Error")
+                
             }
         }
-        
+
     }
     
 }

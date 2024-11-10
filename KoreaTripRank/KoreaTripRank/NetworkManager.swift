@@ -15,12 +15,15 @@ import Alamofire
  - 네트워크 통신
  - 디코딩
  */
+
 struct APIKEY {
-    func getKey() {
-        guard let url = Bundle.main.url(forResource: "Info", withExtension: "plist") else { return }
-        guard let dict = NSDictionary(contentsOf: url) else { return }
-        print("APIKEY")
-        print(dict["APIKEY"] as? String)
+    func getKey() -> String? {
+        guard let url = Bundle.main.url(forResource: "Info", withExtension: "plist"),
+              let dict = NSDictionary(contentsOf: url) 
+        else {
+            return nil
+        }
+        return dict["APIKEY"] as? String
     }
 }
 class NetworkManager {
@@ -32,31 +35,17 @@ class NetworkManager {
         self.decoder = decoder
     }
     
-    func fetchData<T: Decodable>(type: T.Type) async throws -> T? {
-        try await withUnsafeThrowingContinuation { continuation in
-            guard let url = components.getURLComponents().url else {
-                print("url Error")
-                return
-            }
-            AF.request(url, method: .get).validate().response {[weak self] response in
-                switch response.result {
-                case .success(let data):
-                    continuation.resume(returning: self?.decoder.decode(type: type, data: data))
-                    return
-                case .failure(let error):
-                    print(error.localizedDescription)
-                    continuation.resume(throwing: error)
-                    return
-                }
-            }
-        }
-    }
-    func fetchData2<T: Decodable>(type: T.Type) async throws -> T? {
+    func fetchData<T: Decodable>(type: T.Type) async throws -> Result<T, AFError> {
         guard let url = components.getURLComponents().url else {
-            print("url Error")
-            return nil
+            print("invalidURL")
+            return .failure(AFError.invalidURL(url: ""))
         }
-        return try await AF.request(url).serializingDecodable(T.self).value
+        do {
+            let data = try await AF.request(url).serializingDecodable(T.self).value
+            return .success(data)
+        } catch {
+            return .failure(error as! AFError)
+        }
     }
 }
 protocol DataDecodable {
@@ -92,7 +81,7 @@ class URLComponentHandler: URLComponentable {
         components.path = "/" + paths.joined(separator: "/")
         
         components.percentEncodedQueryItems = [
-            URLQueryItem(name: "serviceKey", value: "BLSSs%2FqV7vhukX%2Bxy4ts3XEuFU6UVBP6EuwoUxoEkW%2FLMRW27dBTbJXTKUhWeWy9bNidunqwB9Gb8p0Gm3FTRw%3D%3D"),
+            URLQueryItem(name: "serviceKey", value: APIKEY().getKey()),
             URLQueryItem(name: "numOfRows", value: "1"),
             URLQueryItem(name: "MobileOS", value: mobileOS),
             URLQueryItem(name: "MobileApp", value: mobileAppName),
