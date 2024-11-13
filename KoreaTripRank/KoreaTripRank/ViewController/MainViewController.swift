@@ -86,33 +86,24 @@ class MainViewController: UIViewController {
             pageView.setViewControllers([firstVC], direction: .forward, animated: true)
         }
         let manager = NetworkManager(components: URLComponentHandler(), decoder: DecodeHandler())
-        
         Task {
-            let response = try await manager.fetchData(type: NetworkResponse.self)
-            switch response {
-            case .success(let data):
-//                print(data.response.responseBody.items.item)
-                print("Success")
-            case .failure(.invalidURL(let url)):
-                print("invalidURL")
-            case .failure(.sessionTaskFailed(let error)):
-                print("sessionTaskFailed")
-            case .failure(.createURLRequestFailed(error: let error)):
-                print(error.localizedDescription)
-            case .failure(.responseSerializationFailed(reason: let reason)):
-                print(reason)
-                print("responseSerializationFailed")
-            case .failure(.sessionInvalidated(error: let error)):
-                print("sessionInvalidated")
-                print(error?.localizedDescription)
-            case .failure(.urlRequestValidationFailed(reason: let reason)):
-                print("urlRequestValidationFailed")
-            default:
-                print("unknown Error")
+            do {
+                async let response1 = try manager.fetchData(for: .trip, type: TripNetworkResponse.self)
+                async let response2 = try manager.fetchData(for: .weather, type: WeatherNetworkResponse.self)
                 
+                let result = try await (response1, response2)
+                print(result.0)
+                print(result.1)
+            } catch NetworkError.invalidURL {
+                print("invalidURL")
+            } catch NetworkError.decodingError {
+                print("decodingError")
+            } catch NetworkError.serverError(let code) {
+                print("server Error code: \(code)")
+            } catch {
+                print("unknown Error")
             }
         }
-
     }
     
 }
