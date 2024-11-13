@@ -10,6 +10,7 @@
 		2B946A5706E83B3AA9B500CE /* Pods_KoreaTripRank_KoreaTripRankUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FB949475C528B7DC07DF4001 /* Pods_KoreaTripRank_KoreaTripRankUITests.framework */; };
 		73D7FA1D6A5903585F6FE760 /* Pods_KoreaTripRankTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2921D781453A3348D78704E4 /* Pods_KoreaTripRankTests.framework */; };
 		B056E3C42D24C3625DBD4014 /* Pods_KoreaTripRank.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D844309077A7649B010B68B /* Pods_KoreaTripRank.framework */; };
+		B550F8BB2CE4FBEA00E90069 /* SearchCollectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B550F8BA2CE4FBEA00E90069 /* SearchCollectionHeaderView.swift */; };
 		B569C6A92CD869CC007386E0 /* SearchCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B569C6A82CD869CC007386E0 /* SearchCollectionViewCell.swift */; };
 		B569C6AB2CD8BCFA007386E0 /* AddressSearchResultTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B569C6AA2CD8BCFA007386E0 /* AddressSearchResultTableViewCell.swift */; };
 		B569C6AD2CD8C59A007386E0 /* StringExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B569C6AC2CD8C59A007386E0 /* StringExtensions.swift */; };
@@ -55,6 +56,7 @@
 		9D844309077A7649B010B68B /* Pods_KoreaTripRank.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_KoreaTripRank.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A7D15C65AD72FA5ED1F0FCDA /* Pods-KoreaTripRank-KoreaTripRankUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KoreaTripRank-KoreaTripRankUITests.release.xcconfig"; path = "Target Support Files/Pods-KoreaTripRank-KoreaTripRankUITests/Pods-KoreaTripRank-KoreaTripRankUITests.release.xcconfig"; sourceTree = "<group>"; };
 		B54163652CE0EE38005974A2 /* Secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
+		B550F8BA2CE4FBEA00E90069 /* SearchCollectionHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchCollectionHeaderView.swift; sourceTree = "<group>"; };
 		B569C6A82CD869CC007386E0 /* SearchCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchCollectionViewCell.swift; sourceTree = "<group>"; };
 		B569C6AA2CD8BCFA007386E0 /* AddressSearchResultTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressSearchResultTableViewCell.swift; sourceTree = "<group>"; };
 		B569C6AC2CD8C59A007386E0 /* StringExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtensions.swift; sourceTree = "<group>"; };
@@ -108,6 +110,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		B550F8B92CE4FB7400E90069 /* CollectionHeaderView */ = {
+			isa = PBXGroup;
+			children = (
+				B550F8BA2CE4FBEA00E90069 /* SearchCollectionHeaderView.swift */,
+			);
+			path = CollectionHeaderView;
+			sourceTree = "<group>";
+		};
 		B569C6AE2CD8C5B5007386E0 /* Delegate */ = {
 			isa = PBXGroup;
 			children = (
@@ -193,6 +203,7 @@
 		B59124922CD62375008A13F2 /* KoreaTripRank */ = {
 			isa = PBXGroup;
 			children = (
+				B550F8B92CE4FB7400E90069 /* CollectionHeaderView */,
 				B569C6B72CD8C860007386E0 /* ViewModel */,
 				B569C6B52CD8C641007386E0 /* Files */,
 				B569C6B22CD8C5F4007386E0 /* Model */,
@@ -490,6 +501,7 @@
 			files = (
 				B569C6AD2CD8C59A007386E0 /* StringExtensions.swift in Sources */,
 				B569C6AB2CD8BCFA007386E0 /* AddressSearchResultTableViewCell.swift in Sources */,
+				B550F8BB2CE4FBEA00E90069 /* SearchCollectionHeaderView.swift in Sources */,
 				B56AD67D2CD797BE00F2FC8E /* SearchViewController.swift in Sources */,
 				B59124982CD62375008A13F2 /* MainViewController.swift in Sources */,
 				B5BA4DC52CDB108400477410 /* NetworkManager.swift in Sources */,
