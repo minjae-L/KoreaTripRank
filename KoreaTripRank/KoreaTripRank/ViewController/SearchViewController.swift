@@ -7,6 +7,7 @@
 
 import UIKit
 import SnapKit
+import MapKit
 
 class SearchViewController: UIViewController {
     
@@ -30,6 +31,7 @@ class SearchViewController: UIViewController {
         let flowlayout = UICollectionViewFlowLayout()
         flowlayout.scrollDirection = .vertical
         let cv = UICollectionView(frame: .zero, collectionViewLayout: flowlayout)
+        cv.backgroundColor = .lightGray
         cv.delegate = self
         cv.dataSource = self
         cv.register(SearchCollectionViewCell.self, forCellWithReuseIdentifier: SearchCollectionViewCell.identifier)
@@ -121,7 +123,6 @@ class SearchViewController: UIViewController {
             make.leading.trailing.equalToSuperview()
             make.height.equalToSuperview()
         }
-        
     }
     private func changedLayout() {
         UIView.animate(withDuration: 0.2) {
@@ -142,6 +143,12 @@ class SearchViewController: UIViewController {
 }
 
 extension SearchViewController: SearchViewModelDelegate {
+    func searchedLocation() {
+        DispatchQueue.main.async { [weak self] in
+            self?.collectionView.reloadData()
+        }
+    }
+    
     func addressSearching() {
         DispatchQueue.main.async { [weak self] in
             self?.addressSearchResultView.reloadData()
@@ -165,24 +172,24 @@ extension SearchViewController: UISearchBarDelegate {
 // MARK: - CollectionViewDelegate, DataSource, DelegateFlowLayout
 extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 5
+        return viewModel.tripArray.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SearchCollectionViewCell.identifier, for: indexPath) as? SearchCollectionViewCell else { return UICollectionViewCell() }
-        cell.configure(model: indexPath.row)
+        cell.configure(model: viewModel.tripArray[indexPath.row])
         return cell
     }
 }
 extension SearchViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return 1
+        return 10
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        return 1
+        return 10
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: self.view.frame.width, height: 200)
+        return CGSize(width: self.view.frame.width - 20, height: 150)
     }
 }
 
@@ -197,12 +204,22 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: AddressSearchResultTableViewCell.identifier, for: indexPath) as? AddressSearchResultTableViewCell else { return UITableViewCell() }
-        
-        
+        cell.selectionStyle = .none
         cell.configure(model: viewModel.filteredAddressArray[indexPath.row])
         return cell
     }
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        print(viewModel.filteredAddressArray[indexPath.row])
+        let searchText = "\(viewModel.filteredAddressArray[indexPath.row].areaName) \(viewModel.filteredAddressArray[indexPath.row].sigunguName)"
+        viewModel.completer.delegate = self
+        viewModel.didSected(text: searchText, index: indexPath.row)
+    }
 }
 
-
-
+extension SearchViewController: MKLocalSearchCompleterDelegate {
+    func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
+        print("delegate")
+        print(completer.results)
+        viewModel.getLocation(results: completer.results)
+    }
+}
