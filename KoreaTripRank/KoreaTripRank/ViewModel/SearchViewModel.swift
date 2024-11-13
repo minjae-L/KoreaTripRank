@@ -10,6 +10,12 @@ import MapKit
 
 protocol SearchViewModelDelegate: AnyObject {
     func addressSearching()
+    func searchedLocation()
+}
+enum TripCategory {
+    case tourristSpot
+    case food
+    case accommodation
 }
 final class SearchViewModel {
     
@@ -26,6 +32,11 @@ final class SearchViewModel {
     var completer = MKLocalSearchCompleter()
     var searchResults = [MKLocalSearchCompletion]()
     
+    var tripArray: [TripItem] = [] {
+        didSet {
+            delegate?.searchedLocation()
+        }
+    }
     func filtering(text: String) {
         var output = [LocationDataModel]()
         for element in areaDatabase.data {
@@ -70,10 +81,8 @@ final class SearchViewModel {
             
             do {
                 let result = try await (tripResponse, weatherResponse)
-                print("trip")
-                print(result.0.response.responseBody.items.item)
-                print("\nweather")
-                print(result.1.response.responseBody?.items.item)
+                print("Success")
+                tripArray = result.0.response.responseBody.items.item
             } catch NetworkError.invalidURL {
                 print("invalidURL")
             } catch NetworkError.decodingError {
@@ -92,7 +101,6 @@ final class SearchViewModel {
         completer.queryFragment = text
         completer.resultTypes = .address
         self.selectedSigungu = filteredAddressArray[index]
-        
     }
     
     func getLocation(results: [MKLocalSearchCompletion]) {

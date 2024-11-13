@@ -139,7 +139,7 @@ class URLComponentHandler: URLComponentable {
             components.path = "/" + tripPaths.joined(separator: "/")
             components.percentEncodedQueryItems = [
                 URLQueryItem(name: "serviceKey", value: APIKEY().getKey()),
-                URLQueryItem(name: "numOfRows", value: "10"),
+                URLQueryItem(name: "numOfRows", value: "100"),
                 URLQueryItem(name: "MobileOS", value: mobileOS),
                 URLQueryItem(name: "MobileApp", value: mobileAppName),
                 URLQueryItem(name: "baseYm", value: currentDate.baseDateYM),
