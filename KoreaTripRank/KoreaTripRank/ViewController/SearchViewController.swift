@@ -7,6 +7,7 @@
 
 import UIKit
 import SnapKit
+import MapKit
 
 class SearchViewController: UIViewController {
     
@@ -198,11 +199,21 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: AddressSearchResultTableViewCell.identifier, for: indexPath) as? AddressSearchResultTableViewCell else { return UITableViewCell() }
         
-        
         cell.configure(model: viewModel.filteredAddressArray[indexPath.row])
         return cell
     }
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        print(viewModel.filteredAddressArray[indexPath.row])
+        let searchText = "\(viewModel.filteredAddressArray[indexPath.row].areaName) \(viewModel.filteredAddressArray[indexPath.row].sigunguName)"
+        viewModel.completer.delegate = self
+        viewModel.didSected(text: searchText, index: indexPath.row)
+    }
 }
 
-
-
+extension SearchViewController: MKLocalSearchCompleterDelegate {
+    func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
+        print("delegate")
+        print(completer.results)
+        viewModel.getLocation(results: completer.results)
+    }
+}
