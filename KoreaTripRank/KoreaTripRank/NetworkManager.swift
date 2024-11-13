@@ -15,7 +15,16 @@ import Alamofire
  - 네트워크 통신
  - 디코딩
  */
-
+enum NetworkError: Error {
+    case decodingError
+    case serverError(code: Int)
+    case missingData
+    case invalidURL
+}
+enum NetworkURLCase {
+    case trip
+    case weather
+}
 struct APIKEY {
     func getKey() -> String? {
         guard let url = Bundle.main.url(forResource: "Info", withExtension: "plist"),
