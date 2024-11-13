@@ -7,29 +7,29 @@
 
 import Foundation
 
-// MARK: - HTTP 통신 데이터 모델
-struct NetworkResponse: Decodable {
-    let response: Response
+// MARK: - HTTP 통신 데이터 모델 <관광지>
+struct TripNetworkResponse: Decodable {
+    let response: TripResponse
 }
-struct Response: Decodable {
-    let responseHeader: ResponseHeader
-    let responseBody: ResponseBody
+struct TripResponse: Decodable {
+    let responseHeader: TripResponseHeader
+    let responseBody: TripResponseBody
 
     enum CodingKeys: String, CodingKey {
         case responseHeader = "header"
         case responseBody = "body"
     }
 }
-struct ResponseBody: Decodable {
-    let items: Items
+struct TripResponseBody: Decodable {
+    let items: TripItems
     let numOfRows: Int
     let pageNo: Int
     let totalCount: Int
 }
-struct Items: Decodable {
-    let item: [Item]
+struct TripItems: Decodable {
+    let item: [TripItem]
 }
-struct Item: Decodable {
+struct TripItem: Decodable {
     let areaName: String
     let relatedAreaName: String
     let relatedAreaAddress: String
@@ -48,7 +48,7 @@ struct Item: Decodable {
         case rankNum = "rlteRank"
     }
 }
-struct ResponseHeader: Decodable {
+struct TripResponseHeader: Decodable {
     let resultCode: String
     let resultMessage: String
 
@@ -57,7 +57,37 @@ struct ResponseHeader: Decodable {
         case resultMessage = "resultMsg"
     }
 }
+// MARK: - HTTP 통신 데이터 모델 <날씨>
+struct WeatherNetworkResponse: Decodable {
+    let response: WeatherResponse
+}
 
+struct WeatherResponse: Decodable {
+    let responseHeader: WeatherResponseHeader
+    let responseBody: WeatherResponseBody?
+    
+    enum CodingKeys: String, CodingKey {
+        case responseHeader = "header"
+        case responseBody = "body"
+    }
+}
+struct WeatherResponseHeader: Decodable {
+    let resultCode: String
+}
+
+struct WeatherResponseBody: Decodable {
+    let items: WeatherItems
+}
+struct WeatherItems: Decodable {
+    let item: [WeatherItem]
+}
+struct WeatherItem: Decodable {
+    let baseDate: String
+    let baseTime: String
+    let category: String
+    let fcstTime: String
+    let fcstValue: String
+}
 // MARK: - 지역 모델
 struct LocationModel: Decodable {
     let data: [LocationDataModel]
