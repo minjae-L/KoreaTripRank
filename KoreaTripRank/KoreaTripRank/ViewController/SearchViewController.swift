@@ -145,7 +145,7 @@ class SearchViewController: UIViewController {
 }
 
 extension SearchViewController: SearchViewModelDelegate {
-    func searchedLocation() {
+    func needUpdateCollectionView() {
         DispatchQueue.main.async { [weak self] in
             self?.collectionView.reloadData()
         }
@@ -160,7 +160,7 @@ extension SearchViewController: SearchViewModelDelegate {
 // MARK: -  SearchBarDelegate
 extension SearchViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        viewModel.filtering(text: searchBar.text!)
+        viewModel.filteringAddress(text: searchBar.text!)
     }
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         searchBar.text = ""
@@ -182,6 +182,7 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
             guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: SearchCollectionHeaderView.identifier, for: indexPath) as? SearchCollectionHeaderView else {
                 return UICollectionReusableView()
             }
+            header.delegate = self
             return header
         case UICollectionView.elementKindSectionFooter:
             return UICollectionReusableView()
@@ -191,12 +192,12 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
         }
     }
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return viewModel.tripArray.count
+        return viewModel.filteredTripArray.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SearchCollectionViewCell.identifier, for: indexPath) as? SearchCollectionViewCell else { return UICollectionViewCell() }
-        cell.configure(model: viewModel.tripArray[indexPath.row])
+        cell.configure(model: viewModel.filteredTripArray[indexPath.row])
         return cell
     }
 }
@@ -209,6 +210,13 @@ extension SearchViewController: UICollectionViewDelegateFlowLayout {
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: self.view.frame.width - 20, height: 150)
+    }
+}
+
+extension SearchViewController: SearchCollectionHeaderViewDelegate {
+    func filteringButtonTapped(type: TripCategory) {
+        viewModel.filteringTrip(type: type)
+        self.needUpdateCollectionView()
     }
 }
 

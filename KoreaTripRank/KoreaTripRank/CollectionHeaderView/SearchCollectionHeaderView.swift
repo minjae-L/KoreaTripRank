@@ -8,9 +8,14 @@
 import UIKit
 import SnapKit
 
+protocol SearchCollectionHeaderViewDelegate: AnyObject {
+    func filteringButtonTapped(type: TripCategory)
+}
+
 class SearchCollectionHeaderView: UICollectionReusableView {
     
     static let identifier = "SearchCollectionHeaderView"
+    weak var delegate: SearchCollectionHeaderViewDelegate?
     
     private lazy var allCategoryButton: UIButton = {
         let btn = UIButton()
@@ -85,18 +90,22 @@ class SearchCollectionHeaderView: UICollectionReusableView {
     @objc private func allCategoryButtonTapped() {
         self.animateButton(button: allCategoryButton)
         self.selectedToggle(button: allCategoryButton)
+        delegate?.filteringButtonTapped(type: .all)
     }
     @objc private func tourlistSpotButtonTapped() {
         self.animateButton(button: tourlistSpotButton)
         self.selectedToggle(button: tourlistSpotButton)
+        delegate?.filteringButtonTapped(type: .tourristSpot)
     }
     @objc private func foodButtonTapped() {
         self.animateButton(button: foodButton)
         self.selectedToggle(button: foodButton)
+        delegate?.filteringButtonTapped(type: .food)
     }
     @objc private func accommodationButtonTapped() {
         self.animateButton(button: accommodationButton)
         self.selectedToggle(button: accommodationButton)
+        delegate?.filteringButtonTapped(type: .accommodation)
     }
     private func addView() {
         addSubview(allCategoryButton)
