@@ -85,6 +85,25 @@ class MainViewController: UIViewController {
         if let firstVC = viewControllers.first {
             pageView.setViewControllers([firstVC], direction: .forward, animated: true)
         }
+        let manager = NetworkManager(components: URLComponentHandler(), decoder: DecodeHandler())
+        Task {
+            do {
+                async let response1 = try manager.fetchData(for: .trip, type: TripNetworkResponse.self)
+                async let response2 = try manager.fetchData(for: .weather, type: WeatherNetworkResponse.self)
+                
+                let result = try await (response1, response2)
+                print(result.0)
+                print(result.1)
+            } catch NetworkError.invalidURL {
+                print("invalidURL")
+            } catch NetworkError.decodingError {
+                print("decodingError")
+            } catch NetworkError.serverError(let code) {
+                print("server Error code: \(code)")
+            } catch {
+                print("unknown Error")
+            }
+        }
     }
     
 }
