@@ -106,7 +106,7 @@ class SearchCollectionHeaderView: UICollectionReusableView {
         }
     }
     
-    func defualtMode() {
+    func defaultMode() {
         for btn in buttonArray {
             btn.isSelected = false
             btn.backgroundColor = .lightGray.withAlphaComponent(0.3)

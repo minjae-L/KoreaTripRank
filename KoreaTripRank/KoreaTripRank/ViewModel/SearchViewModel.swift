@@ -39,18 +39,26 @@ final class SearchViewModel {
             delegate?.needUpdateCollectionView()
         }
     }
+    
+    private func sortedTripArray(arr: [TripItem]) -> [TripItem] {
+        return arr.sorted { item1, item2 in
+            return Int(item1.rankNum)! < Int(item2.rankNum)!
+        }
+    }
+    
     func filteringTrip(type: TripCategory) {
         switch type {
         case .all:
-            filteredTripArray = tripArray
+            filteredTripArray = sortedTripArray(arr: tripArray)
         case .tourristSpot:
-            filteredTripArray = tripArray.filter{ $0.relatedLargeCategoryName == "관광지" }
+            filteredTripArray = sortedTripArray(arr: tripArray.filter{ $0.relatedLargeCategoryName == "관광지" })
         case .food:
-            filteredTripArray = tripArray.filter{ $0.relatedLargeCategoryName == "음식" }
+            filteredTripArray = sortedTripArray(arr: tripArray.filter{ $0.relatedLargeCategoryName == "음식" })
         case .accommodation:
-            filteredTripArray = tripArray.filter{ $0.relatedLargeCategoryName == "숙박" }
+            filteredTripArray = sortedTripArray(arr: tripArray.filter{ $0.relatedLargeCategoryName == "숙박" })
         }
     }
+    
     func filteringAddress(text: String) {
         var output = [LocationDataModel]()
         for element in areaDatabase.data {
@@ -62,6 +70,7 @@ final class SearchViewModel {
         }
         self.filteredAddressArray = output
     }
+    
     private func search(for suggestionCompletion: MKLocalSearchCompletion) async throws {
         let searchRequest = MKLocalSearch.Request(completion: suggestionCompletion)
         searchRequest.region = MKCoordinateRegion(MKMapRect.world)
@@ -81,8 +90,8 @@ final class SearchViewModel {
             print("MapKit Search Error")
             print(error.localizedDescription)
         }
-        
     }
+    
     private func loadData() {
         guard let addressName = selectedSigungu,
               let addressInfo = selectedLocationInfo else {
@@ -97,7 +106,7 @@ final class SearchViewModel {
                 let result = try await (tripResponse, weatherResponse)
                 print("Success")
                 tripArray = result.0.response.responseBody.items.item
-                filteredTripArray = tripArray
+                filteringTrip(type: .all)
             } catch NetworkError.invalidURL {
                 print("invalidURL")
             } catch NetworkError.decodingError {
@@ -123,5 +132,6 @@ final class SearchViewModel {
             try await self.search(for: results[0])
         }
     }
+    
 }
 
