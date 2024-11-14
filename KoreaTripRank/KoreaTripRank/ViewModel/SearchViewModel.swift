@@ -10,9 +10,10 @@ import MapKit
 
 protocol SearchViewModelDelegate: AnyObject {
     func addressSearching()
-    func searchedLocation()
+    func needUpdateCollectionView()
 }
 enum TripCategory {
+    case all
     case tourristSpot
     case food
     case accommodation
@@ -32,12 +33,25 @@ final class SearchViewModel {
     var completer = MKLocalSearchCompleter()
     var searchResults = [MKLocalSearchCompletion]()
     
-    var tripArray: [TripItem] = [] {
+    private var tripArray: [TripItem] = []
+    var filteredTripArray: [TripItem] = [] {
         didSet {
-            delegate?.searchedLocation()
+            delegate?.needUpdateCollectionView()
         }
     }
-    func filtering(text: String) {
+    func filteringTrip(type: TripCategory) {
+        switch type {
+        case .all:
+            filteredTripArray = tripArray
+        case .tourristSpot:
+            filteredTripArray = tripArray.filter{ $0.relatedLargeCategoryName == "관광지" }
+        case .food:
+            filteredTripArray = tripArray.filter{ $0.relatedLargeCategoryName == "음식" }
+        case .accommodation:
+            filteredTripArray = tripArray.filter{ $0.relatedLargeCategoryName == "숙박" }
+        }
+    }
+    func filteringAddress(text: String) {
         var output = [LocationDataModel]()
         for element in areaDatabase.data {
             let areaArray = String.separatingString(text: element.areaName, length: text.count)
@@ -83,6 +97,7 @@ final class SearchViewModel {
                 let result = try await (tripResponse, weatherResponse)
                 print("Success")
                 tripArray = result.0.response.responseBody.items.item
+                filteredTripArray = tripArray
             } catch NetworkError.invalidURL {
                 print("invalidURL")
             } catch NetworkError.decodingError {
