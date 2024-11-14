@@ -25,7 +25,7 @@ class SearchCollectionHeaderView: UICollectionReusableView {
         btn.clipsToBounds = false
         btn.backgroundColor = .lightGray.withAlphaComponent(0.3)
         btn.layer.cornerRadius = 10
-        btn.addTarget(self, action: #selector(allCategoryButtonTapped), for: .touchUpInside)
+        btn.addTarget(self, action: #selector(filteringButtonTapped), for: .touchUpInside)
         return btn
     }()
     
@@ -37,7 +37,7 @@ class SearchCollectionHeaderView: UICollectionReusableView {
         btn.clipsToBounds = false
         btn.layer.cornerRadius = 10
         btn.backgroundColor = .lightGray.withAlphaComponent(0.3)
-        btn.addTarget(self, action: #selector(tourlistSpotButtonTapped), for: .touchUpInside)
+        btn.addTarget(self, action: #selector(filteringButtonTapped), for: .touchUpInside)
         return btn
     }()
     
@@ -49,7 +49,7 @@ class SearchCollectionHeaderView: UICollectionReusableView {
         btn.clipsToBounds = false
         btn.layer.cornerRadius = 10
         btn.backgroundColor = .lightGray.withAlphaComponent(0.3)
-        btn.addTarget(self, action: #selector(foodButtonTapped), for: .touchUpInside)
+        btn.addTarget(self, action: #selector(filteringButtonTapped), for: .touchUpInside)
         return btn
     }()
     
@@ -61,7 +61,7 @@ class SearchCollectionHeaderView: UICollectionReusableView {
         btn.clipsToBounds = false
         btn.layer.cornerRadius = 10
         btn.backgroundColor = .lightGray.withAlphaComponent(0.3)
-        btn.addTarget(self, action: #selector(accommodationButtonTapped), for: .touchUpInside)
+        btn.addTarget(self, action: #selector(filteringButtonTapped), for: .touchUpInside)
         return btn
     }()
     
@@ -78,6 +78,7 @@ class SearchCollectionHeaderView: UICollectionReusableView {
             btn.backgroundColor = .lightGray.withAlphaComponent(0.3)
         }
     }
+    
     private func animateButton(button: UIButton) {
         UIView.animate(withDuration: 0.1, animations: {
             button.transform = CGAffineTransform(scaleX: 0.9, y: 0.9)
@@ -87,25 +88,30 @@ class SearchCollectionHeaderView: UICollectionReusableView {
             }
         })
     }
-    @objc private func allCategoryButtonTapped() {
-        self.animateButton(button: allCategoryButton)
-        self.selectedToggle(button: allCategoryButton)
+    
+    @objc private func filteringButtonTapped(button: UIButton) {
+        self.animateButton(button: button)
+        self.selectedToggle(button: button)
+        switch button {
+        case allCategoryButton:
+            delegate?.filteringButtonTapped(type: .all)
+        case tourlistSpotButton:
+            delegate?.filteringButtonTapped(type: .tourristSpot)
+        case foodButton:
+            delegate?.filteringButtonTapped(type: .food)
+        case accommodationButton:
+            delegate?.filteringButtonTapped(type: .accommodation)
+        default:
+            print("error")
+        }
+    }
+    
+    func defualtMode() {
+        for btn in buttonArray {
+            btn.isSelected = false
+            btn.backgroundColor = .lightGray.withAlphaComponent(0.3)
+        }
         delegate?.filteringButtonTapped(type: .all)
-    }
-    @objc private func tourlistSpotButtonTapped() {
-        self.animateButton(button: tourlistSpotButton)
-        self.selectedToggle(button: tourlistSpotButton)
-        delegate?.filteringButtonTapped(type: .tourristSpot)
-    }
-    @objc private func foodButtonTapped() {
-        self.animateButton(button: foodButton)
-        self.selectedToggle(button: foodButton)
-        delegate?.filteringButtonTapped(type: .food)
-    }
-    @objc private func accommodationButtonTapped() {
-        self.animateButton(button: accommodationButton)
-        self.selectedToggle(button: accommodationButton)
-        delegate?.filteringButtonTapped(type: .accommodation)
     }
     private func addView() {
         addSubview(allCategoryButton)
