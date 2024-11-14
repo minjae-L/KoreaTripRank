@@ -26,6 +26,7 @@ class SearchViewController: UIViewController {
             changedLayout()
         }
     }
+    
     //MARK: UI Property
     private lazy var collectionView: UICollectionView = {
         let flowlayout = UICollectionViewFlowLayout()
@@ -174,13 +175,20 @@ extension SearchViewController: UISearchBarDelegate {
 // MARK: - CollectionViewDelegate, DataSource, DelegateFlowLayout
 extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        return CGSize(width: self.view.frame.width, height: 50)
+        if viewModel.filteredTripArray.count != 0{
+            return CGSize(width: self.view.frame.width, height: 50)
+        } else {
+            return .zero
+        }
     }
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         switch kind {
         case UICollectionView.elementKindSectionHeader:
             guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: SearchCollectionHeaderView.identifier, for: indexPath) as? SearchCollectionHeaderView else {
                 return UICollectionReusableView()
+            }
+            if self.isSearching {
+                header.defualtMode()
             }
             header.delegate = self
             return header
