@@ -19,6 +19,7 @@ class SearchCollectionViewCell: UICollectionViewCell {
     private var relatedAreaLabel: UILabel = {
         let lb = UILabel()
         lb.font = UIFont(name: "", size: 35)
+        lb.numberOfLines = 0
         return lb
     }()
     
@@ -40,6 +41,16 @@ class SearchCollectionViewCell: UICollectionViewCell {
         btn.setImage(UIImage(systemName: "star"), for: .normal)
         return btn
     }()
+    
+    private func configureCell() {
+        self.clipsToBounds = false
+        self.layer.masksToBounds = false
+        self.layer.shadowOpacity = 0.8
+        self.layer.shadowOffset = CGSize(width: -1, height: 1)
+        self.layer.shadowRadius = 3
+        
+        self.layer.cornerRadius = 10
+    }
     
     private func addView() {
         contentView.addSubview(areaLabel)
@@ -72,6 +83,7 @@ class SearchCollectionViewCell: UICollectionViewCell {
     }
     override init(frame: CGRect) {
         super.init(frame: .zero)
+        configureCell()
         addView()
         configureLayout()
         self.backgroundColor = .white
@@ -82,8 +94,10 @@ class SearchCollectionViewCell: UICollectionViewCell {
     func configure(model: TripItem) {
         self.areaLabel.text = model.areaName
         self.areaAddressLabel.text = model.relatedAreaAddress
-        self.relatedAreaLabel.text = model.relatedAreaName
         self.relatedCategoryLabel.text = "[\(model.relatedLargeCategoryName)]"
+        
+        let separatedRelatedAreaText = model.relatedAreaName.split(separator: "/").map{String($0)}
+        self.relatedAreaLabel.text = separatedRelatedAreaText.joined(separator: "\n")
+        print(separatedRelatedAreaText)
     }
-
 }
