@@ -31,8 +31,9 @@ class SearchViewController: UIViewController {
     private lazy var collectionView: UICollectionView = {
         let flowlayout = UICollectionViewFlowLayout()
         flowlayout.scrollDirection = .vertical
+        flowlayout.sectionHeadersPinToVisibleBounds = true
         let cv = UICollectionView(frame: .zero, collectionViewLayout: flowlayout)
-        cv.backgroundColor = .lightGray
+        cv.backgroundColor = .white
         cv.delegate = self
         cv.dataSource = self
         cv.register(SearchCollectionViewCell.self, forCellWithReuseIdentifier: SearchCollectionViewCell.identifier)

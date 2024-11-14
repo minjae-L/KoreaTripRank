@@ -121,25 +121,30 @@ class SearchCollectionHeaderView: UICollectionReusableView {
     }
     
     private func setLayout() {
+        let allCateogoryButtonWidthSize: CGFloat = allCategoryButton.intrinsicContentSize.width + 15
+        let tourlistSpotButtonWidthSize: CGFloat = tourlistSpotButton.intrinsicContentSize.width + 15
+        let foodButtonWidthSize: CGFloat = foodButton.intrinsicContentSize.width + 15
+        let accommodationButtonWidthSize: CGFloat = accommodationButton.intrinsicContentSize.width + 15
+        
         allCategoryButton.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
             make.leading.equalToSuperview().offset(10)
-            make.width.equalTo(60)
+            make.width.equalTo(allCateogoryButtonWidthSize)
         }
         tourlistSpotButton.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
             make.leading.equalTo(allCategoryButton.snp.trailing).offset(10)
-            make.width.equalTo(60)
+            make.width.equalTo(tourlistSpotButtonWidthSize)
         }
         foodButton.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
             make.leading.equalTo(tourlistSpotButton.snp.trailing).offset(10)
-            make.width.equalTo(60)
+            make.width.equalTo(foodButtonWidthSize)
         }
         accommodationButton.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
             make.leading.equalTo(foodButton.snp.trailing).offset(10)
-            make.width.equalTo(60)
+            make.width.equalTo(accommodationButtonWidthSize)
         }
     }
     override init(frame: CGRect) {
