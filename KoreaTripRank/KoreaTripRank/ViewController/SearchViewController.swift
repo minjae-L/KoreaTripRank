@@ -32,13 +32,13 @@ class SearchViewController: UIViewController {
         let flowlayout = UICollectionViewFlowLayout()
         flowlayout.scrollDirection = .vertical
         flowlayout.sectionHeadersPinToVisibleBounds = true
+        flowlayout.sectionInset.top = 10.0
         let cv = UICollectionView(frame: .zero, collectionViewLayout: flowlayout)
         cv.backgroundColor = .white
         cv.delegate = self
         cv.dataSource = self
         cv.register(SearchCollectionViewCell.self, forCellWithReuseIdentifier: SearchCollectionViewCell.identifier)
         cv.register(SearchCollectionHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: SearchCollectionHeaderView.identifier)
-        
         return cv
     }()
     private lazy var searchBar: UISearchBar = {
@@ -189,7 +189,7 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
                 return UICollectionReusableView()
             }
             if self.isSearching {
-                header.defualtMode()
+                header.defaultMode()
             }
             header.delegate = self
             return header
@@ -217,9 +217,12 @@ extension SearchViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         return 10
     }
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: self.view.frame.width - 20, height: 150)
+        let width = view.frame.width * 0.9
+        return CGSize(width: width, height: 120)
     }
+    
 }
 
 extension SearchViewController: SearchCollectionHeaderViewDelegate {
