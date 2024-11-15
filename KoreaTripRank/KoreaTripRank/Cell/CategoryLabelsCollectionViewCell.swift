@@ -16,13 +16,12 @@ class CategoryLabelsCollectionViewCell: UICollectionViewCell {
         let lb = UILabel()
         lb.textAlignment = .center
         lb.font = .boldSystemFont(ofSize: 15)
-        lb.sizeToFit()
         return lb
     }()
     
     override init(frame: CGRect) {
         super.init(frame: .zero)
-        self.backgroundColor = .cyan
+        self.backgroundColor = .lightGray
         contentView.addSubview(titleCategoryLabel)
         titleCategoryLabel.snp.makeConstraints { make in
             make.centerY.equalToSuperview()

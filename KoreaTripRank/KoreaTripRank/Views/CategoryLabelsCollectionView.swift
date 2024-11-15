@@ -17,6 +17,8 @@ class CategoryLabelsCollectionView: UIView {
     
     private lazy var collectionView: UICollectionView = {
         let flowlayout = UICollectionViewFlowLayout()
+        flowlayout.scrollDirection = .horizontal
+        flowlayout.minimumInteritemSpacing = 5
         let cv = UICollectionView(frame: .zero, collectionViewLayout: flowlayout)
         cv.delegate = self
         cv.dataSource = self
@@ -32,7 +34,6 @@ class CategoryLabelsCollectionView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.addSubview(collectionView)
-        self.backgroundColor = .cyan
         collectionView.snp.makeConstraints { make in
             make.top.trailing.leading.bottom.equalToSuperview()
         }
@@ -55,13 +56,8 @@ extension CategoryLabelsCollectionView: UICollectionViewDelegate, UICollectionVi
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 100, height: self.frame.height)
+        let width = (categorys[indexPath.row] as NSString).size().width
+        return CGSize(width: width + 25, height: self.frame.height)
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return 5
-    }
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        return 5
-    }
 }
