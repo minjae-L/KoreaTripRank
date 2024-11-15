@@ -151,9 +151,9 @@ class SearchCollectionViewCell: UICollectionViewCell {
             self.rankImageView.image = nil
             hideRankImage()
         }
-        let labels = [model.relatedLargeCategoryName, model.relatedMediumCategoryName, model.relatedSmallCategoryName]
-        let labelSet = Array(Set(labels))
-        categoryCollectionView.updateLabels(labels: labelSet)
+        
+        let labels = Array(Set([model.relatedMediumCategoryName, model.relatedSmallCategoryName]))
+        categoryCollectionView.updateLabels(labels: labels)
     }
 }
 
