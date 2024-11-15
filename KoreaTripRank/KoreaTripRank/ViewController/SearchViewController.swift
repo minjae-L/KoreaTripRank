@@ -209,6 +209,7 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
         cell.configure(model: viewModel.filteredTripArray[indexPath.row])
         return cell
     }
+    
 }
 extension SearchViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
@@ -220,7 +221,7 @@ extension SearchViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let width = view.frame.width * 0.9
-        return CGSize(width: width, height: 120)
+        return CGSize(width: width, height: 150)
     }
     
 }
@@ -262,3 +263,4 @@ extension SearchViewController: MKLocalSearchCompleterDelegate {
         viewModel.getLocation(results: completer.results)
     }
 }
+

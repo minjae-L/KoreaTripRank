@@ -48,7 +48,10 @@ class NetworkManager {
         self.decoder = decoder
     }
     
-    func fetchData<T: Decodable>(urlCase URLCase: NetworkURLCase, tripKey: LocationDataModel? = nil, weatherKey: ConvertedLocationModel? = nil, type: T.Type) async throws -> T {
+    func fetchData<T: Decodable>(urlCase URLCase: NetworkURLCase,
+                                 tripKey: LocationDataModel? = nil,
+                                 weatherKey: ConvertedLocationModel? = nil,
+                                 type: T.Type) async throws -> T {
         var urlComponents = URLComponents()
         switch URLCase {
         case .trip:
