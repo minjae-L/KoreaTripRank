@@ -46,9 +46,9 @@ class SearchCollectionViewCell: UICollectionViewCell {
     private var contentStackView: UIStackView = {
         let sv = UIStackView()
         sv.axis = .vertical
-        sv.spacing = 10
+        sv.spacing = 5
         sv.alignment = .leading
-        sv.distribution = .fill
+        sv.distribution = .fillProportionally
         return sv
     }()
     
@@ -61,13 +61,14 @@ class SearchCollectionViewCell: UICollectionViewCell {
         return sv
     }()
     
+    private lazy var categoryCollectionView = CategoryLabelsCollectionView(frame: .zero)
+    
     private func configureCell() {
         self.clipsToBounds = false
         self.layer.masksToBounds = false
         self.layer.shadowOpacity = 0.8
         self.layer.shadowOffset = CGSize(width: -1, height: 1)
         self.layer.shadowRadius = 3
-        
         self.layer.cornerRadius = 10
     }
     
@@ -77,22 +78,29 @@ class SearchCollectionViewCell: UICollectionViewCell {
         contentStackView.addArrangedSubview(rankAreaLabelStackView)
         contentStackView.addArrangedSubview(areaCategoryLabel)
         contentStackView.addArrangedSubview(areaAddressLabel)
+        contentStackView.addArrangedSubview(categoryCollectionView)
         contentView.addSubview(contentStackView)
         contentView.addSubview(favoriteButton)
     }
+    
     private func configureLayout() {
         contentStackView.snp.makeConstraints { make in
-            make.top.leading.equalToSuperview().offset(20)
-            make.bottom.trailing.equalToSuperview().offset(-20)
+            make.top.leading.equalToSuperview().offset(15)
+            make.bottom.trailing.equalToSuperview().offset(-15)
         }
         rankAreaLabelStackView.snp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
         }
+        categoryCollectionView.snp.makeConstraints { make in
+            make.leading.trailing.equalToSuperview()
+            make.height.equalTo(20)
+        }
         favoriteButton.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
-            make.trailing.equalToSuperview().offset(-20)
+            make.trailing.equalToSuperview().offset(-15)
         }
     }
+    
     override init(frame: CGRect) {
         super.init(frame: .zero)
         configureCell()
@@ -108,6 +116,7 @@ class SearchCollectionViewCell: UICollectionViewCell {
         self.rankImageView.snp.remakeConstraints { make in
             make.width.height.equalTo(0)
         }
+        categoryCollectionView.updateLabels(labels: [])
     }
     private func showRankImage() {
         rankImageView.snp.remakeConstraints { make in
@@ -142,5 +151,9 @@ class SearchCollectionViewCell: UICollectionViewCell {
             self.rankImageView.image = nil
             hideRankImage()
         }
+        let labels = [model.relatedLargeCategoryName, model.relatedMediumCategoryName, model.relatedSmallCategoryName]
+        let labelSet = Array(Set(labels))
+        categoryCollectionView.updateLabels(labels: labelSet)
     }
 }
+
