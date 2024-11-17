@@ -39,7 +39,21 @@ final class SearchViewModel {
     var completer = MKLocalSearchCompleter()
     var searchResults = [MKLocalSearchCompletion]()
     
-    private var tripArray: [TripItem] = []
+    private var AllTripDataLoaded: Bool = false
+    private var currentTripPage: Int = 0 {
+        didSet {
+            currentTripDataLoadedCount = 20 * currentTripPage
+        }
+    }
+    private var currentTripDataLoadedCount: Int = 0
+    private var tripDataMaxCount = 0
+    private var viewState = ViewState.readyToLoad
+    
+    private var tripArray: [TripItem] = [] {
+        didSet {
+            viewState = .readyToLoad
+        }
+    }
     var filteredTripArray: [TripItem] = [] {
         didSet {
             delegate?.needUpdateCollectionView()
