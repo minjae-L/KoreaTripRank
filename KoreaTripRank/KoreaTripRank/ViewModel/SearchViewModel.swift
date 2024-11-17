@@ -42,7 +42,7 @@ final class SearchViewModel {
     private var AllTripDataLoaded: Bool = false
     private var currentTripPage: Int = 0 {
         didSet {
-            currentTripDataLoadedCount = 20 * currentTripPage
+            currentTripDataLoadedCount = 50 * currentTripPage
         }
     }
     private var currentTripDataLoadedCount: Int = 0

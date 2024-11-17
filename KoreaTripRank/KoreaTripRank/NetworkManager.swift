@@ -143,7 +143,7 @@ class URLComponentHandler: URLComponentable {
             components.path = "/" + tripPaths.joined(separator: "/")
             components.percentEncodedQueryItems = [
                 URLQueryItem(name: "serviceKey", value: APIKEY().getKey()),
-                URLQueryItem(name: "numOfRows", value: "20"),
+                URLQueryItem(name: "numOfRows", value: "50"),
                 URLQueryItem(name: "MobileOS", value: mobileOS),
                 URLQueryItem(name: "MobileApp", value: mobileAppName),
                 URLQueryItem(name: "baseYm", value: currentDate.baseDateYM),
@@ -160,7 +160,7 @@ class URLComponentHandler: URLComponentable {
             components.path = "/" + weatherPaths.joined(separator: "/")
             components.percentEncodedQueryItems = [
                 URLQueryItem(name: "serviceKey", value: APIKEY().getKey()),
-                URLQueryItem(name: "numOfRows", value: "20"),
+                URLQueryItem(name: "numOfRows", value: "50"),
                 URLQueryItem(name: "pageNo", value: String(page)),
                 URLQueryItem(name: "dataType", value: "JSON"),
                 URLQueryItem(name: "base_date", value: currentDate.baseDate),
