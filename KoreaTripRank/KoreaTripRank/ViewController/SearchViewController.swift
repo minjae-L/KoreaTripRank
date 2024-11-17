@@ -242,8 +242,8 @@ extension SearchViewController: UICollectionViewDelegateFlowLayout {
 
 extension SearchViewController: SearchCollectionHeaderViewDelegate {
     func filteringButtonTapped(type: TripCategory) {
+        collectionView.scrollToItem(at: IndexPath(item: -1, section: 0), at: .top, animated: false)
         viewModel.filteringTrip(type: type)
-        self.needUpdateCollectionView()
     }
 }
 

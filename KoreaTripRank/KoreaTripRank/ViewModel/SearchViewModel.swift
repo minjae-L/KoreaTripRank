@@ -48,12 +48,9 @@ final class SearchViewModel {
     private var currentTripDataLoadedCount: Int = 0
     private var tripDataMaxCount = 0
     private var viewState = ViewState.readyToLoad
+    var currentCategoryState: TripCategory = .all
     
-    private var tripArray: [TripItem] = [] {
-        didSet {
-            viewState = .readyToLoad
-        }
-    }
+    private var tripArray: [TripItem] = []
     var filteredTripArray: [TripItem] = [] {
         didSet {
             delegate?.needUpdateCollectionView()
@@ -67,6 +64,7 @@ final class SearchViewModel {
     }
     
     func filteringTrip(type: TripCategory) {
+        self.currentCategoryState = type
         switch type {
         case .all:
             filteredTripArray = sortedTripArray(arr: tripArray)
@@ -118,6 +116,7 @@ final class SearchViewModel {
             return
         }
         if isFirstLoad {
+            self.currentCategoryState = .all
             self.tripArray.removeAll()
             self.currentTripPage = 1
             self.AllTripDataLoaded = false
@@ -146,7 +145,9 @@ final class SearchViewModel {
                 tripArray.append(contentsOf: result.response.responseBody.items.item)
 //                tripArray = result.response.responseBody.items.item
                 tripDataMaxCount = result.response.responseBody.totalCount
-                filteringTrip(type: .all)
+                
+                filteringTrip(type: currentCategoryState)
+                viewState = .readyToLoad
             } catch NetworkError.invalidURL {
                 print("invalidURL")
             } catch NetworkError.decodingError {
