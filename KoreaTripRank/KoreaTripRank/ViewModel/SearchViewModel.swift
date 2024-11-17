@@ -12,11 +12,17 @@ protocol SearchViewModelDelegate: AnyObject {
     func addressSearching()
     func needUpdateCollectionView()
 }
+
 enum TripCategory {
     case all
     case tourristSpot
     case food
     case accommodation
+}
+
+enum ViewState {
+    case loading
+    case readyToLoad
 }
 final class SearchViewModel {
     
