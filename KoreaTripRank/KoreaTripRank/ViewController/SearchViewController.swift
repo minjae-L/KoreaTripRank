@@ -210,6 +210,20 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
         return cell
     }
     
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let contentOffY = scrollView.contentOffset.y
+        let scrollViewHeight = scrollView.contentSize.height
+        let contentHeight = self.collectionView.frame.height
+        let leftBottomHeight = scrollViewHeight - contentOffY - contentHeight
+        let loadLine = scrollViewHeight * 0.1
+        
+        if leftBottomHeight <= loadLine {
+            print("need more")
+            viewModel.fetchData(isFirstLoad: false)
+        }
+        
+    }
+    
 }
 extension SearchViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
