@@ -105,27 +105,47 @@ final class SearchViewModel {
             var location = ConvertedLocationModel(lat: lati, lng: long)
             location.convertGRID_GPS(mode: 0, lat_X: lati, lng_Y: long)
             selectedLocationInfo = location
-            self.loadData()
+            self.fetchData(isFirstLoad: true)
         } catch {
             print("MapKit Search Error")
             print(error.localizedDescription)
         }
     }
     
-    private func loadData() {
-        guard let addressName = selectedSigungu,
-              let addressInfo = selectedLocationInfo else {
+    func fetchData(isFirstLoad: Bool) {
+        if self.AllTripDataLoaded {
+            print("All Data Loaded!!")
             return
         }
-        
+        if isFirstLoad {
+            self.tripArray.removeAll()
+            self.currentTripPage = 1
+            self.AllTripDataLoaded = false
+        } else {
+            self.currentTripPage += 1
+            if currentTripPage >= tripDataMaxCount {
+                self.AllTripDataLoaded = true
+            }
+        }
+        loadData(page: currentTripPage)
+    }
+    private func loadData(page: Int) {
+        guard let addressName = selectedSigungu,
+              let addressInfo = selectedLocationInfo,
+              self.viewState == .readyToLoad else {
+            return
+        }
+        viewState = .loading
         Task {
-            async let tripResponse = NetworkManager.shared.fetchData(urlCase: .trip, tripKey: selectedSigungu, type: TripNetworkResponse.self)
-            async let weatherResponse = NetworkManager.shared.fetchData(urlCase: .weather, weatherKey: selectedLocationInfo, type: WeatherNetworkResponse.self)
+            async let tripResponse = NetworkManager.shared.fetchData(urlCase: .trip, tripKey: addressName, type: TripNetworkResponse.self, page: page)
+//            async let weatherResponse = NetworkManager.shared.fetchData(urlCase: .weather, weatherKey: addressInfo, type: WeatherNetworkResponse.self, count: count)
             
             do {
-                let result = try await (tripResponse, weatherResponse)
+                let result = try await tripResponse
                 print("Success")
-                tripArray = result.0.response.responseBody.items.item
+                tripArray.append(contentsOf: result.response.responseBody.items.item)
+//                tripArray = result.response.responseBody.items.item
+                tripDataMaxCount = result.response.responseBody.totalCount
                 filteringTrip(type: .all)
             } catch NetworkError.invalidURL {
                 print("invalidURL")
