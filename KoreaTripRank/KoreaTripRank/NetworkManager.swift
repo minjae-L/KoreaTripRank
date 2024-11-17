@@ -51,13 +51,14 @@ class NetworkManager {
     func fetchData<T: Decodable>(urlCase URLCase: NetworkURLCase,
                                  tripKey: LocationDataModel? = nil,
                                  weatherKey: ConvertedLocationModel? = nil,
-                                 type: T.Type) async throws -> T {
+                                 type: T.Type,
+                                 page: Int) async throws -> T {
         var urlComponents = URLComponents()
         switch URLCase {
         case .trip:
-            urlComponents = components.getURLComponents(for: .trip, tripKey: tripKey)
+            urlComponents = components.getURLComponents(for: .trip, page: page, tripKey: tripKey)
         case .weather:
-            urlComponents = components.getURLComponents(for: .weather, weatherKey: weatherKey)
+            urlComponents = components.getURLComponents(for: .weather, page: page, weatherKey: weatherKey)
         }
         guard let url = urlComponents.url else {
             throw(NetworkError.invalidURL)
@@ -96,11 +97,11 @@ class DecodeHandler: DataDecodable {
 }
 
 protocol URLComponentable {
-    func getURLComponents(for type: NetworkURLCase, tripKey: LocationDataModel?, weatherKey: ConvertedLocationModel?) -> URLComponents
+    func getURLComponents(for type: NetworkURLCase, page: Int, tripKey: LocationDataModel?, weatherKey: ConvertedLocationModel?) -> URLComponents
 }
 extension URLComponentable {
-    func getURLComponents(for type: NetworkURLCase, tripKey: LocationDataModel? = nil, weatherKey: ConvertedLocationModel? = nil) -> URLComponents {
-        return getURLComponents(for: type, tripKey: tripKey, weatherKey: weatherKey)
+    func getURLComponents(for type: NetworkURLCase, page: Int, tripKey: LocationDataModel? = nil, weatherKey: ConvertedLocationModel? = nil) -> URLComponents {
+        return getURLComponents(for: type, page: page, tripKey: tripKey, weatherKey: weatherKey)
     }
 }
 
@@ -128,7 +129,7 @@ class URLComponentHandler: URLComponentable {
         return (baseDate, baseTime, baseDateYM)
     }
     
-    func getURLComponents(for type: NetworkURLCase, tripKey: LocationDataModel?, weatherKey: ConvertedLocationModel?) -> URLComponents {
+    func getURLComponents(for type: NetworkURLCase, page: Int, tripKey: LocationDataModel?, weatherKey: ConvertedLocationModel?) -> URLComponents {
         var components = URLComponents()
         components.scheme = scheme
         components.host = host
@@ -142,13 +143,14 @@ class URLComponentHandler: URLComponentable {
             components.path = "/" + tripPaths.joined(separator: "/")
             components.percentEncodedQueryItems = [
                 URLQueryItem(name: "serviceKey", value: APIKEY().getKey()),
-                URLQueryItem(name: "numOfRows", value: "100"),
+                URLQueryItem(name: "numOfRows", value: "20"),
                 URLQueryItem(name: "MobileOS", value: mobileOS),
                 URLQueryItem(name: "MobileApp", value: mobileAppName),
                 URLQueryItem(name: "baseYm", value: currentDate.baseDateYM),
                 URLQueryItem(name: "areaCd", value: String(areaCd)),
                 URLQueryItem(name: "signguCd", value: String(sigunguCd)),
-                URLQueryItem(name: "_type", value: "json")
+                URLQueryItem(name: "_type", value: "json"),
+                URLQueryItem(name: "pageNo", value: String(page))
             ]
         case .weather:
             guard let nx = weatherKey?.x,
@@ -158,8 +160,8 @@ class URLComponentHandler: URLComponentable {
             components.path = "/" + weatherPaths.joined(separator: "/")
             components.percentEncodedQueryItems = [
                 URLQueryItem(name: "serviceKey", value: APIKEY().getKey()),
-                URLQueryItem(name: "numOfRows", value: "50"),
-                URLQueryItem(name: "pageNo", value: "1"),
+                URLQueryItem(name: "numOfRows", value: "20"),
+                URLQueryItem(name: "pageNo", value: String(page)),
                 URLQueryItem(name: "dataType", value: "JSON"),
                 URLQueryItem(name: "base_date", value: currentDate.baseDate),
                 URLQueryItem(name: "base_time", value: currentDate.baseTime),
