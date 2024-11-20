@@ -121,7 +121,7 @@ final class SearchViewModel {
         loadData(page: currentTripPage, networkType: .trip)
     }
     
-    private func loadData(page: Int, networkType: NetworkingType) {
+    private func loadData(page: Int, networkType: NetworkingType, index: Int? = 0) {
         
         guard let addressName = selectedSigungu else {
             print("data unloaded")
@@ -145,7 +145,16 @@ final class SearchViewModel {
                     filteringTrip(type: currentCategoryState)
                 case .weather:
                     let result = try await weatherResponse
-                    print(result.response.responseBody?.items.item)
+                    
+                    guard let arr = result.response.responseBody?.items.item,
+                          let idx = index,
+                          let nx = self.selectedLocationInfo?.x,
+                          let ny = self.selectedLocationInfo?.y
+                    else { return }
+                    filteredTripArray[idx].nx = String(nx)
+                    filteredTripArray[idx].ny = String(ny)
+                    filteredTripArray[idx].weatherModel = convertWeatherData(item: arr)
+                    print(filteredTripArray[idx])
                 }
                 print("Success")
                 try await Task.sleep(for: .seconds(2))
@@ -166,12 +175,12 @@ final class SearchViewModel {
     
     func checkCoordinate(index: Int) {
         Task {
-            await print(getCoordinate(defaultData: ConvertedLocationModel(lat: 0, lng: 0), location: filteredTripArray[index], index: index))
+            await print(getCoordinate(location: filteredTripArray[index], index: index))
         }
         
     }
     
-    func getCoordinate(defaultData: ConvertedLocationModel, location: TripItem, index: Int) async {
+    func getCoordinate(location: TripItem, index: Int) async {
         Task {
             let case1 = location.relatedAreaAddress
             let case2 = location.relatedAreaName
@@ -184,7 +193,7 @@ final class SearchViewModel {
             result.filter{ $0 != nil }
             if result.isEmpty { return }
             self.selectedLocationInfo = result.first!
-            loadData(page: 1, networkType: .weather)
+            loadData(page: 1, networkType: .weather, index: index)
         }
     }
     
@@ -192,7 +201,50 @@ final class SearchViewModel {
         self.selectedSigungu = filteredAddressArray[index]
     }
     
-    
+    func convertWeatherData(item: [WeatherItem]) -> WeatherDataModel?{
+        let time = item[0].fcstTime
+        let currentWeather = item.filter{$0.fcstTime == time}
+        
+        guard let temperature = currentWeather.filter{$0.category == "T1H"}.first?.fcstValue,
+            let wind = currentWeather.filter{$0.category == "WSD"}.first?.fcstValue,
+            var rainAmount = currentWeather.filter{$0.category == "RN1"}.first?.fcstValue,
+            var rainState = currentWeather.filter{$0.category == "PTY"}.first?.fcstValue,
+            var skyState = currentWeather.filter{$0.category == "SKY"}.first?.fcstValue 
+        else {
+                return nil
+            }
+        if rainAmount == "강수없음" {
+            rainAmount = "0"
+        }
+        switch rainState {
+        case "0":
+            rainState = "없음"
+        case "1":
+            rainState = "비"
+        case "2":
+            rainState = "비/눈"
+        case "5":
+            rainState = "빗방울"
+        case "6":
+            rainState = "빗방울 / 눈날림"
+        case "7":
+            rainState = "눈날림"
+        default:
+            break
+        }
+        switch skyState {
+        case "1":
+            skyState = "맑음"
+        case "3":
+            skyState = "구름많음"
+        case "4":
+            skyState = "흐림"
+        default:
+            break
+        }
+        
+        return WeatherDataModel(temp: temperature, rainAmount: rainAmount, rainState: rainState, skyState: skyState, wind: wind)
+    }
     
 }
 

@@ -156,4 +156,3 @@ class SearchCollectionViewCell: UICollectionViewCell {
         categoryCollectionView.updateLabels(labels: labels)
     }
 }
-

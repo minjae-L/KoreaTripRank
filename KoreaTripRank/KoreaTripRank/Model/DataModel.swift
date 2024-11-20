@@ -37,8 +37,9 @@ struct TripItem: Decodable {
     let relatedMediumCategoryName: String
     let relatedSmallCategoryName: String
     let rankNum: String
-    let nx: String?
-    let ny: String?
+    var nx: String?
+    var ny: String?
+    var weatherModel: WeatherDataModel?
 
     enum CodingKeys: String, CodingKey {
         case areaName = "tAtsNm"
@@ -50,6 +51,7 @@ struct TripItem: Decodable {
         case rankNum = "rlteRank"
         case nx = "nx"
         case ny = "ny"
+        case weatherModel = "weather"
     }
 }
 struct TripResponseHeader: Decodable {
@@ -91,6 +93,24 @@ struct WeatherItem: Decodable {
     let category: String
     let fcstTime: String
     let fcstValue: String
+}
+/*
+PTY: 강수형태
+ 0: 없음, 1: 비, 2: 비/눈, 5: 빗방울, 6: 빗방울,눈날림, 7: 눈날림
+ rn1 강수량
+ 강수없음
+ sky 하늘상태
+ 1: 맑음, 3: 구름많음, 4: 흐림
+ t1h 기온
+ 
+ WSD: 풍속
+ */
+struct WeatherDataModel: Decodable {
+    let temp: String
+    let rainAmount: String
+    let rainState: String
+    let skyState: String
+    let wind: String
 }
 // MARK: - 지역 모델
 struct LocationModel: Decodable {
