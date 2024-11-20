@@ -209,8 +209,8 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
         cell.configure(model: viewModel.filteredTripArray[indexPath.row])
         return cell
     }
-    
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        guard !isSearching else { return }
         let contentOffY = scrollView.contentOffset.y
         let scrollViewHeight = scrollView.contentSize.height
         let contentHeight = self.collectionView.frame.height
