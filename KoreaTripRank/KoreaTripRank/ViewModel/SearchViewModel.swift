@@ -24,6 +24,12 @@ enum ViewState {
     case loading
     case readyToLoad
 }
+
+enum NetworkingType {
+    case trip
+    case weather
+}
+
 final class SearchViewModel {
     
     var filteredAddressArray: [LocationDataModel] = [] {
@@ -36,6 +42,7 @@ final class SearchViewModel {
     var selectedSigungu: LocationDataModel?
     var selectedLocationInfo: ConvertedLocationModel?
     var locationSearcHandler: LocationSearchHandler
+    var defaultWeatherData: ConvertedLocationModel?
     private var AllTripDataLoaded: Bool = false
     private var currentTripPage: Int = 0 {
         didSet {
@@ -91,10 +98,15 @@ final class SearchViewModel {
     }
     
     func fetchData(isFirstLoad: Bool) {
-        if self.AllTripDataLoaded {
+        guard !self.AllTripDataLoaded  else {
             print("All Data Loaded!!")
             return
         }
+        guard self.viewState == .readyToLoad else {
+            print("-Data loading-")
+            return
+        }
+        
         if isFirstLoad {
             self.currentCategoryState = .all
             self.tripArray.removeAll()
@@ -106,27 +118,37 @@ final class SearchViewModel {
                 self.AllTripDataLoaded = true
             }
         }
-        loadData(page: currentTripPage)
+        loadData(page: currentTripPage, networkType: .trip)
     }
-    private func loadData(page: Int) {
-        guard let addressName = selectedSigungu,
-              let addressInfo = selectedLocationInfo,
-              self.viewState == .readyToLoad else {
+    
+    private func loadData(page: Int, networkType: NetworkingType) {
+        
+        guard let addressName = selectedSigungu else {
+            print("data unloaded")
             return
         }
+        if networkType == .weather && self.selectedLocationInfo == nil {
+            print("weather data didn't prepared")
+        }
+        
         viewState = .loading
+        
         Task {
             async let tripResponse = NetworkManager.shared.fetchData(urlCase: .trip, tripKey: addressName, type: TripNetworkResponse.self, page: page)
-//            async let weatherResponse = NetworkManager.shared.fetchData(urlCase: .weather, weatherKey: addressInfo, type: WeatherNetworkResponse.self, count: count)
-            
+            async let weatherResponse = NetworkManager.shared.fetchData(urlCase: .weather, weatherKey: self.selectedLocationInfo, type: WeatherNetworkResponse.self, page: page)
             do {
-                let result = try await tripResponse
+                switch networkType {
+                case .trip:
+                    let result = try await tripResponse
+                    tripArray.append(contentsOf: result.response.responseBody.items.item)
+                    tripDataMaxCount = result.response.responseBody.totalCount
+                    filteringTrip(type: currentCategoryState)
+                case .weather:
+                    let result = try await weatherResponse
+                    print(result.response.responseBody?.items.item)
+                }
                 print("Success")
-                tripArray.append(contentsOf: result.response.responseBody.items.item)
-//                tripArray = result.response.responseBody.items.item
-                tripDataMaxCount = result.response.responseBody.totalCount
-                
-                filteringTrip(type: currentCategoryState)
+                try await Task.sleep(for: .seconds(2))
                 viewState = .readyToLoad
             } catch NetworkError.invalidURL {
                 print("invalidURL")
@@ -139,6 +161,30 @@ final class SearchViewModel {
             } catch {
                 print("unknown error")
             }
+        }
+    }
+    
+    func checkCoordinate(index: Int) {
+        Task {
+            await print(getCoordinate(defaultData: ConvertedLocationModel(lat: 0, lng: 0), location: filteredTripArray[index], index: index))
+        }
+        
+    }
+    
+    func getCoordinate(defaultData: ConvertedLocationModel, location: TripItem, index: Int) async {
+        Task {
+            let case1 = location.relatedAreaAddress
+            let case2 = location.relatedAreaName
+            let case3 = location.areaName
+            async let res1 = locationSearcHandler.search(for: case1)
+            async let res2 = locationSearcHandler.search(for: case2)
+            async let res3 = locationSearcHandler.search(for: case3)
+            
+            var result =  await [try? res1, try? res2, try? res3]
+            result.filter{ $0 != nil }
+            if result.isEmpty { return }
+            self.selectedLocationInfo = result.first!
+            loadData(page: 1, networkType: .weather)
         }
     }
     
