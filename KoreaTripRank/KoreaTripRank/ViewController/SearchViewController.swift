@@ -7,12 +7,11 @@
 
 import UIKit
 import SnapKit
-import MapKit
 
 class SearchViewController: UIViewController {
     
     private lazy var viewModel: SearchViewModel = {
-        let vm = SearchViewModel()
+        let vm = SearchViewModel(locationSearcHandler: LocationSearch())
         vm.delegate = self
         return vm
     }()
@@ -32,13 +31,13 @@ class SearchViewController: UIViewController {
         let flowlayout = UICollectionViewFlowLayout()
         flowlayout.scrollDirection = .vertical
         flowlayout.sectionHeadersPinToVisibleBounds = true
+        flowlayout.sectionInset.top = 10.0
         let cv = UICollectionView(frame: .zero, collectionViewLayout: flowlayout)
         cv.backgroundColor = .white
         cv.delegate = self
         cv.dataSource = self
         cv.register(SearchCollectionViewCell.self, forCellWithReuseIdentifier: SearchCollectionViewCell.identifier)
         cv.register(SearchCollectionHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: SearchCollectionHeaderView.identifier)
-        
         return cv
     }()
     private lazy var searchBar: UISearchBar = {
@@ -189,7 +188,7 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
                 return UICollectionReusableView()
             }
             if self.isSearching {
-                header.defualtMode()
+                header.defaultMode()
             }
             header.delegate = self
             return header
@@ -209,6 +208,24 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
         cell.configure(model: viewModel.filteredTripArray[indexPath.row])
         return cell
     }
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        guard !isSearching else { return }
+        let contentOffY = scrollView.contentOffset.y
+        let scrollViewHeight = scrollView.contentSize.height
+        let contentHeight = self.collectionView.frame.height
+        let leftBottomHeight = scrollViewHeight - contentOffY - contentHeight
+        let loadLine = scrollViewHeight * 0.1
+        
+        if leftBottomHeight <= loadLine {
+            print("need more")
+            viewModel.fetchData(isFirstLoad: false)
+        }
+        
+    }
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        viewModel.checkCoordinate(index: indexPath.row)
+    }
+    
 }
 extension SearchViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
@@ -217,15 +234,18 @@ extension SearchViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         return 10
     }
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: self.view.frame.width - 20, height: 150)
+        let width = view.frame.width * 0.9
+        return CGSize(width: width, height: 150)
     }
+    
 }
 
 extension SearchViewController: SearchCollectionHeaderViewDelegate {
     func filteringButtonTapped(type: TripCategory) {
+        collectionView.scrollToItem(at: IndexPath(item: -1, section: 0), at: .top, animated: false)
         viewModel.filteringTrip(type: type)
-        self.needUpdateCollectionView()
     }
 }
 
@@ -245,17 +265,9 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
         return cell
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print(viewModel.filteredAddressArray[indexPath.row])
-        let searchText = "\(viewModel.filteredAddressArray[indexPath.row].areaName) \(viewModel.filteredAddressArray[indexPath.row].sigunguName)"
-        viewModel.completer.delegate = self
-        viewModel.didSected(text: searchText, index: indexPath.row)
+        viewModel.selectedSigungu = viewModel.filteredAddressArray[indexPath.row]
+        viewModel.fetchData(isFirstLoad: true)
     }
 }
 
-extension SearchViewController: MKLocalSearchCompleterDelegate {
-    func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
-        print("delegate")
-        print(completer.results)
-        viewModel.getLocation(results: completer.results)
-    }
-}
+

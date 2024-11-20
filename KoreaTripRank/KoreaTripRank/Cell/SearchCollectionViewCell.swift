@@ -11,14 +11,21 @@ import SnapKit
 class SearchCollectionViewCell: UICollectionViewCell {
     static let identifier = "SearchCollectionViewCell"
     
-    private var areaLabel: UILabel = {
+    private var rankImageView: UIImageView = {
+        let image = UIImageView()
+        return image
+    }()
+    
+    private var areaCategoryLabel: UILabel = {
         let lb = UILabel()
-        lb.font = .boldSystemFont(ofSize: 20)
+        lb.font = UIFont(name: "", size: 15)
+        lb.textColor = .lightGray
         return lb
     }()
+    
     private var relatedAreaLabel: UILabel = {
         let lb = UILabel()
-        lb.font = UIFont(name: "", size: 35)
+        lb.font = .boldSystemFont(ofSize: 20)
         lb.numberOfLines = 0
         return lb
     }()
@@ -30,17 +37,31 @@ class SearchCollectionViewCell: UICollectionViewCell {
         return lb
     }()
     
-    private var relatedCategoryLabel: UILabel = {
-        let lb = UILabel()
-        lb.font = .boldSystemFont(ofSize: 20)
-        return lb
-    }()
-    
     private var favoriteButton: UIButton = {
         let btn = UIButton()
         btn.setImage(UIImage(systemName: "star"), for: .normal)
         return btn
     }()
+    
+    private var contentStackView: UIStackView = {
+        let sv = UIStackView()
+        sv.axis = .vertical
+        sv.spacing = 5
+        sv.alignment = .leading
+        sv.distribution = .fillProportionally
+        return sv
+    }()
+    
+    private var rankAreaLabelStackView: UIStackView = {
+        let sv = UIStackView()
+        sv.axis = .horizontal
+        sv.spacing = 5
+        sv.alignment = .leading
+        sv.distribution = .fill
+        return sv
+    }()
+    
+    private lazy var categoryCollectionView = CategoryLabelsCollectionView(frame: .zero)
     
     private func configureCell() {
         self.clipsToBounds = false
@@ -48,39 +69,38 @@ class SearchCollectionViewCell: UICollectionViewCell {
         self.layer.shadowOpacity = 0.8
         self.layer.shadowOffset = CGSize(width: -1, height: 1)
         self.layer.shadowRadius = 3
-        
         self.layer.cornerRadius = 10
     }
     
     private func addView() {
-        contentView.addSubview(areaLabel)
-        contentView.addSubview(relatedAreaLabel)
-        contentView.addSubview(areaAddressLabel)
-        contentView.addSubview(relatedCategoryLabel)
+        rankAreaLabelStackView.addArrangedSubview(rankImageView)
+        rankAreaLabelStackView.addArrangedSubview(relatedAreaLabel)
+        contentStackView.addArrangedSubview(rankAreaLabelStackView)
+        contentStackView.addArrangedSubview(areaCategoryLabel)
+        contentStackView.addArrangedSubview(areaAddressLabel)
+        contentStackView.addArrangedSubview(categoryCollectionView)
+        contentView.addSubview(contentStackView)
         contentView.addSubview(favoriteButton)
     }
+    
     private func configureLayout() {
-        relatedCategoryLabel.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(20)
-            make.leading.equalToSuperview().offset(20)
+        contentStackView.snp.makeConstraints { make in
+            make.top.leading.equalToSuperview().offset(15)
+            make.bottom.trailing.equalToSuperview().offset(-15)
         }
-        areaLabel.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(20)
-            make.leading.equalTo(relatedCategoryLabel.snp.trailing).offset(10)
+        rankAreaLabelStackView.snp.makeConstraints { make in
+            make.leading.trailing.equalToSuperview()
         }
-        relatedAreaLabel.snp.makeConstraints { make in
-            make.top.equalTo(areaLabel.snp.bottom).offset(15)
-            make.leading.equalToSuperview().offset(20)
-        }
-        areaAddressLabel.snp.makeConstraints { make in
-            make.top.equalTo(relatedAreaLabel.snp.bottom).offset(20)
-            make.leading.equalToSuperview().offset(20)
+        categoryCollectionView.snp.makeConstraints { make in
+            make.leading.trailing.equalToSuperview()
+            make.height.equalTo(20)
         }
         favoriteButton.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
-            make.trailing.equalToSuperview().offset(-20)
+            make.trailing.equalToSuperview().offset(-15)
         }
     }
+    
     override init(frame: CGRect) {
         super.init(frame: .zero)
         configureCell()
@@ -91,13 +111,49 @@ class SearchCollectionViewCell: UICollectionViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    override func prepareForReuse() {
+        self.rankImageView.image = nil
+        self.rankImageView.snp.remakeConstraints { make in
+            make.width.height.equalTo(0)
+        }
+        categoryCollectionView.updateLabels(labels: [])
+    }
+    private func showRankImage() {
+        rankImageView.snp.remakeConstraints { make in
+            make.width.height.equalTo(25)
+        }
+    }
+    private func hideRankImage() {
+        rankImageView.snp.remakeConstraints { make in
+            make.width.height.equalTo(0)
+        }
+    }
     func configure(model: TripItem) {
-        self.areaLabel.text = model.areaName
         self.areaAddressLabel.text = model.relatedAreaAddress
-        self.relatedCategoryLabel.text = "[\(model.relatedLargeCategoryName)]"
-        
+        self.areaCategoryLabel.text = "# \(model.relatedLargeCategoryName)   \(model.areaName)"
         let separatedRelatedAreaText = model.relatedAreaName.split(separator: "/").map{String($0)}
-        self.relatedAreaLabel.text = separatedRelatedAreaText.joined(separator: "\n")
-        print(separatedRelatedAreaText)
+        if separatedRelatedAreaText.count == 1 {
+            self.relatedAreaLabel.text = separatedRelatedAreaText.first
+        } else {
+            self.relatedAreaLabel.text = "\(separatedRelatedAreaText[0]) (\(separatedRelatedAreaText[1]))"
+        }
+        switch model.rankNum {
+        case "1":
+            self.rankImageView.image = UIImage(named: "firstPlaceRibbon")
+            showRankImage()
+        case "2":
+            self.rankImageView.image = UIImage(named: "secondPlaceRibbon")
+            showRankImage()
+        case "3":
+            self.rankImageView.image = UIImage(named: "thirdPlaceRibbon")
+            showRankImage()
+        default:
+            self.rankImageView.image = nil
+            hideRankImage()
+        }
+        
+        let labels = Array(Set([model.relatedMediumCategoryName, model.relatedSmallCategoryName]))
+        categoryCollectionView.updateLabels(labels: labels)
     }
 }
+

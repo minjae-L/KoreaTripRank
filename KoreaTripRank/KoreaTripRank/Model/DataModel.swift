@@ -37,6 +37,8 @@ struct TripItem: Decodable {
     let relatedMediumCategoryName: String
     let relatedSmallCategoryName: String
     let rankNum: String
+    let nx: String?
+    let ny: String?
 
     enum CodingKeys: String, CodingKey {
         case areaName = "tAtsNm"
@@ -46,6 +48,8 @@ struct TripItem: Decodable {
         case relatedMediumCategoryName = "rlteCtgryMclsNm"
         case relatedSmallCategoryName = "rlteCtgrySclsNm"
         case rankNum = "rlteRank"
+        case nx = "nx"
+        case ny = "ny"
     }
 }
 struct TripResponseHeader: Decodable {
