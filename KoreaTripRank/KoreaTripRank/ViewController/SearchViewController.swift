@@ -7,12 +7,11 @@
 
 import UIKit
 import SnapKit
-import MapKit
 
 class SearchViewController: UIViewController {
     
     private lazy var viewModel: SearchViewModel = {
-        let vm = SearchViewModel()
+        let vm = SearchViewModel(locationSearcHandler: LocationSearch())
         vm.delegate = self
         return vm
     }()
@@ -223,6 +222,9 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
         }
         
     }
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        viewModel.checkCoordinate(index: indexPath.row)
+    }
     
 }
 extension SearchViewController: UICollectionViewDelegateFlowLayout {
@@ -263,18 +265,9 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
         return cell
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print(viewModel.filteredAddressArray[indexPath.row])
-        let searchText = "\(viewModel.filteredAddressArray[indexPath.row].areaName) \(viewModel.filteredAddressArray[indexPath.row].sigunguName)"
-        viewModel.completer.delegate = self
-        viewModel.didSected(text: searchText, index: indexPath.row)
+        viewModel.selectedSigungu = viewModel.filteredAddressArray[indexPath.row]
+        viewModel.fetchData(isFirstLoad: true)
     }
 }
 
-extension SearchViewController: MKLocalSearchCompleterDelegate {
-    func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
-        print("delegate")
-        print(completer.results)
-        viewModel.getLocation(results: completer.results)
-    }
-}
 
