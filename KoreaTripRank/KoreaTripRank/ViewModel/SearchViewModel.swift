@@ -35,10 +35,7 @@ final class SearchViewModel {
     weak var delegate: SearchViewModelDelegate?
     var selectedSigungu: LocationDataModel?
     var selectedLocationInfo: ConvertedLocationModel?
-    
-    var completer = MKLocalSearchCompleter()
-    var searchResults = [MKLocalSearchCompletion]()
-    
+    var locationSearcHandler: LocationSearchHandler
     private var AllTripDataLoaded: Bool = false
     private var currentTripPage: Int = 0 {
         didSet {
@@ -55,6 +52,10 @@ final class SearchViewModel {
         didSet {
             delegate?.needUpdateCollectionView()
         }
+    }
+    
+    init(locationSearcHandler: LocationSearchHandler) {
+        self.locationSearcHandler = locationSearcHandler
     }
     
     private func sortedTripArray(arr: [TripItem]) -> [TripItem] {
@@ -87,27 +88,6 @@ final class SearchViewModel {
             }
         }
         self.filteredAddressArray = output
-    }
-    
-    private func search(for suggestionCompletion: MKLocalSearchCompletion) async throws {
-        let searchRequest = MKLocalSearch.Request(completion: suggestionCompletion)
-        searchRequest.region = MKCoordinateRegion(MKMapRect.world)
-        searchRequest.resultTypes = .address
-        
-        let localSearch = MKLocalSearch(request: searchRequest)
-        do {
-            let response = try await localSearch.start()
-            print("MapKit Search Success")
-            let lati = response.mapItems[0].placemark.coordinate.latitude
-            let long = response.mapItems[0].placemark.coordinate.longitude
-            var location = ConvertedLocationModel(lat: lati, lng: long)
-            location.convertGRID_GPS(mode: 0, lat_X: lati, lng_Y: long)
-            selectedLocationInfo = location
-            self.fetchData(isFirstLoad: true)
-        } catch {
-            print("MapKit Search Error")
-            print(error.localizedDescription)
-        }
     }
     
     func fetchData(isFirstLoad: Bool) {
@@ -163,14 +143,40 @@ final class SearchViewModel {
     }
     
     func didSected(text: String, index: Int) {
-        completer.queryFragment = text
-        completer.resultTypes = .address
         self.selectedSigungu = filteredAddressArray[index]
     }
     
-    func getLocation(results: [MKLocalSearchCompletion]) {
-        Task {
-            try await self.search(for: results[0])
+    
+    
+}
+
+protocol LocationSearchHandler {
+    func search(for query: String) async throws -> ConvertedLocationModel
+}
+
+final class LocationSearch: LocationSearchHandler {
+    
+    func search(for query: String) async throws -> ConvertedLocationModel {
+        let request = MKLocalSearch.Request()
+        request.naturalLanguageQuery = query
+        request.resultTypes = .address
+        request.region = MKCoordinateRegion(MKMapRect.world)
+        
+        
+        let localSearch = MKLocalSearch(request: request)
+        do {
+            let response = try await localSearch.start()
+            print("MapKit Search Success")
+            let lati = response.mapItems[0].placemark.coordinate.latitude
+            let long = response.mapItems[0].placemark.coordinate.longitude
+            var location = ConvertedLocationModel(lat: lati, lng: long)
+            location.convertGRID_GPS(mode: 0, lat_X: lati, lng_Y: long)
+            print("\(query) : \(location)")
+            return location
+        } catch {
+            print("MapKit Search Error")
+            print(error.localizedDescription)
+            throw(error)
         }
     }
     
