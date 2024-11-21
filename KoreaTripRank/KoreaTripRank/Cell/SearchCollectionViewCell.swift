@@ -139,13 +139,13 @@ class SearchCollectionViewCell: UICollectionViewCell {
         }
         switch model.rankNum {
         case "1":
-            self.rankImageView.image = UIImage(named: "firstPlaceRibbon")
+            self.rankImageView.image = Asset.firstPlaceRibbon.image
             showRankImage()
         case "2":
-            self.rankImageView.image = UIImage(named: "secondPlaceRibbon")
+            self.rankImageView.image = Asset.secondPlaceRibbon.image
             showRankImage()
         case "3":
-            self.rankImageView.image = UIImage(named: "thirdPlaceRibbon")
+            self.rankImageView.image = Asset.thirdPlaceRibbon.image
             showRankImage()
         default:
             self.rankImageView.image = nil
