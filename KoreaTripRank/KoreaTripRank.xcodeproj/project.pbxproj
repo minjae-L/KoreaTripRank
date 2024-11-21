@@ -30,6 +30,7 @@
 		B59124B52CD62378008A13F2 /* KoreaTripRankUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59124B42CD62378008A13F2 /* KoreaTripRankUITests.swift */; };
 		B59124B72CD62378008A13F2 /* KoreaTripRankUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59124B62CD62378008A13F2 /* KoreaTripRankUITestsLaunchTests.swift */; };
 		B5BA4DC52CDB108400477410 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BA4DC42CDB108400477410 /* NetworkManager.swift */; };
+		EA813CCB2CEF773F00D6EF8C /* swiftgen.yml in Resources */ = {isa = PBXBuildFile; fileRef = EA813CCA2CEF773F00D6EF8C /* swiftgen.yml */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -83,6 +84,7 @@
 		B59124B62CD62378008A13F2 /* KoreaTripRankUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KoreaTripRankUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		B5BA4DC42CDB108400477410 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		DC4644F2A2FAEF5EC94675E8 /* Pods-KoreaTripRank-KoreaTripRankUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KoreaTripRank-KoreaTripRankUITests.debug.xcconfig"; path = "Target Support Files/Pods-KoreaTripRank-KoreaTripRankUITests/Pods-KoreaTripRank-KoreaTripRankUITests.debug.xcconfig"; sourceTree = "<group>"; };
+		EA813CCA2CEF773F00D6EF8C /* swiftgen.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = swiftgen.yml; sourceTree = "<group>"; };
 		FB949475C528B7DC07DF4001 /* Pods_KoreaTripRank_KoreaTripRankUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_KoreaTripRank_KoreaTripRankUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -194,6 +196,7 @@
 		B59124872CD62375008A13F2 = {
 			isa = PBXGroup;
 			children = (
+				EA813CCA2CEF773F00D6EF8C /* swiftgen.yml */,
 				B59124922CD62375008A13F2 /* KoreaTripRank */,
 				B59124A92CD62378008A13F2 /* KoreaTripRankTests */,
 				B59124B32CD62378008A13F2 /* KoreaTripRankUITests */,
@@ -216,6 +219,7 @@
 		B59124922CD62375008A13F2 /* KoreaTripRank */ = {
 			isa = PBXGroup;
 			children = (
+				EA813CCC2CEF775D00D6EF8C /* Resources */,
 				B58194A82CE7B0A2000DADCC /* Views */,
 				B550F8B92CE4FB7400E90069 /* CollectionHeaderView */,
 				B569C6B72CD8C860007386E0 /* ViewModel */,
@@ -274,6 +278,13 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		EA813CCC2CEF775D00D6EF8C /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -286,6 +297,7 @@
 				B591248D2CD62375008A13F2 /* Frameworks */,
 				B591248E2CD62375008A13F2 /* Resources */,
 				D74ED9DE596E4604534B3418 /* [CP] Embed Pods Frameworks */,
+				EA813CCD2CEF777600D6EF8C /* SwiftGen */,
 			);
 			buildRules = (
 			);
@@ -386,6 +398,7 @@
 				B569C6BD2CD903E8007386E0 /* AreaCode.json in Resources */,
 				B59124A02CD62377008A13F2 /* LaunchScreen.storyboard in Resources */,
 				B591249D2CD62377008A13F2 /* Assets.xcassets in Resources */,
+				EA813CCB2CEF773F00D6EF8C /* swiftgen.yml in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -505,6 +518,24 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-KoreaTripRank/Pods-KoreaTripRank-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
+		};
+		EA813CCD2CEF777600D6EF8C /* SwiftGen */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = SwiftGen;
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if [[ -f \"${PODS_ROOT}/SwiftGen/bin/swiftgen\" ]]; then\n  \"${PODS_ROOT}/SwiftGen/bin/swiftgen\"\nelse\n  echo \"warning: SwiftGen is not installed. Run 'pod install --repo-update' to install it.\"\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -697,7 +728,7 @@
 		};
 		B59124BB2CD62378008A13F2 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = DC4644F2A2FAEF5EC94675E8 /* Pods-KoreaTripRank-KoreaTripRankUITests.debug.xcconfig */;
+			baseConfigurationReference = 99CCEA8F04803BE5DBA382AD /* Pods-KoreaTripRank.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -725,7 +756,7 @@
 		};
 		B59124BC2CD62378008A13F2 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = DC4644F2A2FAEF5EC94675E8 /* Pods-KoreaTripRank-KoreaTripRankUITests.debug.xcconfig */;
+			baseConfigurationReference = 6AF0C8087824CBDE387EA135 /* Pods-KoreaTripRank.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
