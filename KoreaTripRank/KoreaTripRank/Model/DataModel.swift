@@ -37,9 +37,7 @@ struct TripItem: Decodable {
     let relatedMediumCategoryName: String
     let relatedSmallCategoryName: String
     let rankNum: String
-    var nx: String?
-    var ny: String?
-    var weatherModel: WeatherDataModel?
+    var weatherModel: [WeatherDataModel]?
     var isExpanded: Bool = false
 
     enum CodingKeys: String, CodingKey {
@@ -50,8 +48,6 @@ struct TripItem: Decodable {
         case relatedMediumCategoryName = "rlteCtgryMclsNm"
         case relatedSmallCategoryName = "rlteCtgrySclsNm"
         case rankNum = "rlteRank"
-        case nx = "nx"
-        case ny = "ny"
         case weatherModel = "weather"
     }
 }
@@ -107,6 +103,10 @@ PTY: 강수형태
  WSD: 풍속
  */
 struct WeatherDataModel: Decodable {
+    let baseDate: String
+    let fcstTime: String
+    let nx: String
+    let ny: String
     let temp: String
     let rainAmount: String
     let rainState: String
