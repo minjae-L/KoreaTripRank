@@ -40,6 +40,7 @@ struct TripItem: Decodable {
     var nx: String?
     var ny: String?
     var weatherModel: WeatherDataModel?
+    var isExpanded: Bool = false
 
     enum CodingKeys: String, CodingKey {
         case areaName = "tAtsNm"
