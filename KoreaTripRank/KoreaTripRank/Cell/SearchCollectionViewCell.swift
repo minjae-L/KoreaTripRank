@@ -427,18 +427,35 @@ class SearchCollectionViewCell: UICollectionViewCell {
             return
         }
         guard let model = model.weatherModel else { return }
-
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "HHmm"
+        let afterHour = Calendar.current.date(byAdding: .hour, value: 1, to: Date())
+        let afterHourString = dateFormatter.string(from: afterHour!)
+        var arr = afterHourString.map{String($0)}
+        arr[2] = "0"
+        arr[3] = "0"
+        let fctsTIme = arr.joined(separator: "")
+        var index = 0
+        for i in 0..<model.count {
+            if model[i].fcstTime == fctsTIme {
+                index = i
+                break
+            }
+        }
+        
+        
         self.expandButton.setTitle("닫기", for: .normal)
         self.weatherContentView.isHidden = false
         self.windImageView.image = UIImage(named: "wind")
-        self.temperatureLabel.text = "\(model.temp)°C"
-        self.windLabel.text = "\(model.wind)m/s"
-        if model.rainAmount == "강수없음" {
+        self.temperatureLabel.text = "\(model[index].temp)°C"
+        self.windLabel.text = "\(model[index].wind)m/s"
+        if model[index].rainAmount == "강수없음" {
             self.rainAmountLabel.text = nil
         } else {
-            self.rainAmountLabel.text = "\(model.rainAmount)mm"
+            self.rainAmountLabel.text = "\(model[index].rainAmount)mm"
         }
-        switch model.rainState {
+        switch model[index].rainState {
         case "0":
             self.firstRainStateImageView.image = UIImage(named: "noRain")
             self.secondRainStateImageView.image = nil
@@ -461,7 +478,7 @@ class SearchCollectionViewCell: UICollectionViewCell {
             self.firstRainStateImageView.image = nil
             self.secondRainStateImageView.image = nil
         }
-        switch model.skyState {
+        switch model[index].skyState {
         case "1":
             self.skyStateImageView.image = UIImage(named: "sun")
         case "3":
