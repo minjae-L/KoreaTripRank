@@ -356,11 +356,20 @@ class SearchCollectionViewCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     override func prepareForReuse() {
+        isSelected = false
         self.rankImageView.image = nil
         self.rankImageView.snp.remakeConstraints { make in
             make.width.height.equalTo(0)
         }
         categoryCollectionView.updateLabels(labels: [])
+        self.skyStateImageView.image = nil
+        self.firstRainStateImageView.image = nil
+        self.secondRainStateImageView.image = nil
+        self.windImageView.image = nil
+        self.rainAmountLabel.text = nil
+        self.temperatureLabel.text = nil
+        self.windLabel.text = nil
+        self.expandButton.setTitle("현재 날씨 보기", for: .normal)
     }
     private func showRankImage() {
         rankImageView.snp.remakeConstraints { make in
@@ -374,7 +383,6 @@ class SearchCollectionViewCell: UICollectionViewCell {
     }
     func configure(model: TripItem) {
         self.areaAddressLabel.text = model.relatedAreaAddress
-        self.areaCategoryLabel.text = "# \(model.relatedLargeCategoryName)   \(model.areaName)"
         let separatedRelatedAreaText = model.relatedAreaName.split(separator: "/").map{String($0)}
         if separatedRelatedAreaText.count == 1 {
             self.relatedAreaLabel.text = separatedRelatedAreaText.first
@@ -396,7 +404,62 @@ class SearchCollectionViewCell: UICollectionViewCell {
             hideRankImage()
         }
         
-        let labels = Array(Set([model.relatedMediumCategoryName, model.relatedSmallCategoryName]))
+        let labels = Array(Set([model.areaName, model.relatedLargeCategoryName, model.relatedMediumCategoryName, model.relatedSmallCategoryName])).sorted(by: <)
         categoryCollectionView.updateLabels(labels: labels)
+        
+    }
+    
+    func configureWeatherView(model: TripItem) {
+        if !model.isExpanded {
+            weatherViewDefaultLayout()
+            self.expandButton.setTitle("현재 날씨 보기", for: .normal)
+            return
+        }
+        guard let model = model.weatherModel else { return }
+
+        self.expandButton.setTitle("닫기", for: .normal)
+        self.weatherContentView.isHidden = false
+        self.windImageView.image = UIImage(named: "wind")
+        self.temperatureLabel.text = "\(model.temp)°C"
+        self.windLabel.text = "\(model.wind)m/s"
+        if model.rainAmount == "강수없음" {
+            self.rainAmountLabel.text = nil
+        } else {
+            self.rainAmountLabel.text = "\(model.rainAmount)mm"
+        }
+        switch model.rainState {
+        case "0":
+            self.firstRainStateImageView.image = UIImage(named: "noRain")
+            self.secondRainStateImageView.image = nil
+        case "1":
+            self.firstRainStateImageView.image = UIImage(named: "rain")
+            self.secondRainStateImageView.image = nil
+        case "2":
+            self.firstRainStateImageView.image = UIImage(named: "rain")
+            self.secondRainStateImageView.image = UIImage(named: "lightSnow")
+        case "5":
+            self.firstRainStateImageView.image = UIImage(named: "lightRain")
+            self.secondRainStateImageView.image = nil
+        case "6":
+            self.firstRainStateImageView.image = UIImage(named: "lightRain")
+            self.secondRainStateImageView.image = UIImage(named: "snow")
+        case "7":
+            self.firstRainStateImageView.image = UIImage(named: "snow")
+            self.secondRainStateImageView.image = nil
+        default:
+            self.firstRainStateImageView.image = nil
+            self.secondRainStateImageView.image = nil
+        }
+        switch model.skyState {
+        case "1":
+            self.skyStateImageView.image = UIImage(named: "sun")
+        case "3":
+            self.skyStateImageView.image = UIImage(named: "partlyCloudyDay")
+        case "4":
+            self.skyStateImageView.image = UIImage(named: "clouds")
+        default:
+            self.skyStateImageView.image = nil
+        }
+        weatherViewExpandedLayout()
     }
 }
