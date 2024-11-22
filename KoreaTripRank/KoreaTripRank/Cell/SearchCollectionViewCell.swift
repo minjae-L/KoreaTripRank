@@ -14,10 +14,12 @@ protocol SearchCollectionViewCellDelegate: AnyObject {
 class SearchCollectionViewCell: UICollectionViewCell {
     static let identifier = "SearchCollectionViewCell"
     
+    // MARK: UI Property
     private var rankImageView: UIImageView = {
         let image = UIImageView()
         return image
     }()
+    
     weak var delegate: SearchCollectionViewCellDelegate?
     
     var indexPath: IndexPath?
@@ -187,7 +189,6 @@ class SearchCollectionViewCell: UICollectionViewCell {
         return view
     }()
     
-    
     private lazy var contentStackView: UIStackView = {
         let sv = UIStackView()
         sv.axis = .vertical
@@ -221,10 +222,13 @@ class SearchCollectionViewCell: UICollectionViewCell {
     }()
     
     private lazy var categoryCollectionView = CategoryLabelsCollectionView(frame: .zero)
+    
+    // MARK: Methods
     @objc func expandButtonTapped() {
         guard let ip = indexPath else { return }
         delegate?.didTappedExpandButton(indexPath: ip)
     }
+    // 셀 그림자, 모양 정의
     private func configureCell() {
         self.clipsToBounds = false
         self.layer.masksToBounds = false
@@ -238,6 +242,7 @@ class SearchCollectionViewCell: UICollectionViewCell {
         contentView.addSubview(contentStackView)
         contentView.addSubview(favoriteButton)
     }
+    // 확장된 경우 현재 날씨 레이아웃 설정
     private func weatherViewExpandedLayout() {
         [skyStateImageView, temperatureLabel, firstRainStateImageView, secondRainStateImageView, rainAmountLabel, windImageView, windLabel].forEach { view in
             if (view == secondRainStateImageView && secondRainStateImageView.image == nil) || (view == rainAmountLabel && rainAmountLabel.text == nil) {
@@ -254,7 +259,6 @@ class SearchCollectionViewCell: UICollectionViewCell {
                         make.width.equalTo(30)
                     }
                 }
-                
             }
         }
         
@@ -262,6 +266,7 @@ class SearchCollectionViewCell: UICollectionViewCell {
             make.height.equalTo(30)
         }
     }
+    // 확장되지 않은 경우 레이아웃 설정 (기본값)
     private func weatherViewDefaultLayout() {
         
         weatherContentView.snp.updateConstraints { make in
@@ -275,6 +280,7 @@ class SearchCollectionViewCell: UICollectionViewCell {
         self.windLabel.text = nil
         self.windImageView.image = nil
     }
+    // 처음 셀 불러오면 설정되는 레이아웃 (기본값)
     private func configureLayout() {
         contentStackView.snp.remakeConstraints { make in
             make.top.leading.equalToSuperview().offset(15)
@@ -352,9 +358,11 @@ class SearchCollectionViewCell: UICollectionViewCell {
         configureLayout()
         self.backgroundColor = .white
     }
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    // 재사용 시 셀안의 UI 상태 정의
     override func prepareForReuse() {
         isSelected = false
         self.rankImageView.image = nil
@@ -371,16 +379,19 @@ class SearchCollectionViewCell: UICollectionViewCell {
         self.windLabel.text = nil
         self.expandButton.setTitle("현재 날씨 보기", for: .normal)
     }
+    // 순위 안에 있는 장소면 랭킹 보여주기
     private func showRankImage() {
         rankImageView.snp.remakeConstraints { make in
             make.width.height.equalTo(25)
         }
     }
+    
     private func hideRankImage() {
         rankImageView.snp.remakeConstraints { make in
             make.width.height.equalTo(0)
         }
     }
+    // 커스텀 셀 UI 정의
     func configure(model: TripItem) {
         self.areaAddressLabel.text = model.relatedAreaAddress
         let separatedRelatedAreaText = model.relatedAreaName.split(separator: "/").map{String($0)}
@@ -408,7 +419,7 @@ class SearchCollectionViewCell: UICollectionViewCell {
         categoryCollectionView.updateLabels(labels: labels)
         
     }
-    
+    // 확장 시 보여지는 WeaterView 정의
     func configureWeatherView(model: TripItem) {
         if !model.isExpanded {
             weatherViewDefaultLayout()

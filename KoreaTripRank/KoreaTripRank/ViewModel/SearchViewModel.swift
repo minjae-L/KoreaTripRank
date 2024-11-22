@@ -12,49 +12,60 @@ protocol SearchViewModelDelegate: AnyObject {
     func addressSearching()
     func needUpdateCollectionView()
 }
-
+// 관광지 카테고리
 enum TripCategory {
     case all
     case tourristSpot
     case food
     case accommodation
 }
-
+// 현재 뷰 상태 (loading: 데이터 불러오는중 인 상태, readToLoad: 데이터 불러올 수 있는 상태)
 enum ViewState {
     case loading
     case readyToLoad
 }
-
+// HTTP네트워크에서 관광지 혹은 날씨 선택해서 불러오기 위한 열거형
 enum NetworkingType {
     case trip
     case weather
 }
 
 final class SearchViewModel {
-    
+    // 주소검색창에 보여지는 데이터배열
     var filteredAddressArray: [LocationDataModel] = [] {
         didSet {
             delegate?.addressSearching()
         }
     }
+    // JSON파일로 있는 장소데이터
     var areaDatabase = AreaDatabase()
     weak var delegate: SearchViewModelDelegate?
+    // 주소 검색창에서 주소 선택시 해당 변수에 저장후 네트워크 통신 때 사용함
     var selectedSigungu: LocationDataModel?
+    // 현재 날씨 보기 선택시 해당 변수에 저장후 네트워크 통신 때 사용함
     var selectedLocationInfo: ConvertedLocationModel?
+    
     var locationSearcHandler: LocationSearchHandler
     var defaultWeatherData: ConvertedLocationModel?
+    // 무한 스크롤 중 데이터가 더 이상 불러 올 수 없는지 확인하기 위한 변수
     private var AllTripDataLoaded: Bool = false
+    // HTTP통신에서 Key값으로 쓰이는 page 변수
     private var currentTripPage: Int = 0 {
         didSet {
             currentTripDataLoadedCount = 50 * currentTripPage
         }
     }
+    // 현재 불러온 데이터의 총 개수
     private var currentTripDataLoadedCount: Int = 0
+    // 해당 장소의 데이터 총 갯수 (현재 불러온 개수와 비교하여 모두 불러왔는지 확인)
     private var tripDataMaxCount = 0
+    // 현재 뷰 상태 정의
     private var viewState = ViewState.readyToLoad
+    // 현재 선택된 카테고리 (기본값 .all)
     var currentCategoryState: TripCategory = .all
-    
+    // 주소 선택시 불러온 관광지 데이터
     private var tripArray: [TripItem] = []
+    // 셀에 뿌려질 데이터로 tripArray에서 필터링하여 저장됨
     var filteredTripArray: [TripItem] = [] {
         didSet {
             delegate?.needUpdateCollectionView()
@@ -64,13 +75,14 @@ final class SearchViewModel {
     init(locationSearcHandler: LocationSearchHandler) {
         self.locationSearcHandler = locationSearcHandler
     }
-    
+    // 랭킹순으로 정렬
     private func sortedTripArray(arr: [TripItem]) -> [TripItem] {
         return arr.sorted { item1, item2 in
             return Int(item1.rankNum)! < Int(item2.rankNum)!
         }
     }
     
+    // 해당 카테고리로 필터링하여 저장
     func filteringTrip(type: TripCategory) {
         self.currentCategoryState = type
         switch type {
@@ -84,7 +96,7 @@ final class SearchViewModel {
             filteredTripArray = sortedTripArray(arr: tripArray.filter{ $0.relatedLargeCategoryName == "숙박" })
         }
     }
-    
+    // 주소검색창에서 입력 시 필터링된 데이터를 출력하기 위한 메서드
     func filteringAddress(text: String) {
         var output = [LocationDataModel]()
         for element in areaDatabase.data {
@@ -96,7 +108,7 @@ final class SearchViewModel {
         }
         self.filteredAddressArray = output
     }
-    
+    // 데이터 불러오기(isFirestLoad true: 처음 불러오기, false: 추가로 불러오기(무한스크롤))
     func fetchData(isFirstLoad: Bool) {
         guard !self.AllTripDataLoaded  else {
             print("All Data Loaded!!")
@@ -106,7 +118,8 @@ final class SearchViewModel {
             print("-Data loading-")
             return
         }
-        
+        // 처음 불러오는거라면 전체 카테고리로 설정 후 이전 데이터를 지우고 불러오기
+        // 추가로 불러오는것이라면 카운트 후 불러오기
         if isFirstLoad {
             self.currentCategoryState = .all
             self.tripArray.removeAll()
@@ -121,6 +134,7 @@ final class SearchViewModel {
         loadData(page: currentTripPage, networkType: .trip)
     }
     
+    // NetworkManager로부터 데이터 불러오기
     private func loadData(page: Int, networkType: NetworkingType, index: Int? = 0) {
         
         guard let addressName = selectedSigungu else {
@@ -130,22 +144,29 @@ final class SearchViewModel {
         if networkType == .weather && self.selectedLocationInfo == nil {
             print("weather data didn't prepared")
         }
-        
+        // 현재 상태를 불러오는중으로 전환
         viewState = .loading
         
+        // 네트워킹 시작
         Task {
+            // 두개의 응답 생성
             async let tripResponse = NetworkManager.shared.fetchData(urlCase: .trip, tripKey: addressName, type: TripNetworkResponse.self, page: page)
             async let weatherResponse = NetworkManager.shared.fetchData(urlCase: .weather, weatherKey: self.selectedLocationInfo, type: WeatherNetworkResponse.self, page: page)
             do {
                 switch networkType {
+                    
+                    // 관광지
                 case .trip:
                     let result = try await tripResponse
+                    // 불러온 관광지 데이터를 저장
                     tripArray.append(contentsOf: result.response.responseBody.items.item)
                     tripDataMaxCount = result.response.responseBody.totalCount
                     filteringTrip(type: currentCategoryState)
+                    
+                    // 날씨
                 case .weather:
                     let result = try await weatherResponse
-                    
+                    // 불러온 날씨 데이터를 ㅓㅈ장
                     guard let arr = result.response.responseBody?.items.item,
                           let idx = index,
                           let nx = self.selectedLocationInfo?.x,
@@ -157,7 +178,10 @@ final class SearchViewModel {
                     print(filteredTripArray[idx])
                 }
                 print("Success")
+                // 성공적으로 불러왔다면 지연시간 추가 (무한스크롤 시 너무 많은 호출 방지)
                 try await Task.sleep(for: .seconds(2))
+                
+                // 에러 핸들링
             } catch NetworkError.invalidURL {
                 print("invalidURL")
             } catch NetworkError.decodingError {
@@ -169,17 +193,18 @@ final class SearchViewModel {
             } catch {
                 print("unknown error")
             }
+            // 성공 또는 실패 후 데이터 불러오기 가능 상태로 전환
             viewState = .readyToLoad
         }
     }
-    
+    // 현재 날씨 보기 선택 시 날씨 불러오는 작업 실행
     func checkCoordinate(index: Int) {
         Task {
-            await print(getCoordinate(location: filteredTripArray[index], index: index))
+            await getCoordinate(location: filteredTripArray[index], index: index)
         }
         
     }
-    
+    // MapKit을 이용하여 해당 지역의 위도 경도를 구한 후 좌표값으로 변환하는 작업을 비동기로 실행
     func getCoordinate(location: TripItem, index: Int) async {
         Task {
             let case1 = location.relatedAreaAddress
@@ -188,19 +213,17 @@ final class SearchViewModel {
             async let res1 = locationSearcHandler.search(for: case1)
             async let res2 = locationSearcHandler.search(for: case2)
             async let res3 = locationSearcHandler.search(for: case3)
-            
+            // 모든 응답값이 에러가 난다면 종료
+            // 주소의 정확도는 res1 > res2 > res3
             var result =  await [try? res1, try? res2, try? res3]
             result.filter{ $0 != nil }
             if result.isEmpty { return }
+            // 해당 주소의 좌표를 통해 날씨정보를 구하기
             self.selectedLocationInfo = result.first!
             loadData(page: 1, networkType: .weather, index: index)
         }
     }
-    
-    func didSected(text: String, index: Int) {
-        self.selectedSigungu = filteredAddressArray[index]
-    }
-    
+    // HTTP통신 후 받은 날씨 데이터를 지정한 데이터모델로 변환
     func convertWeatherData(item: [WeatherItem]) -> WeatherDataModel?{
         let time = item[0].fcstTime
         let currentWeather = item.filter{$0.fcstTime == time}
@@ -218,6 +241,7 @@ final class SearchViewModel {
     
 }
 
+// MapKit 검색 기능을 담은 클래스
 protocol LocationSearchHandler {
     func search(for query: String) async throws -> ConvertedLocationModel
 }

@@ -10,11 +10,13 @@ import SnapKit
 
 class SearchViewController: UIViewController {
     
+    // 뷰모델
     private lazy var viewModel: SearchViewModel = {
         let vm = SearchViewModel(locationSearcHandler: LocationSearch())
         vm.delegate = self
         return vm
     }()
+    // 검색창으로 진입했는지 확인하기 위한 변수
     private var isSearching: Bool = false {
         didSet {
             if isSearching {
@@ -22,7 +24,9 @@ class SearchViewController: UIViewController {
             } else {
                 defualtLayout()
             }
-            changedLayout()
+            UIView.animate(withDuration: 0.2) {
+                self.view.layoutIfNeeded()
+            }
         }
     }
     
@@ -40,29 +44,38 @@ class SearchViewController: UIViewController {
         cv.register(SearchCollectionHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: SearchCollectionHeaderView.identifier)
         return cv
     }()
+    
     private lazy var searchBar: UISearchBar = {
         let sb = UISearchBar(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 50))
         sb.delegate = self
         return sb
     }()
+    
     private var titleLabel: UILabel = {
         let lb = UILabel()
-        lb.text = "한국 관광지 랭킹"
+        lb.text = "검색"
         lb.font = .boldSystemFont(ofSize: 20)
         lb.sizeToFit()
         return lb
     }()
+    
     private lazy var searchContainView: UIView = {
         let view = UIView()
         view.backgroundColor = UIColor.white.withAlphaComponent(0.3)
+        view.addSubview(self.titleLabel)
+        view.addSubview(self.searchButton)
+        view.addSubview(self.searchBar)
+        view.addSubview(self.addressSearchResultView)
         return view
     }()
+    
     private lazy var searchButton: UIButton = {
         let btn = UIButton()
         btn.setImage(UIImage(systemName: "magnifyingglass"), for: .normal)
         btn.addTarget(self, action: #selector(searchButtonTapped), for: .touchUpInside)
         return btn
     }()
+    
     private lazy var addressSearchResultView: UITableView = {
         let tb = UITableView()
         tb.delegate = self
@@ -71,14 +84,12 @@ class SearchViewController: UIViewController {
         tb.register(AddressSearchResultTableViewCell.self, forCellReuseIdentifier: AddressSearchResultTableViewCell.identifier)
         return tb
     }()
+    
     private func addView() {
         view.addSubview(collectionView)
         view.addSubview(searchContainView)
-        searchContainView.addSubview(titleLabel)
-        searchContainView.addSubview(searchButton)
-        searchContainView.addSubview(searchBar)
-        searchContainView.addSubview(addressSearchResultView)
     }
+    // 기본모드일 때 레이아웃
     private func defualtLayout() {
         self.titleLabel.isHidden = false
         self.searchButton.isHidden = false
@@ -109,6 +120,7 @@ class SearchViewController: UIViewController {
             make.height.equalTo(0)
         }
     }
+    // 검색모드일 때 레이아웃
     private func searchingLayout() {
         self.titleLabel.isHidden = true
         self.searchButton.isHidden = true
@@ -127,31 +139,29 @@ class SearchViewController: UIViewController {
             make.height.equalToSuperview()
         }
     }
-    private func changedLayout() {
-        UIView.animate(withDuration: 0.2) {
-            self.view.layoutIfNeeded()
-        }
-    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
         addView()
         defualtLayout()
     }
+    // 검색 버튼 이벤트
     @objc func searchButtonTapped() {
         searchBar.showsCancelButton = true
         self.isSearching = true
     }
     
 }
-
+// ViewModel Delegate
 extension SearchViewController: SearchViewModelDelegate {
+    // 무한스크롤 또는 필터링된 데이터를 보여줄 때 다시 불러오기
     func needUpdateCollectionView() {
         DispatchQueue.main.async { [weak self] in
             self?.collectionView.reloadData()
         }
     }
-    
+    // 주소검색에서 자동완성을 위한 다시 불러오기
     func addressSearching() {
         DispatchQueue.main.async { [weak self] in
             self?.addressSearchResultView.reloadData()
@@ -160,10 +170,11 @@ extension SearchViewController: SearchViewModelDelegate {
 }
 //MARK: - CollectionViewButtonDelegate
 extension SearchViewController: SearchCollectionViewCellDelegate {
+    // 현재 날씨 보기 클릭 시 셀 높이가 확장되며 현재 날씨를 표시하고 해당 셀의 isExpaned 데이터 수정
     func didTappedExpandButton(indexPath: IndexPath) {
         viewModel.filteredTripArray[indexPath.row].isExpanded.toggle()
         viewModel.checkCoordinate(index: indexPath.row)
-        
+        // 애니메이션 실행 후 다시불러오기
         UIView.animate(withDuration: 0.3) { [weak self] in
             self?.collectionView.reloadItems(at: [indexPath])
         } completion: { [weak self] _ in
@@ -174,9 +185,11 @@ extension SearchViewController: SearchCollectionViewCellDelegate {
 
 // MARK: -  SearchBarDelegate
 extension SearchViewController: UISearchBarDelegate {
+    // 주소검색 자동완성
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         viewModel.filteringAddress(text: searchBar.text!)
     }
+    // 검색버튼 클릭 시 해당 주소의 관광지 불러오기
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         searchBar.text = ""
         self.isSearching = false
@@ -189,12 +202,14 @@ extension SearchViewController: UISearchBarDelegate {
 // MARK: - CollectionViewDelegate, DataSource, DelegateFlowLayout
 extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        // 검색된 데이터가 있는 경우 헤더 보이기
         if viewModel.filteredTripArray.count != 0{
             return CGSize(width: self.view.frame.width, height: 50)
         } else {
             return .zero
         }
     }
+    // 헤더 정의
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         switch kind {
         case UICollectionView.elementKindSectionHeader:
@@ -213,18 +228,21 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
             return UICollectionReusableView()
         }
     }
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return viewModel.filteredTripArray.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SearchCollectionViewCell.identifier, for: indexPath) as? SearchCollectionViewCell else { return UICollectionViewCell() }
+        // 셀 버튼 이벤트를 위한 델리게이트 선언
         cell.delegate = self
         cell.configure(model: viewModel.filteredTripArray[indexPath.row])
         cell.configureWeatherView(model: viewModel.filteredTripArray[indexPath.row])
         cell.indexPath = indexPath
         return cell
     }
+    // 일정 이하로 스크롤 시 데이터 추가로 불러오기 위해 현재 위치 값을 구하고 조건과 비교하기
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         guard !isSearching else { return }
         let contentOffY = scrollView.contentOffset.y
@@ -237,18 +255,18 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
             print("need more")
             viewModel.fetchData(isFirstLoad: false)
         }
-        
     }
-    
 }
+// MARK: UICollectionViewDelegateFlowLayout
 extension SearchViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return 10
     }
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         return 10
     }
-    
+    // 셀 높이 정의
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let width = view.frame.width * 0.9
         if viewModel.filteredTripArray[indexPath.row].isExpanded {
@@ -259,7 +277,7 @@ extension SearchViewController: UICollectionViewDelegateFlowLayout {
     }
     
 }
-
+// 헤더 뷰에 있는 카테고리 선택 시 해당 아이템 보여주기
 extension SearchViewController: SearchCollectionHeaderViewDelegate {
     func filteringButtonTapped(type: TripCategory) {
         collectionView.scrollToItem(at: IndexPath(item: -1, section: 0), at: .top, animated: false)

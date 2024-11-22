@@ -37,7 +37,7 @@ struct APIKEY {
         return dict["APIKEY"] as? String
     }
 }
-
+// MARK: NetworkManager
 class NetworkManager {
     let components: URLComponentable
     let decoder: DataDecodable
@@ -77,7 +77,7 @@ class NetworkManager {
         return data
     }
 }
-
+// MARK: DataDecodable
 protocol DataDecodable {
     func decode<T: Decodable>(type: T.Type, data: Data?) -> T?
 }
@@ -96,6 +96,7 @@ class DecodeHandler: DataDecodable {
     }
 }
 
+// MARK: URLComponentable
 protocol URLComponentable {
     func getURLComponents(for type: NetworkURLCase, page: Int, tripKey: LocationDataModel?, weatherKey: ConvertedLocationModel?) -> URLComponents
 }
