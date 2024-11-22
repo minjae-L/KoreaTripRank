@@ -158,6 +158,20 @@ extension SearchViewController: SearchViewModelDelegate {
         }
     }
 }
+//MARK: - CollectionViewButtonDelegate
+extension SearchViewController: SearchCollectionViewCellDelegate {
+    func didTappedExpandButton(indexPath: IndexPath) {
+        viewModel.filteredTripArray[indexPath.row].isExpanded.toggle()
+        viewModel.checkCoordinate(index: indexPath.row)
+        
+        UIView.animate(withDuration: 0.3) { [weak self] in
+            self?.collectionView.reloadItems(at: [indexPath])
+        } completion: { [weak self] _ in
+            self?.collectionView.reloadData()
+        }
+    }
+}
+
 // MARK: -  SearchBarDelegate
 extension SearchViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
@@ -205,7 +219,10 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SearchCollectionViewCell.identifier, for: indexPath) as? SearchCollectionViewCell else { return UICollectionViewCell() }
+        cell.delegate = self
         cell.configure(model: viewModel.filteredTripArray[indexPath.row])
+        cell.configureWeatherView(model: viewModel.filteredTripArray[indexPath.row])
+        cell.indexPath = indexPath
         return cell
     }
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -222,9 +239,6 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
         }
         
     }
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        viewModel.checkCoordinate(index: indexPath.row)
-    }
     
 }
 extension SearchViewController: UICollectionViewDelegateFlowLayout {
@@ -237,7 +251,11 @@ extension SearchViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let width = view.frame.width * 0.9
-        return CGSize(width: width, height: 150)
+        if viewModel.filteredTripArray[indexPath.row].isExpanded {
+            return CGSize(width: width, height: 180)
+        } else {
+            return CGSize(width: width, height: 150)
+        }
     }
     
 }

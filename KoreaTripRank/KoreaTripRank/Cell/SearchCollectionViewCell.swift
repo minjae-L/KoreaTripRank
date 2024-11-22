@@ -8,6 +8,9 @@
 import UIKit
 import SnapKit
 
+protocol SearchCollectionViewCellDelegate: AnyObject {
+    func didTappedExpandButton(indexPath: IndexPath)
+}
 class SearchCollectionViewCell: UICollectionViewCell {
     static let identifier = "SearchCollectionViewCell"
     
@@ -15,13 +18,9 @@ class SearchCollectionViewCell: UICollectionViewCell {
         let image = UIImageView()
         return image
     }()
+    weak var delegate: SearchCollectionViewCellDelegate?
     
-    private var areaCategoryLabel: UILabel = {
-        let lb = UILabel()
-        lb.font = UIFont(name: "", size: 15)
-        lb.textColor = .lightGray
-        return lb
-    }()
+    var indexPath: IndexPath?
     
     private var relatedAreaLabel: UILabel = {
         let lb = UILabel()
@@ -44,6 +43,13 @@ class SearchCollectionViewCell: UICollectionViewCell {
     }()
     
     private var contentStackView: UIStackView = {
+    private lazy var expandButton: UIButton = {
+        let btn = UIButton()
+        btn.setTitle("현재 날씨 보기", for: .normal)
+        btn.setTitleColor(.lightGray, for: .normal)
+        btn.addTarget(self, action: #selector(expandButtonTapped), for: .touchUpInside)
+        return btn
+    }()
         let sv = UIStackView()
         sv.axis = .vertical
         sv.spacing = 5
@@ -63,6 +69,10 @@ class SearchCollectionViewCell: UICollectionViewCell {
     
     private lazy var categoryCollectionView = CategoryLabelsCollectionView(frame: .zero)
     
+    @objc func expandButtonTapped() {
+        guard let ip = indexPath else { return }
+        delegate?.didTappedExpandButton(indexPath: ip)
+    }
     private func configureCell() {
         self.clipsToBounds = false
         self.layer.masksToBounds = false
