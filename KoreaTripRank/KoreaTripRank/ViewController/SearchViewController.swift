@@ -153,6 +153,7 @@ class SearchViewController: UIViewController {
     }
     
 }
+
 // ViewModel Delegate
 extension SearchViewController: SearchViewModelDelegate {
     // 무한스크롤 또는 필터링된 데이터를 보여줄 때 다시 불러오기
@@ -178,7 +179,9 @@ extension SearchViewController: SearchCollectionViewCellDelegate {
         UIView.animate(withDuration: 0.3) { [weak self] in
             self?.collectionView.reloadItems(at: [indexPath])
         } completion: { [weak self] _ in
-            self?.collectionView.reloadData()
+            DispatchQueue.main.async {
+                self?.collectionView.reloadData()
+            }
         }
     }
 }
