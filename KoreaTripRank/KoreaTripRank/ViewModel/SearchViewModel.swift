@@ -158,7 +158,6 @@ final class SearchViewModel {
                 }
                 print("Success")
                 try await Task.sleep(for: .seconds(2))
-                viewState = .readyToLoad
             } catch NetworkError.invalidURL {
                 print("invalidURL")
             } catch NetworkError.decodingError {
@@ -170,6 +169,7 @@ final class SearchViewModel {
             } catch {
                 print("unknown error")
             }
+            viewState = .readyToLoad
         }
     }
     
@@ -213,36 +213,6 @@ final class SearchViewModel {
         else {
                 return nil
             }
-        if rainAmount == "강수없음" {
-            rainAmount = "0"
-        }
-        switch rainState {
-        case "0":
-            rainState = "없음"
-        case "1":
-            rainState = "비"
-        case "2":
-            rainState = "비/눈"
-        case "5":
-            rainState = "빗방울"
-        case "6":
-            rainState = "빗방울 / 눈날림"
-        case "7":
-            rainState = "눈날림"
-        default:
-            break
-        }
-        switch skyState {
-        case "1":
-            skyState = "맑음"
-        case "3":
-            skyState = "구름많음"
-        case "4":
-            skyState = "흐림"
-        default:
-            break
-        }
-        
         return WeatherDataModel(temp: temperature, rainAmount: rainAmount, rainState: rainState, skyState: skyState, wind: wind)
     }
     
