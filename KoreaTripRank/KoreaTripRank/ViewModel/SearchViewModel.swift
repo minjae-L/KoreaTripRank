@@ -71,6 +71,23 @@ final class SearchViewModel {
             delegate?.needUpdateCollectionView()
         }
     }
+    // 현재로 부터 1시간 뒤 시간 문자열 구하기
+    private var currentFctsTime: String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "HHmm"
+        let afterhour = Calendar.current.date(byAdding: .hour, value: 1, to: Date())
+        let current = dateFormatter.string(from: afterhour!)
+        var arr = current.map{String($0)}
+        arr[2] = "0"
+        arr[3] = "0"
+        return arr.joined()
+    }
+    // 오늘 날짜 구하기
+    private var currentDate: String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyyMMdd"
+        return dateFormatter.string(from: Date())
+    }
     
     init(locationSearcHandler: LocationSearchHandler) {
         self.locationSearcHandler = locationSearcHandler
@@ -166,15 +183,13 @@ final class SearchViewModel {
                     // 날씨
                 case .weather:
                     let result = try await weatherResponse
-                    // 불러온 날씨 데이터를 ㅓㅈ장
+                    // 불러온 날씨 데이터를 저장
                     guard let arr = result.response.responseBody?.items.item,
                           let idx = index,
                           let nx = self.selectedLocationInfo?.x,
                           let ny = self.selectedLocationInfo?.y
                     else { return }
-                    filteredTripArray[idx].nx = String(nx)
-                    filteredTripArray[idx].ny = String(ny)
-                    filteredTripArray[idx].weatherModel = convertWeatherData(item: arr)
+                    filteredTripArray[idx].weatherModel = convertWeatherData(item: arr, nx: String(nx), ny: String(ny))
                     print(filteredTripArray[idx])
                 }
                 print("Success")
@@ -199,6 +214,18 @@ final class SearchViewModel {
     }
     // 현재 날씨 보기 선택 시 날씨 불러오는 작업 실행
     func checkCoordinate(index: Int) {
+        // 이전에 불러온 데이터가 이미 존재한다면 데이터를 새로 불러오지 않는다.
+        print("currentFctsTime: \(currentFctsTime)")
+        print("currentDate: \(currentDate)")
+        if filteredTripArray[index].isExpanded == false { return }
+        if filteredTripArray[index].weatherModel != nil {
+            for element in filteredTripArray[index].weatherModel! {
+                if element.fcstTime == self.currentFctsTime && element.baseDate == currentDate {
+                    
+                    return
+                }
+            }
+        }
         Task {
             await getCoordinate(location: filteredTripArray[index], index: index)
         }
@@ -224,21 +251,44 @@ final class SearchViewModel {
         }
     }
     // HTTP통신 후 받은 날씨 데이터를 지정한 데이터모델로 변환
-    func convertWeatherData(item: [WeatherItem]) -> WeatherDataModel?{
+    func convertWeatherData(item: [WeatherItem], nx: String, ny: String) -> [WeatherDataModel]?{
         let time = item[0].fcstTime
         let currentWeather = item.filter{$0.fcstTime == time}
+        let firstFcstTime = item[0].fcstTime
+        let fcstTimes = self.getFcstTimes(fctsTime: firstFcstTime)
+        let baseDate = item[0].baseDate
+        let temperatures = item.filter{$0.category == "T1H"}
+        let winds = item.filter{$0.category == "WSD"}
+        let rainAmounts = item.filter{$0.category == "RN1"}
+        let rainStates = item.filter{$0.category == "PTY"}
+        let skyStates = item.filter{$0.category == "SKY"}
+        var output = [WeatherDataModel]()
         
-        guard let temperature = currentWeather.filter{$0.category == "T1H"}.first?.fcstValue,
-            let wind = currentWeather.filter{$0.category == "WSD"}.first?.fcstValue,
-            var rainAmount = currentWeather.filter{$0.category == "RN1"}.first?.fcstValue,
-            var rainState = currentWeather.filter{$0.category == "PTY"}.first?.fcstValue,
-            var skyState = currentWeather.filter{$0.category == "SKY"}.first?.fcstValue 
-        else {
-                return nil
-            }
-        return WeatherDataModel(temp: temperature, rainAmount: rainAmount, rainState: rainState, skyState: skyState, wind: wind)
+        for i in 0..<6 {
+            output.append(WeatherDataModel(baseDate: baseDate,
+                                           fcstTime: fcstTimes[i],
+                                           nx: nx,
+                                           ny: ny,
+                                           temp: temperatures[i].fcstValue,
+                                           rainAmount: rainAmounts[i].fcstValue,
+                                           rainState: rainStates[i].fcstValue,
+                                           skyState: skyStates[i].fcstValue,
+                                           wind: winds[i].fcstValue))
+        }
+        return output
     }
-    
+    // 기준시간으로 부터 6시간 뒤까지 시간 문자열 배열로 구하기
+    private func getFcstTimes(fctsTime: String) -> [String] {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "HHmm"
+        let time = dateFormatter.date(from: fctsTime)
+        var output = [String]()
+        for i in 0..<6 {
+            let t = Calendar.current.date(byAdding: .hour, value: i, to: time!)
+            output.append(dateFormatter.string(from: t!))
+        }
+        return output
+    }
 }
 
 // MapKit 검색 기능을 담은 클래스
