@@ -42,7 +42,13 @@ class SearchCollectionViewCell: UICollectionViewCell {
         return btn
     }()
     
-    private var contentStackView: UIStackView = {
+    private lazy var weatherView: UIView = {
+        let view = UIView()
+        view.addSubview(self.expandButton)
+        view.addSubview(self.weatherContentView)
+        return view
+    }()
+    
     private lazy var expandButton: UIButton = {
         let btn = UIButton()
         btn.setTitle("현재 날씨 보기", for: .normal)
@@ -50,25 +56,171 @@ class SearchCollectionViewCell: UICollectionViewCell {
         btn.addTarget(self, action: #selector(expandButtonTapped), for: .touchUpInside)
         return btn
     }()
+    
+    private lazy var temperatureLabel: UILabel = {
+        let lb = UILabel()
+        lb.sizeToFit()
+        lb.font = .systemFont(ofSize: 15)
+        lb.snp.makeConstraints { make in
+            make.width.greaterThanOrEqualTo(30)
+        }
+        return lb
+    }()
+    
+    private lazy var rainAmountLabel: UILabel = {
+        let lb = UILabel()
+        lb.font = .systemFont(ofSize: 15)
+        lb.snp.makeConstraints { make in
+            make.width.equalTo(0)
+        }
+        return lb
+    }()
+    
+    private lazy var firstRainStateImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.sizeToFit()
+        imageView.snp.makeConstraints { make in
+            make.width.equalTo(30)
+        }
+        return imageView
+    }()
+    
+    private lazy var secondRainStateImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.sizeToFit()
+        imageView.snp.makeConstraints { make in
+            make.width.equalTo(0)
+        }
+        
+        return imageView
+    }()
+    
+    private lazy var skyStateImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.sizeToFit()
+        imageView.snp.makeConstraints { make in
+            make.width.equalTo(30)
+        }
+        return imageView
+    }()
+    
+    private lazy var windImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.sizeToFit()
+        imageView.snp.makeConstraints { make in
+            make.width.equalTo(30)
+        }
+        return imageView
+    }()
+    
+    private lazy var windLabel: UILabel = {
+        let lb = UILabel()
+        lb.font = .systemFont(ofSize: 15)
+        lb.snp.makeConstraints { make in
+            make.width.greaterThanOrEqualTo(30)
+        }
+        return lb
+    }()
+    
+    private lazy var weatherContentView: UIStackView = {
+        let sb = UIStackView()
+        sb.axis = .horizontal
+        sb.spacing = 5
+        sb.alignment = .center
+        sb.distribution = .fill
+        sb.addArrangedSubview(self.skyStateTemperatureContainerView)
+        sb.addArrangedSubview(self.rainStateContainerView)
+        sb.addArrangedSubview(self.windStateContainerView)
+        sb.addArrangedSubview(self.emptyContainerView)
+        return sb
+    }()
+    
+    private lazy var skyStateTemperatureContainerView: UIView = {
+        let view = UIView()
+        view.addSubview(self.skyStateImageView)
+        view.addSubview(self.temperatureLabel)
+        view.clipsToBounds = false
+        view.layer.masksToBounds = false
+        view.layer.shadowOpacity = 0.8
+        view.layer.shadowOffset = CGSize(width: -1, height: 1)
+        view.layer.shadowRadius = 3
+        view.layer.cornerRadius = 10
+        view.backgroundColor = .brown
+        view.snp.makeConstraints { make in
+            make.width.lessThanOrEqualTo(90)
+        }
+        return view
+    }()
+    
+    private lazy var rainStateContainerView: UIView = {
+        let view = UIView()
+        view.addSubview(self.firstRainStateImageView)
+        view.addSubview(self.secondRainStateImageView)
+        view.addSubview(self.rainAmountLabel)
+        view.clipsToBounds = false
+        view.layer.masksToBounds = false
+        view.layer.shadowOpacity = 0.8
+        view.layer.shadowOffset = CGSize(width: -1, height: 1)
+        view.layer.shadowRadius = 3
+        view.layer.cornerRadius = 10
+        view.backgroundColor = .cyan
+        view.snp.makeConstraints { make in
+            make.width.lessThanOrEqualTo(130)
+        }
+        return view
+    }()
+    
+    private lazy var windStateContainerView: UIView = {
+        let view = UIView()
+        view.addSubview(self.windImageView)
+        view.addSubview(self.windLabel)
+        view.clipsToBounds = false
+        view.layer.masksToBounds = false
+        view.layer.shadowOpacity = 0.8
+        view.layer.shadowOffset = CGSize(width: -1, height: 1)
+        view.layer.shadowRadius = 3
+        view.layer.cornerRadius = 10
+        view.backgroundColor = .yellow
+        view.snp.makeConstraints { make in
+            make.width.lessThanOrEqualTo(90)
+        }
+        return view
+    }()
+    
+    
+    private lazy var contentStackView: UIStackView = {
         let sv = UIStackView()
         sv.axis = .vertical
         sv.spacing = 5
         sv.alignment = .leading
-        sv.distribution = .fillProportionally
+        sv.distribution = .fill
+        sv.addArrangedSubview(self.rankAreaLabelStackView)
+        sv.addArrangedSubview(self.areaAddressLabel)
+        sv.addArrangedSubview(self.weatherView)
+        sv.addArrangedSubview(self.categoryCollectionView)
         return sv
     }()
     
-    private var rankAreaLabelStackView: UIStackView = {
+    private lazy var rankAreaLabelStackView: UIStackView = {
         let sv = UIStackView()
         sv.axis = .horizontal
         sv.spacing = 5
         sv.alignment = .leading
         sv.distribution = .fill
+        sv.addArrangedSubview(self.rankImageView)
+        sv.addArrangedSubview(self.relatedAreaLabel)
         return sv
     }()
     
-    private lazy var categoryCollectionView = CategoryLabelsCollectionView(frame: .zero)
+    private lazy var emptyContainerView: UIView = {
+        let view = UIView()
+        view.snp.makeConstraints { make in
+            make.width.equalTo(0).priority(999)
+        }
+        return view
+    }()
     
+    private lazy var categoryCollectionView = CategoryLabelsCollectionView(frame: .zero)
     @objc func expandButtonTapped() {
         guard let ip = indexPath else { return }
         delegate?.didTappedExpandButton(indexPath: ip)
@@ -83,31 +235,113 @@ class SearchCollectionViewCell: UICollectionViewCell {
     }
     
     private func addView() {
-        rankAreaLabelStackView.addArrangedSubview(rankImageView)
-        rankAreaLabelStackView.addArrangedSubview(relatedAreaLabel)
-        contentStackView.addArrangedSubview(rankAreaLabelStackView)
-        contentStackView.addArrangedSubview(areaCategoryLabel)
-        contentStackView.addArrangedSubview(areaAddressLabel)
-        contentStackView.addArrangedSubview(categoryCollectionView)
         contentView.addSubview(contentStackView)
         contentView.addSubview(favoriteButton)
     }
-    
+    private func weatherViewExpandedLayout() {
+        [skyStateImageView, temperatureLabel, firstRainStateImageView, secondRainStateImageView, rainAmountLabel, windImageView, windLabel].forEach { view in
+            if (view == secondRainStateImageView && secondRainStateImageView.image == nil) || (view == rainAmountLabel && rainAmountLabel.text == nil) {
+                view.snp.updateConstraints { make in
+                    make.width.equalTo(0)
+                }
+            } else {
+                if view is UILabel {
+                    view.snp.updateConstraints { make in
+                        make.width.greaterThanOrEqualTo(30)
+                    }
+                } else {
+                    view.snp.updateConstraints { make in
+                        make.width.equalTo(30)
+                    }
+                }
+                
+            }
+        }
+        
+        weatherContentView.snp.updateConstraints { make in
+            make.height.equalTo(30)
+        }
+    }
+    private func weatherViewDefaultLayout() {
+        
+        weatherContentView.snp.updateConstraints { make in
+            make.height.equalTo(0)
+        }
+        self.skyStateImageView.image = nil
+        self.temperatureLabel.text = nil
+        self.firstRainStateImageView.image = nil
+        self.secondRainStateImageView.image = nil
+        self.rainAmountLabel.text = nil
+        self.windLabel.text = nil
+        self.windImageView.image = nil
+    }
     private func configureLayout() {
-        contentStackView.snp.makeConstraints { make in
+        contentStackView.snp.remakeConstraints { make in
             make.top.leading.equalToSuperview().offset(15)
             make.bottom.trailing.equalToSuperview().offset(-15)
         }
-        rankAreaLabelStackView.snp.makeConstraints { make in
-            make.leading.trailing.equalToSuperview()
-        }
-        categoryCollectionView.snp.makeConstraints { make in
+        areaAddressLabel.snp.remakeConstraints { make in
             make.leading.trailing.equalToSuperview()
             make.height.equalTo(20)
         }
-        favoriteButton.snp.makeConstraints { make in
+        rankAreaLabelStackView.snp.remakeConstraints { make in
+            make.leading.trailing.equalToSuperview()
+            make.height.equalTo(30)
+        }
+        categoryCollectionView.snp.remakeConstraints { make in
+            make.leading.trailing.equalToSuperview()
+            make.height.equalTo(20)
+        }
+        favoriteButton.snp.remakeConstraints { make in
             make.centerY.equalToSuperview()
             make.trailing.equalToSuperview().offset(-15)
+        }
+        weatherView.snp.remakeConstraints { make in
+            make.leading.trailing.equalToSuperview()
+        }
+        expandButton.snp.remakeConstraints { make in
+            make.top.equalToSuperview()
+            make.leading.equalToSuperview().offset(5)
+        }
+        weatherContentView.snp.remakeConstraints { make in
+            make.bottom.trailing.leading.equalToSuperview()
+            make.height.equalTo(0)
+        }
+        [skyStateTemperatureContainerView, rainStateContainerView, windStateContainerView, emptyContainerView].forEach {
+            $0.snp.makeConstraints { make in
+                make.top.bottom.equalToSuperview()
+            }
+        }
+        skyStateImageView.snp.makeConstraints { make in
+            make.top.bottom.equalToSuperview()
+            make.leading.equalToSuperview().offset(5)
+        }
+        temperatureLabel.snp.makeConstraints { make in
+            make.top.bottom.equalToSuperview()
+            make.leading.equalTo(skyStateImageView.snp.trailing).offset(5)
+            make.trailing.equalToSuperview().offset(-5)
+        }
+        firstRainStateImageView.snp.makeConstraints { make in
+            make.top.bottom.equalToSuperview()
+            make.leading.equalToSuperview().offset(5)
+        }
+        secondRainStateImageView.snp.makeConstraints { make in
+            make.top.bottom.equalToSuperview()
+            make.leading.equalTo(firstRainStateImageView.snp.trailing).offset(5)
+        }
+        rainAmountLabel.snp.makeConstraints { make in
+            make.top.bottom.equalToSuperview()
+            make.leading.equalTo(secondRainStateImageView.snp.trailing).offset(5)
+            make.trailing.equalToSuperview().offset(-5)
+        }
+        windImageView.snp.makeConstraints { make in
+            make.top.bottom.equalToSuperview()
+            make.leading.equalToSuperview().offset(5)
+        }
+        windLabel.snp.makeConstraints { make in
+            make.top.bottom.equalToSuperview()
+            make.leading.equalTo(windImageView.snp.trailing).offset(5)
+            make.trailing.equalToSuperview().offset(-5)
         }
     }
     
