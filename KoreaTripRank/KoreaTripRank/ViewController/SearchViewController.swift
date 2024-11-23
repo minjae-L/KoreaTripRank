@@ -241,7 +241,6 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
         // 셀 버튼 이벤트를 위한 델리게이트 선언
         cell.delegate = self
         cell.configure(model: viewModel.filteredTripArray[indexPath.row])
-        cell.configureWeatherView(model: viewModel.filteredTripArray[indexPath.row])
         cell.indexPath = indexPath
         return cell
     }

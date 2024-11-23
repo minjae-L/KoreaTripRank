@@ -23,6 +23,14 @@ class SearchCollectionViewCell: UICollectionViewCell {
     weak var delegate: SearchCollectionViewCellDelegate?
     
     var indexPath: IndexPath?
+    // 현재시점을 기준으로 한시간 뒤 시간의 문자열
+    private var afterHour: String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "HHmm"
+        let afterHour = Calendar.current.date(byAdding: .hour, value: 1, to: Date())
+        let afterHourString = dateFormatter.string(from: afterHour!)
+        return afterHourString
+    }
     
     private var relatedAreaLabel: UILabel = {
         let lb = UILabel()
@@ -362,6 +370,21 @@ class SearchCollectionViewCell: UICollectionViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    // 버튼 누른 시점과 동일한 날씨 정보가 담긴 인덱스 구하기
+    private func getCurrentWeatherIndex(model: TripItem) -> Int {
+        guard let model = model.weatherModel else { return 0 }
+        var arr = afterHour.map{String($0)}
+        arr[2] = "0"
+        arr[3] = "0"
+        let fctsTime = arr.joined(separator: "")
+        
+        for i in 0..<model.count {
+            if model[i].fcstTime == fctsTime {
+                return i
+            }
+        }
+        return 0
+    }
     // 재사용 시 셀안의 UI 상태 정의
     override func prepareForReuse() {
         isSelected = false
@@ -393,6 +416,18 @@ class SearchCollectionViewCell: UICollectionViewCell {
     }
     // 커스텀 셀 UI 정의
     func configure(model: TripItem) {
+        // 확장 여부에 따라 오토 레이아웃 설정
+        if model.isExpanded {
+            self.expandButton.setTitle("닫기", for: .normal)
+            weatherViewExpandedLayout()
+            configureWeatherView(model: model)
+        } else {
+            self.expandButton.setTitle("현재 날씨 보기", for: .normal)
+            weatherViewDefaultLayout()
+        }
+        
+        
+        // 날씨 컨텐츠 부분을 제외한 UI에 데이터 주입
         self.areaAddressLabel.text = model.relatedAreaAddress
         let separatedRelatedAreaText = model.relatedAreaName.split(separator: "/").map{String($0)}
         if separatedRelatedAreaText.count == 1 {
@@ -420,30 +455,10 @@ class SearchCollectionViewCell: UICollectionViewCell {
         
     }
     // 확장 시 보여지는 WeaterView 정의
-    func configureWeatherView(model: TripItem) {
-        if !model.isExpanded {
-            weatherViewDefaultLayout()
-            self.expandButton.setTitle("현재 날씨 보기", for: .normal)
-            return
-        }
+    private func configureWeatherView(model: TripItem) {
+        // 현재에서 가장 가까운 미래의 정각시간에 측정된 날씨 정보가 담긴 인덱스
+        let index = getCurrentWeatherIndex(model: model)
         guard let model = model.weatherModel else { return }
-        
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "HHmm"
-        let afterHour = Calendar.current.date(byAdding: .hour, value: 1, to: Date())
-        let afterHourString = dateFormatter.string(from: afterHour!)
-        var arr = afterHourString.map{String($0)}
-        arr[2] = "0"
-        arr[3] = "0"
-        let fctsTIme = arr.joined(separator: "")
-        var index = 0
-        for i in 0..<model.count {
-            if model[i].fcstTime == fctsTIme {
-                index = i
-                break
-            }
-        }
-        
         
         self.expandButton.setTitle("닫기", for: .normal)
         self.weatherContentView.isHidden = false
@@ -488,6 +503,5 @@ class SearchCollectionViewCell: UICollectionViewCell {
         default:
             self.skyStateImageView.image = nil
         }
-        weatherViewExpandedLayout()
     }
 }
