@@ -54,7 +54,7 @@ class SearchCollectionViewCell: UICollectionViewCell {
     
     private lazy var weatherView: UIView = {
         let view = UIView()
-        view.addSubview(self.expandButton)
+        view.addSubview(self.expandButtonView)
         view.addSubview(self.weatherContentView)
         return view
     }()
@@ -65,6 +65,20 @@ class SearchCollectionViewCell: UICollectionViewCell {
         btn.setTitleColor(.lightGray, for: .normal)
         btn.addTarget(self, action: #selector(expandButtonTapped), for: .touchUpInside)
         return btn
+    }()
+    
+    private let spinner: UIActivityIndicatorView = {
+        let spinner = UIActivityIndicatorView(style: .medium)
+        spinner.hidesWhenStopped = true
+        return spinner
+    }()
+    
+    private lazy var expandButtonView: UIView = {
+        let view = UIView(frame: .zero)
+        view.addSubview(self.expandButton)
+        view.addSubview(self.spinner)
+        view.backgroundColor = .white
+        return view
     }()
     
     private lazy var temperatureLabel: UILabel = {
@@ -234,6 +248,8 @@ class SearchCollectionViewCell: UICollectionViewCell {
     // MARK: Methods
     @objc func expandButtonTapped() {
         guard let ip = indexPath else { return }
+        self.expandButton.setTitle("", for: .normal)
+        self.spinner.startAnimating()
         delegate?.didTappedExpandButton(indexPath: ip)
     }
     // 셀 그림자, 모양 정의
@@ -290,6 +306,13 @@ class SearchCollectionViewCell: UICollectionViewCell {
     }
     // 처음 셀 불러오면 설정되는 레이아웃 (기본값)
     private func configureLayout() {
+        expandButton.snp.makeConstraints { make in
+            make.top.equalToSuperview()
+            make.leading.equalToSuperview().offset(10)
+        }
+        spinner.snp.makeConstraints { make in
+            make.top.trailing.bottom.leading.equalToSuperview()
+        }
         contentStackView.snp.remakeConstraints { make in
             make.top.leading.equalToSuperview().offset(15)
             make.bottom.trailing.equalToSuperview().offset(-15)
@@ -313,9 +336,8 @@ class SearchCollectionViewCell: UICollectionViewCell {
         weatherView.snp.remakeConstraints { make in
             make.leading.trailing.equalToSuperview()
         }
-        expandButton.snp.remakeConstraints { make in
-            make.top.equalToSuperview()
-            make.leading.equalToSuperview().offset(5)
+        expandButtonView.snp.remakeConstraints { make in
+            make.top.leading.bottom.trailing.equalToSuperview()
         }
         weatherContentView.snp.remakeConstraints { make in
             make.bottom.trailing.leading.equalToSuperview()
@@ -452,7 +474,7 @@ class SearchCollectionViewCell: UICollectionViewCell {
         
         let labels = Array(Set([model.areaName, model.relatedLargeCategoryName, model.relatedMediumCategoryName, model.relatedSmallCategoryName])).sorted(by: <)
         categoryCollectionView.updateLabels(labels: labels)
-        
+        self.spinner.stopAnimating()
     }
     // 확장 시 보여지는 WeaterView 정의
     private func configureWeatherView(model: TripItem) {
@@ -503,5 +525,6 @@ class SearchCollectionViewCell: UICollectionViewCell {
         default:
             self.skyStateImageView.image = nil
         }
+        self.spinner.stopAnimating()
     }
 }
