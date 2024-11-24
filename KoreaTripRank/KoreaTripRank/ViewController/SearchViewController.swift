@@ -308,4 +308,12 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
     }
 }
 
+extension UICollectionView {
+    func reloadDataWithMsg() {
+        DispatchQueue.main.async {
+            print("Reloaded CollectionViewData")
+            self.reloadData()
+        }
+    }
+}
 
