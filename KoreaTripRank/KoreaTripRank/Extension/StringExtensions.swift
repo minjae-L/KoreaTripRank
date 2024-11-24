@@ -24,4 +24,15 @@ extension String {
         }
         return output
     }
+    
+    func separateAndCombine(by separateString: String) -> [String] {
+        var arr = self.components(separatedBy: separateString)
+        var result = [String]()
+        
+        while arr.count >= 1 {
+            result.append(arr.joined(separator: separateString))
+            arr.removeLast()
+        }
+        return result.reversed()
+    }
 }
