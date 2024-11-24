@@ -170,16 +170,14 @@ final class SearchViewModel {
         
         // 네트워킹 시작
         Task {
-            // 두개의 응답 생성
-            async let tripResponse = NetworkManager.shared.fetchData(urlCase: .trip, tripKey: addressName, type: TripNetworkResponse.self, page: page)
-            async let weatherResponse = NetworkManager.shared.fetchData(urlCase: .weather, weatherKey: self.selectedLocationInfo, type: WeatherNetworkResponse.self, page: page)
             do {
                 switch networkType {
-                    
                     // 관광지
                 case .trip:
+                    async let tripResponse = NetworkManager.shared.fetchData(urlCase: .trip, tripKey: addressName, type: TripNetworkResponse.self, page: page)
                     let result = try await tripResponse
                     // 불러온 관광지 데이터를 저장
+                    print("trip 데이터 저장")
                     tripArray.append(contentsOf: result.response.responseBody.items.item)
                     tripDataMaxCount = result.response.responseBody.totalCount
                     filteringTrip(type: currentCategoryState)
@@ -187,21 +185,22 @@ final class SearchViewModel {
                     
                     // 날씨
                 case .weather:
+                    async let weatherResponse = NetworkManager.shared.fetchData(urlCase: .weather, weatherKey: self.selectedLocationInfo, type: WeatherNetworkResponse.self, page: page)
                     let result = try await weatherResponse
                     // 불러온 날씨 데이터를 저장
+                    print("weather 데이터 저장")
                     guard let arr = result.response.responseBody?.items.item,
                           let idx = index,
                           let nx = self.selectedLocationInfo?.x,
                           let ny = self.selectedLocationInfo?.y
                     else { return }
                     filteredTripArray[idx].weatherModel = convertWeatherData(item: arr, nx: String(nx), ny: String(ny))
-                    print(filteredTripArray[idx])
                 }
                 print("Success")
                 delegate?.noticeWeatherViewNeedUpdateWithAnimate(indexPath: indexPath)
                 // 성공적으로 불러왔다면 지연시간 추가 (무한스크롤 시 너무 많은 호출 방지)
                 try await Task.sleep(for: .seconds(2))
-                
+                print("성공 후 지연시간 완료")
                 // 에러 핸들링
             } catch NetworkError.invalidURL {
                 print("invalidURL")
@@ -221,43 +220,58 @@ final class SearchViewModel {
     // 현재 날씨 보기 선택 시 날씨 불러오는 작업 실행
     func checkCoordinate(index: Int) {
         // 이전에 불러온 데이터가 이미 존재한다면 데이터를 새로 불러오지 않는다.
-        print("currentFctsTime: \(currentFctsTime)")
-        print("currentDate: \(currentDate)")
-        if filteredTripArray[index].isExpanded == false { return }
+        if filteredTripArray[index].isExpanded == false {
+            delegate?.noticeWeatherViewNeedUpdateWithAnimate(indexPath: indexPath)
+            return
+        }
         if filteredTripArray[index].weatherModel != nil {
             for element in filteredTripArray[index].weatherModel! {
                 if element.fcstTime == self.currentFctsTime && element.baseDate == currentDate {
-                    
+                    delegate?.noticeWeatherViewNeedUpdateWithAnimate(indexPath: indexPath)
                     return
                 }
             }
         }
         Task {
+            // 현재 위치값 구하고 좌표로 변환
             await getCoordinate(location: filteredTripArray[index], index: index)
+            // 네트워킹 시작
+            loadData(page: 1, networkType: .weather, index: index)
         }
         
     }
     // MapKit을 이용하여 해당 지역의 위도 경도를 구한 후 좌표값으로 변환하는 작업을 비동기로 실행
-    func getCoordinate(location: TripItem, index: Int) async {
-        Task {
-            let case1 = location.relatedAreaAddress
-            let case2 = location.relatedAreaName
-            let case3 = location.areaName
-            async let res1 = locationSearcHandler.search(for: case1)
-            async let res2 = locationSearcHandler.search(for: case2)
-            async let res3 = locationSearcHandler.search(for: case3)
-            // 모든 응답값이 에러가 난다면 종료
-            // 주소의 정확도는 res1 > res2 > res3
-            var result =  await [try? res1, try? res2, try? res3]
-            result.filter{ $0 != nil }
-            if result.isEmpty { return }
-            // 해당 주소의 좌표를 통해 날씨정보를 구하기
-            self.selectedLocationInfo = result.first!
-            loadData(page: 1, networkType: .weather, index: index)
+    private func getCoordinate(location: TripItem, index: Int) async {
+        // 주소를 공백기준으로 나누어 합쳐 경우의수 만들기
+        var addressArray = location.relatedAreaAddress.separateAndCombine(by: " ")
+        
+        // 맨 뒤부터 해당 주소를 토대로 위도 경도 검색 (맨 뒤 주소가 가장 정확도 높다.)
+        while !addressArray.isEmpty {
+            let address = addressArray.removeLast()
+            if LocationHash.shared.get(key: address) != nil {
+                print("이미 저장된 해시테이블에서 가져오기")
+                self.selectedLocationInfo = LocationHash.shared.get(key: address)
+                return
+            }
+            let result = try? await locationSearcHandler.search(for: address)
+            if result != nil {
+                print("선택된 주소: \(address)")
+                // 비동기 처리 횟수를 줄이기 위해 해쉬 테이블에 저장
+                LocationHash.shared.put(element: (key: address, value: result!))
+                self.selectedLocationInfo = result
+                return
+            }
         }
+        // 모든 조합 가능한 주소가 검색 실패한 경우 시군구 단위로 위도 경도 구하기
+        guard let defaultAddress = self.selectedSigungu?.sigunguName else {
+            print("getCoordinate Error:: 기본주소값이 설정되어 있지 않다.")
+            return
+        }
+        print("선택된 주소: \(defaultAddress)")
+        self.selectedLocationInfo = try? await locationSearcHandler.search(for: defaultAddress)
     }
     // HTTP통신 후 받은 날씨 데이터를 지정한 데이터모델로 변환
-    func convertWeatherData(item: [WeatherItem], nx: String, ny: String) -> [WeatherDataModel]?{
+    private func convertWeatherData(item: [WeatherItem], nx: String, ny: String) -> [WeatherDataModel]?{
         let time = item[0].fcstTime
         let currentWeather = item.filter{$0.fcstTime == time}
         let firstFcstTime = item[0].fcstTime
@@ -329,4 +343,39 @@ final class LocationSearch: LocationSearchHandler {
     }
     
 }
-
+// 위치정보가 저장된 해쉬 자료구조 정의
+class LocationHash {
+    private var hashTable: [[(key: String, value: ConvertedLocationModel)]]
+    private let tableSize: Int
+    static let shared = LocationHash(hashTable: [[]], tableSize: 1000)
+    
+    init(hashTable: [[(key: String, value: String)]], tableSize: Int) {
+        self.tableSize = tableSize
+        self.hashTable = Array(repeating: [], count: tableSize)
+    }
+    
+    private func getHashKey(key: String) -> Int {
+        return abs(key.hashValue) % tableSize
+    }
+    
+    func put(element: (key: String, value: ConvertedLocationModel)) {
+        let hashKey = getHashKey(key: element.key)
+        for i in 0..<hashTable[hashKey].count {
+            if hashTable[hashKey][i].key == element.key {
+                hashTable[hashKey][i].value = element.value
+            }
+        }
+        hashTable[hashKey].append(element)
+    }
+    
+    func get(key: String) -> ConvertedLocationModel? {
+        let hashKey = getHashKey(key: key)
+        
+        for i in 0..<hashTable[hashKey].count {
+            if hashTable[hashKey][i].key == key {
+                return hashTable[hashKey][i].value
+            }
+        }
+        return nil
+    }
+}

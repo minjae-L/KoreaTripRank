@@ -63,10 +63,10 @@ class NetworkManager {
         guard let url = urlComponents.url else {
             throw(NetworkError.invalidURL)
         }
-        print(url)
         let request = AF.request(url)
         
         let response = await request.serializingDecodable(T.self).response
+        
         guard (response.response)?.statusCode == 200 else {
             throw NetworkError.serverError(code: response.response?.statusCode ?? 0)
         }
