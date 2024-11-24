@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import MapKit
 
 protocol SearchViewModelDelegate: AnyObject {
     func addressSearching()
@@ -311,71 +310,5 @@ final class SearchViewModel {
     }
 }
 
-// MapKit 검색 기능을 담은 클래스
-protocol LocationSearchHandler {
-    func search(for query: String) async throws -> ConvertedLocationModel
-}
 
-final class LocationSearch: LocationSearchHandler {
-    
-    func search(for query: String) async throws -> ConvertedLocationModel {
-        let request = MKLocalSearch.Request()
-        request.naturalLanguageQuery = query
-        request.resultTypes = .address
-        request.region = MKCoordinateRegion(MKMapRect.world)
-        
-        
-        let localSearch = MKLocalSearch(request: request)
-        do {
-            let response = try await localSearch.start()
-            print("MapKit Search Success")
-            let lati = response.mapItems[0].placemark.coordinate.latitude
-            let long = response.mapItems[0].placemark.coordinate.longitude
-            var location = ConvertedLocationModel(lat: lati, lng: long)
-            location.convertGRID_GPS(mode: 0, lat_X: lati, lng_Y: long)
-            print("\(query) : \(location)")
-            return location
-        } catch {
-            print("MapKit Search Error")
-            print(error.localizedDescription)
-            throw(error)
-        }
-    }
-    
-}
-// 위치정보가 저장된 해쉬 자료구조 정의
-class LocationHash {
-    private var hashTable: [[(key: String, value: ConvertedLocationModel)]]
-    private let tableSize: Int
-    static let shared = LocationHash(hashTable: [[]], tableSize: 1000)
-    
-    init(hashTable: [[(key: String, value: String)]], tableSize: Int) {
-        self.tableSize = tableSize
-        self.hashTable = Array(repeating: [], count: tableSize)
-    }
-    
-    private func getHashKey(key: String) -> Int {
-        return abs(key.hashValue) % tableSize
-    }
-    
-    func put(element: (key: String, value: ConvertedLocationModel)) {
-        let hashKey = getHashKey(key: element.key)
-        for i in 0..<hashTable[hashKey].count {
-            if hashTable[hashKey][i].key == element.key {
-                hashTable[hashKey][i].value = element.value
-            }
-        }
-        hashTable[hashKey].append(element)
-    }
-    
-    func get(key: String) -> ConvertedLocationModel? {
-        let hashKey = getHashKey(key: key)
-        
-        for i in 0..<hashTable[hashKey].count {
-            if hashTable[hashKey][i].key == key {
-                return hashTable[hashKey][i].value
-            }
-        }
-        return nil
-    }
-}
+
