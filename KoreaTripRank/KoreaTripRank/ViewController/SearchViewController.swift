@@ -156,11 +156,25 @@ class SearchViewController: UIViewController {
 
 // ViewModel Delegate
 extension SearchViewController: SearchViewModelDelegate {
+    func noticeWeatherViewNeedUpdateWithAnimate(indexPath: IndexPath?) {
+        guard let indexPath = indexPath else {
+            print("noticeEndDataLoad:: indexPath is nil")
+            return
+        }
+        // 애니메이션 실행 후 다시불러오기
+        DispatchQueue.main.async { [weak self] in
+            UIView.animate(withDuration: 0.3) {
+                self?.collectionView.reloadItems(at: [indexPath])
+            } completion: { _ in
+                self?.collectionView.reloadData()
+            }
+
+        }
+    }
+    
     // 무한스크롤 또는 필터링된 데이터를 보여줄 때 다시 불러오기
     func needUpdateCollectionView() {
-        DispatchQueue.main.async { [weak self] in
-            self?.collectionView.reloadData()
-        }
+        collectionView.reloadDataWithMsg()
     }
     // 주소검색에서 자동완성을 위한 다시 불러오기
     func addressSearching() {
@@ -173,16 +187,9 @@ extension SearchViewController: SearchViewModelDelegate {
 extension SearchViewController: SearchCollectionViewCellDelegate {
     // 현재 날씨 보기 클릭 시 셀 높이가 확장되며 현재 날씨를 표시하고 해당 셀의 isExpaned 데이터 수정
     func didTappedExpandButton(indexPath: IndexPath) {
+        viewModel.indexPath = indexPath
         viewModel.filteredTripArray[indexPath.row].isExpanded.toggle()
         viewModel.checkCoordinate(index: indexPath.row)
-        // 애니메이션 실행 후 다시불러오기
-        UIView.animate(withDuration: 0.3) { [weak self] in
-            self?.collectionView.reloadItems(at: [indexPath])
-        } completion: { [weak self] _ in
-            DispatchQueue.main.async {
-                self?.collectionView.reloadData()
-            }
-        }
     }
 }
 

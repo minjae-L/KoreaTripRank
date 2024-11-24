@@ -11,6 +11,7 @@ import MapKit
 protocol SearchViewModelDelegate: AnyObject {
     func addressSearching()
     func needUpdateCollectionView()
+    func noticeWeatherViewNeedUpdateWithAnimate(indexPath: IndexPath?)
 }
 // 관광지 카테고리
 enum TripCategory {
@@ -37,6 +38,8 @@ final class SearchViewModel {
             delegate?.addressSearching()
         }
     }
+    //
+    var indexPath: IndexPath?
     // JSON파일로 있는 장소데이터
     var areaDatabase = AreaDatabase()
     weak var delegate: SearchViewModelDelegate?
@@ -66,10 +69,10 @@ final class SearchViewModel {
     // 주소 선택시 불러온 관광지 데이터
     private var tripArray: [TripItem] = []
     // 셀에 뿌려질 데이터로 tripArray에서 필터링하여 저장됨
-    var filteredTripArray: [TripItem] = [] {
-        didSet {
-            delegate?.needUpdateCollectionView()
-        }
+    var filteredTripArray: [TripItem] = []
+    
+    private func noticeNeedUpdate() {
+        delegate?.needUpdateCollectionView()
     }
     // 현재로 부터 1시간 뒤 시간 문자열 구하기
     private var currentFctsTime: String {
@@ -112,6 +115,7 @@ final class SearchViewModel {
         case .accommodation:
             filteredTripArray = sortedTripArray(arr: tripArray.filter{ $0.relatedLargeCategoryName == "숙박" })
         }
+        noticeNeedUpdate()
     }
     // 주소검색창에서 입력 시 필터링된 데이터를 출력하기 위한 메서드
     func filteringAddress(text: String) {
@@ -179,6 +183,7 @@ final class SearchViewModel {
                     tripArray.append(contentsOf: result.response.responseBody.items.item)
                     tripDataMaxCount = result.response.responseBody.totalCount
                     filteringTrip(type: currentCategoryState)
+                    self.noticeNeedUpdate()
                     
                     // 날씨
                 case .weather:
@@ -193,6 +198,7 @@ final class SearchViewModel {
                     print(filteredTripArray[idx])
                 }
                 print("Success")
+                delegate?.noticeWeatherViewNeedUpdateWithAnimate(indexPath: indexPath)
                 // 성공적으로 불러왔다면 지연시간 추가 (무한스크롤 시 너무 많은 호출 방지)
                 try await Task.sleep(for: .seconds(2))
                 
