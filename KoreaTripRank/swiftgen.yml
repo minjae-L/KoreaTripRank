@@ -1,0 +1,11 @@
+input_dir:  KoreaTripRank/
+output_dir:  KoreaTripRank/Resources/
+
+xcassets:
+  inputs:
+    - Assets.xcassets
+  outputs:
+    - templateName: swift5
+      params:
+        forceProvidesNamespaces: true
+      output: Assets+Generated.swift
