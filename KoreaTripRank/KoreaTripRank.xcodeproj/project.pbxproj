@@ -21,6 +21,10 @@
 		B56AD67D2CD797BE00F2FC8E /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56AD67C2CD797BE00F2FC8E /* SearchViewController.swift */; };
 		B58194A72CE7B055000DADCC /* CategoryLabelsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B58194A62CE7B055000DADCC /* CategoryLabelsCollectionViewCell.swift */; };
 		B58194AA2CE7B0CB000DADCC /* CategoryLabelsCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B58194A92CE7B0CB000DADCC /* CategoryLabelsCollectionView.swift */; };
+		B5911DD22CF32C7D003283DD /* LocationHash.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5911DD12CF32C7D003283DD /* LocationHash.swift */; };
+		B5911DD52CF32CD7003283DD /* LocationSearchHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5911DD42CF32CD7003283DD /* LocationSearchHandler.swift */; };
+		B5911DD82CF32D1C003283DD /* URLComponentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5911DD72CF32D1C003283DD /* URLComponentHandler.swift */; };
+		B5911DDA2CF32D47003283DD /* DecodeHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5911DD92CF32D47003283DD /* DecodeHandler.swift */; };
 		B59124942CD62375008A13F2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59124932CD62375008A13F2 /* AppDelegate.swift */; };
 		B59124962CD62375008A13F2 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59124952CD62375008A13F2 /* SceneDelegate.swift */; };
 		B59124982CD62375008A13F2 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59124972CD62375008A13F2 /* MainViewController.swift */; };
@@ -71,6 +75,10 @@
 		B56AD67C2CD797BE00F2FC8E /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		B58194A62CE7B055000DADCC /* CategoryLabelsCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryLabelsCollectionViewCell.swift; sourceTree = "<group>"; };
 		B58194A92CE7B0CB000DADCC /* CategoryLabelsCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryLabelsCollectionView.swift; sourceTree = "<group>"; };
+		B5911DD12CF32C7D003283DD /* LocationHash.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationHash.swift; sourceTree = "<group>"; };
+		B5911DD42CF32CD7003283DD /* LocationSearchHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationSearchHandler.swift; sourceTree = "<group>"; };
+		B5911DD72CF32D1C003283DD /* URLComponentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLComponentHandler.swift; sourceTree = "<group>"; };
+		B5911DD92CF32D47003283DD /* DecodeHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DecodeHandler.swift; sourceTree = "<group>"; };
 		B59124902CD62375008A13F2 /* KoreaTripRank.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KoreaTripRank.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B59124932CD62375008A13F2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B59124952CD62375008A13F2 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -195,6 +203,32 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
+		B5911DD02CF32C63003283DD /* DataStructure */ = {
+			isa = PBXGroup;
+			children = (
+				B5911DD12CF32C7D003283DD /* LocationHash.swift */,
+			);
+			path = DataStructure;
+			sourceTree = "<group>";
+		};
+		B5911DD32CF32CB4003283DD /* Handlers */ = {
+			isa = PBXGroup;
+			children = (
+				B5911DD42CF32CD7003283DD /* LocationSearchHandler.swift */,
+			);
+			path = Handlers;
+			sourceTree = "<group>";
+		};
+		B5911DD62CF32D02003283DD /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				B5BA4DC42CDB108400477410 /* NetworkManager.swift */,
+				B5911DD72CF32D1C003283DD /* URLComponentHandler.swift */,
+				B5911DD92CF32D47003283DD /* DecodeHandler.swift */,
+			);
+			path = Network;
+			sourceTree = "<group>";
+		};
 		B59124872CD62375008A13F2 = {
 			isa = PBXGroup;
 			children = (
@@ -221,6 +255,9 @@
 		B59124922CD62375008A13F2 /* KoreaTripRank */ = {
 			isa = PBXGroup;
 			children = (
+				B5911DD62CF32D02003283DD /* Network */,
+				B5911DD32CF32CB4003283DD /* Handlers */,
+				B5911DD02CF32C63003283DD /* DataStructure */,
 				EA813CCC2CEF775D00D6EF8C /* Resources */,
 				B58194A82CE7B0A2000DADCC /* Views */,
 				B550F8B92CE4FB7400E90069 /* CollectionHeaderView */,
@@ -234,7 +271,6 @@
 				B591249C2CD62377008A13F2 /* Assets.xcassets */,
 				B591249E2CD62377008A13F2 /* LaunchScreen.storyboard */,
 				B59124A12CD62377008A13F2 /* Info.plist */,
-				B5BA4DC42CDB108400477410 /* NetworkManager.swift */,
 				B54163652CE0EE38005974A2 /* Secrets.xcconfig */,
 			);
 			path = KoreaTripRank;
@@ -549,6 +585,8 @@
 			files = (
 				B569C6AD2CD8C59A007386E0 /* StringExtensions.swift in Sources */,
 				B569C6AB2CD8BCFA007386E0 /* AddressSearchResultTableViewCell.swift in Sources */,
+				B5911DD22CF32C7D003283DD /* LocationHash.swift in Sources */,
+				B5911DD52CF32CD7003283DD /* LocationSearchHandler.swift in Sources */,
 				B550F8BB2CE4FBEA00E90069 /* SearchCollectionHeaderView.swift in Sources */,
 				B56AD67D2CD797BE00F2FC8E /* SearchViewController.swift in Sources */,
 				B59124982CD62375008A13F2 /* MainViewController.swift in Sources */,
@@ -560,7 +598,9 @@
 				B569C6A92CD869CC007386E0 /* SearchCollectionViewCell.swift in Sources */,
 				B569C6B92CD8C87A007386E0 /* SearchViewModel.swift in Sources */,
 				B56AD67B2CD7378E00F2FC8E /* FavoriteViewController.swift in Sources */,
+				B5911DD82CF32D1C003283DD /* URLComponentHandler.swift in Sources */,
 				B59124962CD62375008A13F2 /* SceneDelegate.swift in Sources */,
+				B5911DDA2CF32D47003283DD /* DecodeHandler.swift in Sources */,
 				B569C6B42CD8C600007386E0 /* DataModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
