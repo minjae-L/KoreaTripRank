@@ -25,9 +25,18 @@ internal typealias AssetImageTypeAlias = ImageAsset.Image
 // swiftlint:disable identifier_name line_length nesting type_body_length type_name
 internal enum Asset {
   internal static let accentColor = ColorAsset(name: "AccentColor")
+  internal static let clouds = ImageAsset(name: "clouds")
   internal static let firstPlaceRibbon = ImageAsset(name: "firstPlaceRibbon")
+  internal static let lightRain = ImageAsset(name: "lightRain")
+  internal static let lightSnow = ImageAsset(name: "lightSnow")
+  internal static let noRain = ImageAsset(name: "noRain")
+  internal static let partlyCloudyDay = ImageAsset(name: "partlyCloudyDay")
+  internal static let rainfall = ImageAsset(name: "rainfall")
   internal static let secondPlaceRibbon = ImageAsset(name: "secondPlaceRibbon")
+  internal static let snow = ImageAsset(name: "snow")
+  internal static let sun = ImageAsset(name: "sun")
   internal static let thirdPlaceRibbon = ImageAsset(name: "thirdPlaceRibbon")
+  internal static let wind = ImageAsset(name: "wind")
 }
 // swiftlint:enable identifier_name line_length nesting type_body_length type_name
 
