@@ -1,11 +1,11 @@
 {
   "images" : [
     {
-      "filename" : "sun.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "partlyCloudyDay.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
