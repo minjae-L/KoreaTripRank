@@ -255,6 +255,7 @@
 		B59124922CD62375008A13F2 /* KoreaTripRank */ = {
 			isa = PBXGroup;
 			children = (
+				B5F6508A2CF61588004ECAA2 /* Assets */,
 				B5911DD62CF32D02003283DD /* Network */,
 				B5911DD32CF32CB4003283DD /* Handlers */,
 				B5911DD02CF32C63003283DD /* DataStructure */,
@@ -268,7 +269,6 @@
 				B569C6B02CD8C5CE007386E0 /* Cell */,
 				B569C6AF2CD8C5C1007386E0 /* ViewController */,
 				B569C6AE2CD8C5B5007386E0 /* Delegate */,
-				B591249C2CD62377008A13F2 /* Assets.xcassets */,
 				B591249E2CD62377008A13F2 /* LaunchScreen.storyboard */,
 				B59124A12CD62377008A13F2 /* Info.plist */,
 				B54163652CE0EE38005974A2 /* Secrets.xcconfig */,
@@ -291,6 +291,14 @@
 				B59124B62CD62378008A13F2 /* KoreaTripRankUITestsLaunchTests.swift */,
 			);
 			path = KoreaTripRankUITests;
+			sourceTree = "<group>";
+		};
+		B5F6508A2CF61588004ECAA2 /* Assets */ = {
+			isa = PBXGroup;
+			children = (
+				B591249C2CD62377008A13F2 /* Assets.xcassets */,
+			);
+			path = Assets;
 			sourceTree = "<group>";
 		};
 		C815BD431B588499ABB76166 /* Pods */ = {
