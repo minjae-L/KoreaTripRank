@@ -1,11 +1,11 @@
 {
   "images" : [
     {
-      "filename" : "clouds.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "lightSnow.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
