@@ -484,7 +484,7 @@ class SearchCollectionViewCell: UICollectionViewCell {
         
         self.expandButton.setTitle("닫기", for: .normal)
         self.weatherContentView.isHidden = false
-        self.windImageView.image = UIImage(named: "wind")
+        self.windImageView.image = Asset.wind.image
         self.temperatureLabel.text = "\(model[index].temp)°C"
         self.windLabel.text = "\(model[index].wind)m/s"
         if model[index].rainAmount == "강수없음" {
@@ -494,22 +494,25 @@ class SearchCollectionViewCell: UICollectionViewCell {
         }
         switch model[index].rainState {
         case "0":
-            self.firstRainStateImageView.image = UIImage(named: "noRain")
+            self.firstRainStateImageView.image = Asset.noRain.image
             self.secondRainStateImageView.image = nil
         case "1":
-            self.firstRainStateImageView.image = UIImage(named: "rain")
+            self.firstRainStateImageView.image = Asset.rainfall.image
             self.secondRainStateImageView.image = nil
         case "2":
-            self.firstRainStateImageView.image = UIImage(named: "rain")
-            self.secondRainStateImageView.image = UIImage(named: "lightSnow")
+            self.firstRainStateImageView.image = Asset.rainfall.image
+            self.secondRainStateImageView.image = Asset.lightSnow.image
+        case "3":
+            self.firstRainStateImageView.image = Asset.lightSnow.image
+            self.secondRainStateImageView.image = nil
         case "5":
-            self.firstRainStateImageView.image = UIImage(named: "lightRain")
+            self.firstRainStateImageView.image = Asset.lightRain.image
             self.secondRainStateImageView.image = nil
         case "6":
-            self.firstRainStateImageView.image = UIImage(named: "lightRain")
-            self.secondRainStateImageView.image = UIImage(named: "snow")
+            self.firstRainStateImageView.image = Asset.lightRain.image
+            self.secondRainStateImageView.image = Asset.snow.image
         case "7":
-            self.firstRainStateImageView.image = UIImage(named: "snow")
+            self.firstRainStateImageView.image = Asset.snow.image
             self.secondRainStateImageView.image = nil
         default:
             self.firstRainStateImageView.image = nil
@@ -517,11 +520,11 @@ class SearchCollectionViewCell: UICollectionViewCell {
         }
         switch model[index].skyState {
         case "1":
-            self.skyStateImageView.image = UIImage(named: "sun")
+            self.skyStateImageView.image = Asset.sun.image
         case "3":
-            self.skyStateImageView.image = UIImage(named: "partlyCloudyDay")
+            self.skyStateImageView.image = Asset.partlyCloudyDay.image
         case "4":
-            self.skyStateImageView.image = UIImage(named: "clouds")
+            self.skyStateImageView.image = Asset.clouds.image
         default:
             self.skyStateImageView.image = nil
         }
