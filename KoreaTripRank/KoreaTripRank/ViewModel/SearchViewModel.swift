@@ -212,7 +212,7 @@ final class SearchViewModel {
         }
         if filteredTripArray[index].weatherModel != nil {
             for element in filteredTripArray[index].weatherModel! {
-                if element.fcstTime == self.calendarCalculation.getAfterHourDateString() && element.baseDate == calendarCalculation.getCurrentDateString() {
+                if element.fcstTime == self.calendarCalculation.getAfterHourDateString(dateFormat: "HHmm") && element.baseDate == calendarCalculation.getCurrentDateString(dateFormat: "yyyyMMdd") {
                     delegate?.noticeWeatherViewNeedUpdateWithAnimate(indexPath: indexPath)
                     return
                 }

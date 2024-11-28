@@ -25,20 +25,16 @@ class URLComponentHandler: URLComponentable {
     private let mobileAppName: String = "KoreaTripRank"
     private let tripPaths: [String] = ["B551011", "TarRlteTarService", "areaBasedList"]
     private let weatherPaths: [String] = ["1360000","VilageFcstInfoService_2.0","getUltraSrtFcst"]
+    let calendarCalculation: CalendarCalculation
+    
+    init(calendarCalculation: CalendarCalculation) {
+        self.calendarCalculation = calendarCalculation
+    }
     
     private var currentDate: (baseDate: String, baseTime: String, baseDateYM: String) {
-        let now = Date()
-        let thirtyMinuteBefore = Calendar.current.date(byAdding: .minute, value: -30, to: now)!
-        let lastMonth = Calendar.current.date(byAdding: .month, value: -1, to: now)!
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyyMMdd"
-        let baseDate = dateFormatter.string(from: now)
-        dateFormatter.dateFormat = "HHmm"
-        let baseTime = dateFormatter.string(from: thirtyMinuteBefore)
-        dateFormatter.dateFormat = "yyyyMM"
-        let baseDateYM = dateFormatter.string(from: lastMonth)
-        
-        return (baseDate, baseTime, baseDateYM)
+        return (calendarCalculation.getCurrentDateString(dateFormat: "yyyyMMdd"),
+                calendarCalculation.getBeforeHalfHourDateString(dateFormat: "HHmm"),
+                calendarCalculation.getBeforeMonthDateString(dateFormat: "yyyyMM"))
     }
     
     func getURLComponents(for type: NetworkURLCase, page: Int, tripKey: LocationDataModel?, weatherKey: ConvertedLocationModel?) -> URLComponents {

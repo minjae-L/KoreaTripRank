@@ -31,7 +31,7 @@ enum NetworkURLCase {
 class NetworkManager {
     let components: URLComponentable
     let decoder: DataDecodable
-    static let shared = NetworkManager(components: URLComponentHandler(), decoder: DecodeHandler())
+    static let shared = NetworkManager(components: URLComponentHandler(calendarCalculation: CalendarCalculation()), decoder: DecodeHandler())
     
     private init(components: URLComponentable, decoder: DataDecodable) {
         self.components = components
