@@ -38,6 +38,8 @@
 		B5D6A9CB2CF71ED200B7F7AF /* CalendarCalculationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D6A9CA2CF71ED200B7F7AF /* CalendarCalculationTests.swift */; };
 		B5D6A9D22CF74ABE00B7F7AF /* NetworkServiceKeyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D6A9D12CF74ABE00B7F7AF /* NetworkServiceKeyTests.swift */; };
 		B5EC3AB92CF8817C00532A7D /* CalendarCalculation.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D6A9C82CF713E900B7F7AF /* CalendarCalculation.swift */; };
+		B5EC3ABB2CF8884B00532A7D /* URLComponentHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5EC3ABA2CF8884B00532A7D /* URLComponentHandlerTests.swift */; };
+		B5EC3ABD2CF88B1D00532A7D /* APIKEY.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5EC3ABC2CF88B1D00532A7D /* APIKEY.swift */; };
 		EA813CCB2CEF773F00D6EF8C /* swiftgen.yml in Resources */ = {isa = PBXBuildFile; fileRef = EA813CCA2CEF773F00D6EF8C /* swiftgen.yml */; };
 		EA813CCF2CEF79E300D6EF8C /* Assets+Generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA813CCE2CEF79E200D6EF8C /* Assets+Generated.swift */; };
 /* End PBXBuildFile section */
@@ -99,6 +101,8 @@
 		B5D6A9C82CF713E900B7F7AF /* CalendarCalculation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarCalculation.swift; sourceTree = "<group>"; };
 		B5D6A9CA2CF71ED200B7F7AF /* CalendarCalculationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarCalculationTests.swift; sourceTree = "<group>"; };
 		B5D6A9D12CF74ABE00B7F7AF /* NetworkServiceKeyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkServiceKeyTests.swift; sourceTree = "<group>"; };
+		B5EC3ABA2CF8884B00532A7D /* URLComponentHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLComponentHandlerTests.swift; sourceTree = "<group>"; };
+		B5EC3ABC2CF88B1D00532A7D /* APIKEY.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIKEY.swift; sourceTree = "<group>"; };
 		DC4644F2A2FAEF5EC94675E8 /* Pods-KoreaTripRank-KoreaTripRankUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KoreaTripRank-KoreaTripRankUITests.debug.xcconfig"; path = "Target Support Files/Pods-KoreaTripRank-KoreaTripRankUITests/Pods-KoreaTripRank-KoreaTripRankUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		EA813CCA2CEF773F00D6EF8C /* swiftgen.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = swiftgen.yml; sourceTree = "<group>"; };
 		EA813CCE2CEF79E200D6EF8C /* Assets+Generated.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Assets+Generated.swift"; sourceTree = "<group>"; };
@@ -233,6 +237,7 @@
 				B5BA4DC42CDB108400477410 /* NetworkManager.swift */,
 				B5911DD72CF32D1C003283DD /* URLComponentHandler.swift */,
 				B5911DD92CF32D47003283DD /* DecodeHandler.swift */,
+				B5EC3ABC2CF88B1D00532A7D /* APIKEY.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -290,6 +295,7 @@
 				B59124AA2CD62378008A13F2 /* KoreaTripRankTests.swift */,
 				B5D6A9CA2CF71ED200B7F7AF /* CalendarCalculationTests.swift */,
 				B5D6A9D12CF74ABE00B7F7AF /* NetworkServiceKeyTests.swift */,
+				B5EC3ABA2CF8884B00532A7D /* URLComponentHandlerTests.swift */,
 			);
 			path = KoreaTripRankTests;
 			sourceTree = "<group>";
@@ -610,6 +616,7 @@
 				B59124982CD62375008A13F2 /* MainViewController.swift in Sources */,
 				B5BA4DC52CDB108400477410 /* NetworkManager.swift in Sources */,
 				B58194A72CE7B055000DADCC /* CategoryLabelsCollectionViewCell.swift in Sources */,
+				B5EC3ABD2CF88B1D00532A7D /* APIKEY.swift in Sources */,
 				B58194AA2CE7B0CB000DADCC /* CategoryLabelsCollectionView.swift in Sources */,
 				EA813CCF2CEF79E300D6EF8C /* Assets+Generated.swift in Sources */,
 				B59124942CD62375008A13F2 /* AppDelegate.swift in Sources */,
@@ -628,6 +635,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B5EC3ABB2CF8884B00532A7D /* URLComponentHandlerTests.swift in Sources */,
 				B5D6A9D22CF74ABE00B7F7AF /* NetworkServiceKeyTests.swift in Sources */,
 				B5EC3AB92CF8817C00532A7D /* CalendarCalculation.swift in Sources */,
 				B59124AB2CD62378008A13F2 /* KoreaTripRankTests.swift in Sources */,

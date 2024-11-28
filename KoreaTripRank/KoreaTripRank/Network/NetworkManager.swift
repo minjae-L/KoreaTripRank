@@ -27,16 +27,6 @@ enum NetworkURLCase {
     case weather
 }
 
-struct APIKEY {
-    func getKey() -> String? {
-        guard let url = Bundle.main.url(forResource: "Info", withExtension: "plist"),
-              let dict = NSDictionary(contentsOf: url) 
-        else {
-            return nil
-        }
-        return dict["APIKEY"] as? String
-    }
-}
 // MARK: NetworkManager
 class NetworkManager {
     let components: URLComponentable
