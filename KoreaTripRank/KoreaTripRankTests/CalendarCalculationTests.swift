@@ -7,16 +7,19 @@
 
 import XCTest
 @testable import KoreaTripRank
-final class CalendarCalculationTest: XCTestCase {
+final class CalendarCalculationTests: XCTestCase {
     var sut: CalendarCalculation!
-    var dateFormatter = DateFormatter()
-    var current = Date()
+    var dateFormatter: DateFormatter!
+    var current: Date!
     override func setUpWithError() throws {
         sut = CalendarCalculation()
         current = Date()
+        dateFormatter = DateFormatter()
     }
     override func tearDownWithError() throws {
         sut = nil
+        current = nil
+        dateFormatter = nil
     }
     func test_getCurrentDateString호출시_현재날짜가_나오는가() {
         

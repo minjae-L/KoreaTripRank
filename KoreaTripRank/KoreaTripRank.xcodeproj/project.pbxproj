@@ -34,6 +34,10 @@
 		B59124B52CD62378008A13F2 /* KoreaTripRankUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59124B42CD62378008A13F2 /* KoreaTripRankUITests.swift */; };
 		B59124B72CD62378008A13F2 /* KoreaTripRankUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59124B62CD62378008A13F2 /* KoreaTripRankUITestsLaunchTests.swift */; };
 		B5BA4DC52CDB108400477410 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BA4DC42CDB108400477410 /* NetworkManager.swift */; };
+		B5D6A9C92CF713E900B7F7AF /* CalendarCalculation.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D6A9C82CF713E900B7F7AF /* CalendarCalculation.swift */; };
+		B5D6A9CB2CF71ED200B7F7AF /* CalendarCalculationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D6A9CA2CF71ED200B7F7AF /* CalendarCalculationTests.swift */; };
+		B5D6A9D22CF74ABE00B7F7AF /* NetworkServiceKeyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D6A9D12CF74ABE00B7F7AF /* NetworkServiceKeyTests.swift */; };
+		B5EC3AB92CF8817C00532A7D /* CalendarCalculation.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D6A9C82CF713E900B7F7AF /* CalendarCalculation.swift */; };
 		EA813CCB2CEF773F00D6EF8C /* swiftgen.yml in Resources */ = {isa = PBXBuildFile; fileRef = EA813CCA2CEF773F00D6EF8C /* swiftgen.yml */; };
 		EA813CCF2CEF79E300D6EF8C /* Assets+Generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA813CCE2CEF79E200D6EF8C /* Assets+Generated.swift */; };
 /* End PBXBuildFile section */
@@ -92,6 +96,9 @@
 		B59124B42CD62378008A13F2 /* KoreaTripRankUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KoreaTripRankUITests.swift; sourceTree = "<group>"; };
 		B59124B62CD62378008A13F2 /* KoreaTripRankUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KoreaTripRankUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		B5BA4DC42CDB108400477410 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
+		B5D6A9C82CF713E900B7F7AF /* CalendarCalculation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarCalculation.swift; sourceTree = "<group>"; };
+		B5D6A9CA2CF71ED200B7F7AF /* CalendarCalculationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarCalculationTests.swift; sourceTree = "<group>"; };
+		B5D6A9D12CF74ABE00B7F7AF /* NetworkServiceKeyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkServiceKeyTests.swift; sourceTree = "<group>"; };
 		DC4644F2A2FAEF5EC94675E8 /* Pods-KoreaTripRank-KoreaTripRankUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KoreaTripRank-KoreaTripRankUITests.debug.xcconfig"; path = "Target Support Files/Pods-KoreaTripRank-KoreaTripRankUITests/Pods-KoreaTripRank-KoreaTripRankUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		EA813CCA2CEF773F00D6EF8C /* swiftgen.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = swiftgen.yml; sourceTree = "<group>"; };
 		EA813CCE2CEF79E200D6EF8C /* Assets+Generated.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Assets+Generated.swift"; sourceTree = "<group>"; };
@@ -215,6 +222,7 @@
 			isa = PBXGroup;
 			children = (
 				B5911DD42CF32CD7003283DD /* LocationSearchHandler.swift */,
+				B5D6A9C82CF713E900B7F7AF /* CalendarCalculation.swift */,
 			);
 			path = Handlers;
 			sourceTree = "<group>";
@@ -280,6 +288,8 @@
 			isa = PBXGroup;
 			children = (
 				B59124AA2CD62378008A13F2 /* KoreaTripRankTests.swift */,
+				B5D6A9CA2CF71ED200B7F7AF /* CalendarCalculationTests.swift */,
+				B5D6A9D12CF74ABE00B7F7AF /* NetworkServiceKeyTests.swift */,
 			);
 			path = KoreaTripRankTests;
 			sourceTree = "<group>";
@@ -604,6 +614,7 @@
 				EA813CCF2CEF79E300D6EF8C /* Assets+Generated.swift in Sources */,
 				B59124942CD62375008A13F2 /* AppDelegate.swift in Sources */,
 				B569C6A92CD869CC007386E0 /* SearchCollectionViewCell.swift in Sources */,
+				B5D6A9C92CF713E900B7F7AF /* CalendarCalculation.swift in Sources */,
 				B569C6B92CD8C87A007386E0 /* SearchViewModel.swift in Sources */,
 				B56AD67B2CD7378E00F2FC8E /* FavoriteViewController.swift in Sources */,
 				B5911DD82CF32D1C003283DD /* URLComponentHandler.swift in Sources */,
@@ -617,7 +628,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B5D6A9D22CF74ABE00B7F7AF /* NetworkServiceKeyTests.swift in Sources */,
+				B5EC3AB92CF8817C00532A7D /* CalendarCalculation.swift in Sources */,
 				B59124AB2CD62378008A13F2 /* KoreaTripRankTests.swift in Sources */,
+				B5D6A9CB2CF71ED200B7F7AF /* CalendarCalculationTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -759,6 +773,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_NO_COMMON_BLOCKS = YES;
