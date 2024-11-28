@@ -69,31 +69,18 @@ final class SearchViewModel {
     private var tripArray: [TripItem] = []
     // 셀에 뿌려질 데이터로 tripArray에서 필터링하여 저장됨
     var filteredTripArray: [TripItem] = []
+    // 날짜 데이터를 구하는 구조체
+    private var calendarCalculation: CalendarCalculation
+    
+    init(locationSearcHandler: LocationSearchHandler, calendarCalculation: CalendarCalculation) {
+        self.locationSearcHandler = locationSearcHandler
+        self.calendarCalculation = calendarCalculation
+    }
     
     private func noticeNeedUpdate() {
         delegate?.needUpdateCollectionView()
     }
-    // 현재로 부터 1시간 뒤 시간 문자열 구하기
-    private var currentFctsTime: String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "HHmm"
-        let afterhour = Calendar.current.date(byAdding: .hour, value: 1, to: Date())
-        let current = dateFormatter.string(from: afterhour!)
-        var arr = current.map{String($0)}
-        arr[2] = "0"
-        arr[3] = "0"
-        return arr.joined()
-    }
-    // 오늘 날짜 구하기
-    private var currentDate: String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyyMMdd"
-        return dateFormatter.string(from: Date())
-    }
     
-    init(locationSearcHandler: LocationSearchHandler) {
-        self.locationSearcHandler = locationSearcHandler
-    }
     // 랭킹순으로 정렬
     private func sortedTripArray(arr: [TripItem]) -> [TripItem] {
         return arr.sorted { item1, item2 in
@@ -225,7 +212,7 @@ final class SearchViewModel {
         }
         if filteredTripArray[index].weatherModel != nil {
             for element in filteredTripArray[index].weatherModel! {
-                if element.fcstTime == self.currentFctsTime && element.baseDate == currentDate {
+                if element.fcstTime == self.calendarCalculation.getAfterHourDateString() && element.baseDate == calendarCalculation.getCurrentDateString() {
                     delegate?.noticeWeatherViewNeedUpdateWithAnimate(indexPath: indexPath)
                     return
                 }
