@@ -18,17 +18,13 @@ extension URLComponentable {
 }
 
 class URLComponentHandler: URLComponentable {
-    private let scheme = "https"
-    private let host = "apis.data.go.kr"
-    private let paths: [String] = ["B551011", "TarRlteTarService", "areaBasedList"]
     private let mobileOS: String = "iOS"
     private let mobileAppName: String = "KoreaTripRank"
-    private let tripPaths: [String] = ["B551011", "TarRlteTarService", "areaBasedList"]
-    private let weatherPaths: [String] = ["1360000","VilageFcstInfoService_2.0","getUltraSrtFcst"]
     let calendarCalculation: CalendarCalculation
+    let key = APIKEY()
     
-    init(calendarCalculation: CalendarCalculation) {
-        self.calendarCalculation = calendarCalculation
+    init() {
+        self.calendarCalculation = CalendarCalculation()
     }
     
     private var currentDate: (baseDate: String, baseTime: String, baseDateYM: String) {
@@ -38,19 +34,24 @@ class URLComponentHandler: URLComponentable {
     }
     
     func getURLComponents(for type: NetworkURLCase, page: Int, tripKey: LocationDataModel?, weatherKey: ConvertedLocationModel?) -> URLComponents {
+        guard let url = type.getURL() else {
+            print("getURLComponents:: url Error")
+            return URLComponents()
+        }
         var components = URLComponents()
-        components.scheme = scheme
-        components.host = host
+        components.scheme = url.scheme
+        components.host = url.host()
+        components.path = url.path()
         
         switch type {
         case .trip:
             guard let areaCd = tripKey?.areaCode,
                   let sigunguCd = tripKey?.sigunguCode else {
+                print("getURLComponents:: [ERROR] tripKey not prepared")
                 return URLComponents()
             }
-            components.path = "/" + tripPaths.joined(separator: "/")
             components.percentEncodedQueryItems = [
-                URLQueryItem(name: "serviceKey", value: APIKEY().getKey()),
+                URLQueryItem(name: "serviceKey", value: key.getKey()),
                 URLQueryItem(name: "numOfRows", value: "50"),
                 URLQueryItem(name: "MobileOS", value: mobileOS),
                 URLQueryItem(name: "MobileApp", value: mobileAppName),
@@ -63,11 +64,11 @@ class URLComponentHandler: URLComponentable {
         case .weather:
             guard let nx = weatherKey?.x,
                   let ny = weatherKey?.y else {
+                print("getURLComponents:: [ERROR] weatherKey not prepared")
                 return URLComponents()
             }
-            components.path = "/" + weatherPaths.joined(separator: "/")
             components.percentEncodedQueryItems = [
-                URLQueryItem(name: "serviceKey", value: APIKEY().getKey()),
+                URLQueryItem(name: "serviceKey", value: key.getKey()),
                 URLQueryItem(name: "numOfRows", value: "60"),
                 URLQueryItem(name: "pageNo", value: String(page)),
                 URLQueryItem(name: "dataType", value: "JSON"),

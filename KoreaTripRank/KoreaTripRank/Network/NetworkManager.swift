@@ -22,16 +22,20 @@ enum NetworkError: Error {
     case invalidURL
 }
 
-enum NetworkURLCase {
-    case trip
-    case weather
+enum NetworkURLCase: String {
+    case trip = "http://apis.data.go.kr/B551011/TarRlteTarService/areaBasedList"
+    case weather = "https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtFcst"
+    
+    func getURL() -> URL? {
+        return URL(string: self.rawValue)
+    }
 }
 
 // MARK: NetworkManager
 class NetworkManager {
     let components: URLComponentable
     let decoder: DataDecodable
-    static let shared = NetworkManager(components: URLComponentHandler(calendarCalculation: CalendarCalculation()), decoder: DecodeHandler())
+    static let shared = NetworkManager(components: URLComponentHandler(), decoder: DecodeHandler())
     
     private init(components: URLComponentable, decoder: DataDecodable) {
         self.components = components
