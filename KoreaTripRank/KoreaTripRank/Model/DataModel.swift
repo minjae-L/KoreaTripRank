@@ -130,40 +130,84 @@ struct LocationDataModel: Decodable {
         case sigunguCode = "signguCd"
     }
 }
-class AreaDatabase {
+
+// MARK: - AreaDatabase
+enum AreaDatabaseLoadError: Error {
+    case fileNotExist
+    case invalidFileName
+    case invalidFileExtension
+    case invalidURL
+    case dataConvertError
+    case decodingError
+}
+
+struct AreaDatabase {
     var data: [LocationDataModel] = []
     var jsonData: Data?
+    var fileName = "AreaCode"
+    var fileExtension = "json"
+    var fileURL: URL?
     
-    // 데이터 불러오기
-    func load() -> Data? {
-        // 파일이름
-        let fileName = "AreaCode"
-        // 파일 확장자
-        let fileType = "json"
-        // 파일 위치
-        guard let fileLocation = Bundle.main.url(forResource: fileName, withExtension: fileType) else { return nil }
-        
-        // 해당 파일을 Data로 변환
+    
+    mutating func initDatabase() {
         do {
-            let data = try Data(contentsOf: fileLocation)
-            return data
+            try loadFileURL()
+            try convertData(url: self.fileURL)
+            try decode(data: self.jsonData)
+        } catch AreaDatabaseLoadError.invalidURL {
+            print("AreaDatabaseLoadError:: invalidURL")
+        } catch AreaDatabaseLoadError.dataConvertError {
+            print("AreaDatabaseLoadError:: dataConvertError")
+        } catch AreaDatabaseLoadError.invalidFileName {
+            print("AreaDatabaseLoadError:: invalidFileName")
+        } catch AreaDatabaseLoadError.invalidFileExtension {
+            print("AreaDatabaseLoadError:: invalidFileExtension")
+        } catch AreaDatabaseLoadError.fileNotExist {
+            print("AreaDatabaseLoadError:: fileNotExist")
+        } catch AreaDatabaseLoadError.decodingError {
+            print("AreaDatabaseLoadError:: decodingError")
         } catch {
-            return nil
+            print("AreaDatabaseLoadError:: unExpected Error")
         }
     }
-    init() {
-        self.jsonData = load()
-        self.data = decode(data: jsonData)
+    // 데이터 불러오기
+    mutating func loadFileURL() throws {
+        // 파일 위치
+        guard let fileLocation = Bundle.main.url(forResource: fileName, withExtension: fileExtension) else {
+            if fileName != "AreaCode" { throw(AreaDatabaseLoadError.invalidFileName)
+            } else if fileExtension != "json" { throw(AreaDatabaseLoadError.invalidFileExtension)
+            } else {
+                throw(AreaDatabaseLoadError.fileNotExist)
+            }
+        }
+        self.fileURL = fileLocation
     }
-    func decode(data: Data?) -> [LocationDataModel] {
-        guard let data = data else { return [] }
+    
+    mutating func convertData(url: URL?) throws {
+        guard let url = url else {
+            throw(AreaDatabaseLoadError.invalidURL)
+        }
+        // 해당 파일을 Data로 변환
+        do {
+            let data = try Data(contentsOf: url)
+            self.jsonData = data
+        } catch {
+            throw(AreaDatabaseLoadError.dataConvertError)
+        }
+    }
+    
+    
+    mutating func decode(data: Data?) throws {
+        guard let data = self.jsonData else {
+            throw(AreaDatabaseLoadError.dataConvertError)
+        }
         let decoder = JSONDecoder()
         do {
             let decoded = try decoder.decode(LocationModel.self, from: data)
-            return decoded.data
+            self.data = decoded.data
         } catch {
             print(String(describing: error))
-            return []
+            throw(AreaDatabaseLoadError.decodingError)
         }
     }
 }
@@ -192,7 +236,7 @@ struct ConvertedLocationModel {
         let OLON = 126.0 // 기준점 경도(degree)
         let OLAT = 38.0 // 기준점 위도(degree)
         let XO:Double = 43 // 기준점 X좌표(GRID)
-        let YO:Double = 136 // 기1준점 Y좌표(GRID)
+        let YO:Double = 136 // 기준점 Y좌표(GRID)
         let DEGRAD = Double.pi / 180.0
         let RADDEG = 180.0 / Double.pi
         let re = RE / GRID

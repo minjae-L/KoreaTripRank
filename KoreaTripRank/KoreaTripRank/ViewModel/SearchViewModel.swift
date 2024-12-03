@@ -75,6 +75,9 @@ final class SearchViewModel {
     init(locationSearcHandler: LocationSearchHandler, calendarCalculation: CalendarCalculation) {
         self.locationSearcHandler = locationSearcHandler
         self.calendarCalculation = calendarCalculation
+        
+        // 장소 데이터 초기화
+        self.areaDatabase.initDatabase()
     }
     
     private func noticeNeedUpdate() {
