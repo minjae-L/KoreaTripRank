@@ -10,6 +10,10 @@
 		2B946A5706E83B3AA9B500CE /* Pods_KoreaTripRank_KoreaTripRankUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FB949475C528B7DC07DF4001 /* Pods_KoreaTripRank_KoreaTripRankUITests.framework */; };
 		73D7FA1D6A5903585F6FE760 /* Pods_KoreaTripRankTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2921D781453A3348D78704E4 /* Pods_KoreaTripRankTests.framework */; };
 		B056E3C42D24C3625DBD4014 /* Pods_KoreaTripRank.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D844309077A7649B010B68B /* Pods_KoreaTripRank.framework */; };
+		B5248F132CFE9C6E003B3DED /* AreaDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5248F122CFE9C6E003B3DED /* AreaDatabase.swift */; };
+		B5248F142CFE9C84003B3DED /* AreaDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5248F122CFE9C6E003B3DED /* AreaDatabase.swift */; };
+		B5248F162CFE9CB4003B3DED /* ConvertedLocationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5248F152CFE9CB4003B3DED /* ConvertedLocationModel.swift */; };
+		B5248F172CFE9CD0003B3DED /* ConvertedLocationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5248F152CFE9CB4003B3DED /* ConvertedLocationModel.swift */; };
 		B550F8BB2CE4FBEA00E90069 /* SearchCollectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B550F8BA2CE4FBEA00E90069 /* SearchCollectionHeaderView.swift */; };
 		B5663DF82CFB49CF00E68D05 /* URLKeysTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5663DF72CFB49CF00E68D05 /* URLKeysTests.swift */; };
 		B5663DFC2CFB56EE00E68D05 /* URLKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5663DFB2CFB56EE00E68D05 /* URLKeys.swift */; };
@@ -84,6 +88,8 @@
 		99CCEA8F04803BE5DBA382AD /* Pods-KoreaTripRank.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KoreaTripRank.debug.xcconfig"; path = "Target Support Files/Pods-KoreaTripRank/Pods-KoreaTripRank.debug.xcconfig"; sourceTree = "<group>"; };
 		9D844309077A7649B010B68B /* Pods_KoreaTripRank.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_KoreaTripRank.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A7D15C65AD72FA5ED1F0FCDA /* Pods-KoreaTripRank-KoreaTripRankUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KoreaTripRank-KoreaTripRankUITests.release.xcconfig"; path = "Target Support Files/Pods-KoreaTripRank-KoreaTripRankUITests/Pods-KoreaTripRank-KoreaTripRankUITests.release.xcconfig"; sourceTree = "<group>"; };
+		B5248F122CFE9C6E003B3DED /* AreaDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AreaDatabase.swift; sourceTree = "<group>"; };
+		B5248F152CFE9CB4003B3DED /* ConvertedLocationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConvertedLocationModel.swift; sourceTree = "<group>"; };
 		B54163652CE0EE38005974A2 /* Secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
 		B550F8BA2CE4FBEA00E90069 /* SearchCollectionHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchCollectionHeaderView.swift; sourceTree = "<group>"; };
 		B5663DF72CFB49CF00E68D05 /* URLKeysTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLKeysTests.swift; sourceTree = "<group>"; };
@@ -206,6 +212,8 @@
 			isa = PBXGroup;
 			children = (
 				B569C6B32CD8C600007386E0 /* DataModel.swift */,
+				B5248F122CFE9C6E003B3DED /* AreaDatabase.swift */,
+				B5248F152CFE9CB4003B3DED /* ConvertedLocationModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -643,6 +651,7 @@
 				B569C6AD2CD8C59A007386E0 /* StringExtensions.swift in Sources */,
 				B569C6AB2CD8BCFA007386E0 /* AddressSearchResultTableViewCell.swift in Sources */,
 				B5911DD22CF32C7D003283DD /* LocationHash.swift in Sources */,
+				B5248F162CFE9CB4003B3DED /* ConvertedLocationModel.swift in Sources */,
 				B5911DD52CF32CD7003283DD /* LocationSearchHandler.swift in Sources */,
 				B550F8BB2CE4FBEA00E90069 /* SearchCollectionHeaderView.swift in Sources */,
 				B56AD67D2CD797BE00F2FC8E /* SearchViewController.swift in Sources */,
@@ -659,6 +668,7 @@
 				B569C6B92CD8C87A007386E0 /* SearchViewModel.swift in Sources */,
 				B56AD67B2CD7378E00F2FC8E /* FavoriteViewController.swift in Sources */,
 				B59124962CD62375008A13F2 /* SceneDelegate.swift in Sources */,
+				B5248F132CFE9C6E003B3DED /* AreaDatabase.swift in Sources */,
 				B5663DFC2CFB56EE00E68D05 /* URLKeys.swift in Sources */,
 				B5911DDA2CF32D47003283DD /* DecodeHandler.swift in Sources */,
 				B569C6B42CD8C600007386E0 /* DataModel.swift in Sources */,
@@ -675,6 +685,7 @@
 				B5EC3ABB2CF8884B00532A7D /* URLComponentHandlerTests.swift in Sources */,
 				B57EAEA72CFC6C6C002FFF71 /* URLComponentHandler.swift in Sources */,
 				B57EAEA52CFC6C23002FFF71 /* APIKEY.swift in Sources */,
+				B5248F172CFE9CD0003B3DED /* ConvertedLocationModel.swift in Sources */,
 				B5663DF82CFB49CF00E68D05 /* URLKeysTests.swift in Sources */,
 				B5CA8CC22CFD961800BF6001 /* AreaDatabaseTests.swift in Sources */,
 				B5CA8CC02CFD8E4200BF6001 /* ConvertedLocationModelTests.swift in Sources */,
@@ -688,6 +699,7 @@
 				B5D6A9CB2CF71ED200B7F7AF /* CalendarCalculationTests.swift in Sources */,
 				B57EAEAA2CFC6CDE002FFF71 /* StringExtensions.swift in Sources */,
 				B57EAEA62CFC6C45002FFF71 /* DataModel.swift in Sources */,
+				B5248F142CFE9C84003B3DED /* AreaDatabase.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
