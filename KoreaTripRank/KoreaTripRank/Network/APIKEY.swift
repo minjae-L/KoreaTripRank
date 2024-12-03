@@ -6,8 +6,10 @@
 //
 
 import Foundation
-
-struct APIKEY {
+protocol APIKEYConfiguring {
+    func getKey() -> String?
+}
+struct APIKEY: APIKEYConfiguring {
     func getKey() -> String? {
         guard let url = Bundle.main.url(forResource: "Info", withExtension: "plist"),
               let dict = NSDictionary(contentsOf: url)
@@ -15,5 +17,11 @@ struct APIKEY {
             return nil
         }
         return dict["APIKEY"] as? String
+    }
+}
+
+struct MockAPIKEY: APIKEYConfiguring {
+    func getKey() -> String? {
+        return ""
     }
 }

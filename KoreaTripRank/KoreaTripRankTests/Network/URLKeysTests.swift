@@ -12,14 +12,25 @@ final class URLKeysTests: XCTestCase {
     var sut: URLKeys!
     
     override func setUpWithError() throws {
-        sut = URLKeys(calendarCalculation: CalendarCalculation(), APIKEY: APIKEY())
+        let mockCalendarCal = MockCalendarCalculation()
+        let mockAPIKey = MockAPIKEY()
+        sut = URLKeys(calendarCalculation: mockCalendarCal, APIKEY: mockAPIKey)
     }
 
+    func test_qetQueryItems호출시_weatherKey가nil인경우() {
+        // given
+        let dummyWeatherKey: ConvertedLocationModel? = nil
+        // when
+        let result = sut.getQueryItems(type: .weather, page: 1, weatherKey: dummyWeatherKey)
+        // then
+        XCTAssertEqual(result.count, 0)
+    }
+    
     func test_getQueryItems호출시_weatherKey의xy값이Nil인경우() {
         // given
         let dummyWeatherKey = ConvertedLocationModel(lat: 0, lng: 0)
         // when
-        let result = sut.getQueryItems(type: .weather, pageNo: 1, weatherKey: dummyWeatherKey)
+        let result = sut.getQueryItems(type: .weather, page: 1, weatherKey: dummyWeatherKey)
         // then
         XCTAssertEqual(result, [])
     }
@@ -28,7 +39,7 @@ final class URLKeysTests: XCTestCase {
         // given
         let dummyWeatherKey = ConvertedLocationModel(lat: 0, lng: 0, x: 0, y: 0)
         // when
-        let result = sut.getQueryItems(type: .weather, pageNo: 1, weatherKey: dummyWeatherKey)
+        let result = sut.getQueryItems(type: .weather, page: 1, weatherKey: dummyWeatherKey)
         // then
         XCTAssertNotEqual(result, [])
     }
@@ -36,7 +47,7 @@ final class URLKeysTests: XCTestCase {
     func test_getQueryItems호출시_tripKey가nil인경우() {
         // given
         // when
-        let result = sut.getQueryItems(type: .trip, pageNo: 1)
+        let result = sut.getQueryItems(type: .trip, page: 1)
         // then
         XCTAssertEqual(result, [])
     }
@@ -45,18 +56,18 @@ final class URLKeysTests: XCTestCase {
         // given
         let dummyTripKey = LocationDataModel(areaName: "dummy", sigunguName: "dummy", areaCode: 30, sigunguCode: 30)
         // when
-        let result = sut.getQueryItems(type: .trip, pageNo: 1, tripKey: dummyTripKey)
+        let result = sut.getQueryItems(type: .trip, page: 1, tripKey: dummyTripKey)
         // given
         XCTAssertNotEqual(result, [])
     }
     
-    func test_getQueryItems호출후_QueryItem의배열크기가정상적으로리턴되는지() {
+    func test_getQueryItems호출시_QueryItem의배열크기가정상적으로리턴되는지() {
         // given
         let dummyTripKey = LocationDataModel(areaName: "dummy", sigunguName: "dummy", areaCode: 30, sigunguCode: 30)
         let dummyWeatherKey = ConvertedLocationModel(lat: 0, lng: 0, x: 0, y: 0)
         // when
-        let tripResult = sut.getQueryItems(type: .trip, pageNo: 1, tripKey: dummyTripKey)
-        let weatherResult = sut.getQueryItems(type: .weather, pageNo: 1, weatherKey: dummyWeatherKey)
+        let tripResult = sut.getQueryItems(type: .trip, page: 1, tripKey: dummyTripKey)
+        let weatherResult = sut.getQueryItems(type: .weather, page: 1, weatherKey: dummyWeatherKey)
         // then
         XCTAssertEqual(tripResult.count, 9)
         XCTAssertEqual(weatherResult.count, 8)

@@ -26,7 +26,13 @@ enum NetworkError: Error {
 class NetworkManager {
     let components: URLComponentable
     let decoder: DataDecodable
-    static let shared = NetworkManager(components: URLComponentHandler(), decoder: DecodeHandler())
+    
+    static let shared = NetworkManager(components:
+                                        URLComponentHandler(
+                                            urlKeys: URLKeys(
+                                                calendarCalculation: CalendarCalculation(),
+                                                APIKEY: APIKEY())
+                                        ), decoder: DecodeHandler())
     
     private init(components: URLComponentable, decoder: DataDecodable) {
         self.components = components

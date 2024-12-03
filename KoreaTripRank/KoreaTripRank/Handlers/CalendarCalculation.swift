@@ -7,7 +7,14 @@
 
 import Foundation
 
-struct CalendarCalculation {
+protocol CalendarCalculating {
+    func getCurrentDateString(dateFormat: String) -> String
+    func getAfterHourDateString(dateFormat: String) -> String
+    func getBeforeHalfHourDateString(dateFormat: String) -> String
+    func getBeforeMonthDateString(dateFormat: String) -> String
+}
+
+struct CalendarCalculation: CalendarCalculating {
     let dateFormatter: DateFormatter
     
     init() {
@@ -39,5 +46,23 @@ struct CalendarCalculation {
         let beforeMonthDate = Calendar.current.date(byAdding: .month, value: -1, to: Date())!
         
         return dateFormatter.string(from: beforeMonthDate)
+    }
+}
+
+struct MockCalendarCalculation: CalendarCalculating {
+    func getCurrentDateString(dateFormat: String) -> String {
+        return ""
+    }
+    
+    func getAfterHourDateString(dateFormat: String) -> String {
+        return ""
+    }
+    
+    func getBeforeHalfHourDateString(dateFormat: String) -> String {
+        return ""
+    }
+    
+    func getBeforeMonthDateString(dateFormat: String) -> String {
+        return ""
     }
 }

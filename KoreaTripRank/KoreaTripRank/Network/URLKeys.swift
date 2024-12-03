@@ -7,20 +7,43 @@
 
 import Foundation
 
+protocol URLKeyConfiguring {
+    func getQueryItems(type: NetworkURLCase,
+                       page: Int,
+                       weatherKey: ConvertedLocationModel?,
+                       tripKey: LocationDataModel?) -> [URLQueryItem]
+}
+
+extension URLKeyConfiguring {
+    func getQueryItems(type: NetworkURLCase,
+                       page: Int,
+                       weatherKey: ConvertedLocationModel? = nil,
+                       tripKey: LocationDataModel? = nil) -> [URLQueryItem] {
+        return getQueryItems(type: type, page: page, weatherKey: weatherKey, tripKey: tripKey)
+    }
+}
+
+struct MockURLKeys: URLKeyConfiguring {
+    func getQueryItems(type: NetworkURLCase, page: Int, weatherKey: ConvertedLocationModel?, tripKey: LocationDataModel?) -> [URLQueryItem] {
+        return []
+    }
+}
+
 // Components에 들어가는 query 구성
-struct URLKeys {
-    private let calendarCalculation: CalendarCalculation
-    private let APIKEY: APIKEY
+struct URLKeys: URLKeyConfiguring {
+    
+    var calendarCalculation: CalendarCalculating
+    var APIKEY: APIKEYConfiguring
+    
     private let mobileOS: String = "iOS"
     private let mobileAppName: String = "KoreaTripRank"
     
-    init(calendarCalculation: CalendarCalculation, APIKEY: APIKEY) {
+    init(calendarCalculation: CalendarCalculating, APIKEY: APIKEYConfiguring) {
         self.calendarCalculation = calendarCalculation
         self.APIKEY = APIKEY
     }
     
-    func getQueryItems(type: NetworkURLCase, pageNo: Int, weatherKey: ConvertedLocationModel? = nil, tripKey: LocationDataModel? = nil) -> [URLQueryItem] {
-        
+    func getQueryItems(type: NetworkURLCase, page: Int, weatherKey: ConvertedLocationModel?, tripKey: LocationDataModel?) -> [URLQueryItem] {
         var queryItems = [URLQueryItem]()
         
         switch type {
@@ -38,7 +61,7 @@ struct URLKeys {
                 URLQueryItem(name: "areaCd", value: String(tripKey.areaCode)),
                 URLQueryItem(name: "signguCd", value: String(tripKey.sigunguCode)),
                 URLQueryItem(name: "_type", value: "json"),
-                URLQueryItem(name: "pageNo", value: String(pageNo))
+                URLQueryItem(name: "pageNo", value: String(page))
             ]
         case .weather:
             guard let weatherKey = weatherKey else {
@@ -52,7 +75,7 @@ struct URLKeys {
             }
             queryItems = [ URLQueryItem(name: "serviceKey", value: APIKEY.getKey()),
                            URLQueryItem(name: "numOfRows", value: "60"),
-                           URLQueryItem(name: "pageNo", value: String(pageNo)),
+                           URLQueryItem(name: "pageNo", value: String(page)),
                            URLQueryItem(name: "dataType", value: "JSON"),
                            URLQueryItem(name: "base_date", value: calendarCalculation.getCurrentDateString(dateFormat: "yyyyMMdd")),
                            URLQueryItem(name: "base_time", value: calendarCalculation.getBeforeHalfHourDateString(dateFormat: "HHmm")),

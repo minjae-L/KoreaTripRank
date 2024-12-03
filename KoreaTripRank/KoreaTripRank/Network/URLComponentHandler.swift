@@ -28,9 +28,9 @@ extension URLComponentable {
 }
 
 class URLComponentHandler: URLComponentable {
-    var urlKeys: URLKeys
+    var urlKeys: URLKeyConfiguring
     
-    init(urlKeys: URLKeys = URLKeys(calendarCalculation: CalendarCalculation(), APIKEY: APIKEY())) {
+    init(urlKeys: URLKeyConfiguring) {
         self.urlKeys = urlKeys
     }
     
@@ -43,7 +43,7 @@ class URLComponentHandler: URLComponentable {
         components.scheme = url.scheme
         components.host = url.host()
         components.path = url.path()
-        components.percentEncodedQueryItems = urlKeys.getQueryItems(type: type, pageNo: page, weatherKey: weatherKey, tripKey: tripKey)
+        components.percentEncodedQueryItems = urlKeys.getQueryItems(type: type, page: page, weatherKey: weatherKey, tripKey: tripKey)
 
         return components
     }
