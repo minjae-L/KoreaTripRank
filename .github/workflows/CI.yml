@@ -13,15 +13,15 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - name: Make JSON File
+    - name: Make xcconfig File
       run: |
         echo '{
         "APIKEY": "${{ secrets.APIKEY}}"
-        }' >> secrets.xcconfig
+        }' >> ./KoreaTripRank/Secrets.xcconfig
     - name: Start xcode build 🛠
       run: |
         pod install --repo-update --clean-install --project-directory=KoreaTripRank/
         xcodebuild clean test -workspace KoreaTripRank/KoreaTripRank.xcworkspace -scheme KoreaTripRank -destination 'platform=iOS Simulator,name=iPhone 15 Pro,OS=latest'
     - name: Remove Secrets.xcconfig
       run: |
-        rm ./Secrets.xcconfig
+        rm ./KoreaTripRank/Secrets.xcconfig
