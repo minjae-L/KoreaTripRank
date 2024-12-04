@@ -13,7 +13,23 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+    - name: Make JSON File
+      run: |
+        echo '{
+        "APIKEY": "${{ secrets.APIKEY}}"
+        }' >> secrets.json
+    - name: Convert File to xcconfig
+      run: |
+        if [ -f secrets.json ]; then
+          plutil -convert xml1 -o ./KoreaTripRank/Secrets.xcconfig secrets.json
+        else
+          ehco "secrets.json is not exist"
+          exit 1
+        fi
     - name: Start xcode build 🛠
       run: |
         pod install --repo-update --clean-install --project-directory=KoreaTripRank/
         xcodebuild clean test -workspace KoreaTripRank/KoreaTripRank.xcworkspace -scheme KoreaTripRank -destination 'platform=iOS Simulator,name=iPhone 15 Pro,OS=latest'
+    - name: Remove Secrets.xcconfig
+      run: |
+        rm secrets.json ./KoreaTripRank/Secrets.xcconfig
