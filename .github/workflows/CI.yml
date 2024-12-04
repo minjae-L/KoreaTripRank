@@ -21,7 +21,7 @@ jobs:
     - name: Convert File to xcconfig
       run: |
         if [ -f secrets.json ]; then
-          plutil -convert xml1 -o ./Secrets.xcconfig secrets.json
+          plutil -convert xml1 -o /Users/runner/work/KoreaTripRank/KoreaTripRank/KoreaTripRank/KoreaTripRank/Secrets.xcconfig secrets.json
         else
           ehco "secrets.json is not exist"
           exit 1
