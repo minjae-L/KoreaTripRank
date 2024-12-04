@@ -15,9 +15,10 @@ jobs:
     - uses: actions/checkout@v3
     - name: Make xcconfig File
       run: |
-        echo '{
-        "APIKEY": "${{ secrets.APIKEY}}"
-        }' >> ./KoreaTripRank/Secrets.xcconfig
+        echo "APIKEY = ${{ secrets.APIKEY}}" > Secrets.xcconfig
+    - name: Move to project
+      run: |
+        mv Secrets.xcconfig  ./KoreaTripRank/
     - name: Start xcode build 🛠
       run: |
         pod install --repo-update --clean-install --project-directory=KoreaTripRank/
