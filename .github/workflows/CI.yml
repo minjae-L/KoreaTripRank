@@ -16,7 +16,7 @@ jobs:
     - name: Make xcconfig file
       run: |
         mkdir -p ./KoreaTripRank/KoreaTripRank
-        echo "APIKEY = {{secrets.APIKEY}}" < ./KoreaTripRank/KoreaTripRank/Secrets.xcconfig
+        echo "APIKEY = {{secrets.APIKEY}}" > ./KoreaTripRank/KoreaTripRank/Secrets.xcconfig
     - name: Check xcconfig file
       run: |
         cat ./KoreaTripRank/KoreaTripRank/Secrets.xcconfig
