@@ -13,9 +13,13 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+    - name: Make xcconfig file
+      run: |
+        mkdir -p ./KoreaTripRank/KoreaTripRank/
+        echo "APIKEY = {{secrets.APIKEY}}" < ./KoreaTripRank/KoreaTripRank/Secrets.xcconfig
     - name: Check xcconfig file
       run: |
-        cat ./KoreaTripRank/KoreaTripRank/Info.plist
+        cat ./KoreaTripRank/KoreaTripRank/Secrets.xcconfig
     - name: Start xcode build 🛠
       run: |
         pod install --repo-update --clean-install --project-directory=KoreaTripRank/
