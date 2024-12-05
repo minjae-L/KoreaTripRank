@@ -27,14 +27,9 @@ class NetworkManager {
     let components: URLComponentable
     let decoder: DataDecodable
     
-    static let shared = NetworkManager(components:
-                                        URLComponentHandler(
-                                            urlKeys: URLKeys(
-                                                calendarCalculation: CalendarCalculation(),
-                                                APIKEY: APIKEY())
-                                        ), decoder: DecodeHandler())
+    static let shared = NetworkManager()
     
-    private init(components: URLComponentable, decoder: DataDecodable) {
+    private init(components: URLComponentable = URLComponentHandler(), decoder: DataDecodable = DecodeHandler()) {
         self.components = components
         self.decoder = decoder
     }

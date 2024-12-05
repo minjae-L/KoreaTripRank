@@ -22,7 +22,7 @@ extension URLKeyConfiguring {
         return getQueryItems(type: type, page: page, weatherKey: weatherKey, tripKey: tripKey)
     }
 }
-
+	
 struct MockURLKeys: URLKeyConfiguring {
     func getQueryItems(type: NetworkURLCase, page: Int, weatherKey: ConvertedLocationModel?, tripKey: LocationDataModel?) -> [URLQueryItem] {
         return []
@@ -33,14 +33,14 @@ struct MockURLKeys: URLKeyConfiguring {
 struct URLKeys: URLKeyConfiguring {
     
     var calendarCalculation: CalendarCalculating
-    var APIKEY: APIKEYConfiguring
+    var APIKey: APIKEYConfiguring
     
     private let mobileOS: String = "iOS"
     private let mobileAppName: String = "KoreaTripRank"
     
-    init(calendarCalculation: CalendarCalculating, APIKEY: APIKEYConfiguring) {
+    init(calendarCalculation: CalendarCalculating = CalendarCalculation(), APIKey: APIKEYConfiguring = APIKEY()) {
         self.calendarCalculation = calendarCalculation
-        self.APIKEY = APIKEY
+        self.APIKey = APIKey
     }
     
     func getQueryItems(type: NetworkURLCase, page: Int, weatherKey: ConvertedLocationModel?, tripKey: LocationDataModel?) -> [URLQueryItem] {
@@ -53,7 +53,7 @@ struct URLKeys: URLKeyConfiguring {
                 return []
             }
             queryItems = [
-                URLQueryItem(name: "serviceKey", value: APIKEY.getKey()),
+                URLQueryItem(name: "serviceKey", value: APIKey.getKey()),
                 URLQueryItem(name: "numOfRows", value: "50"),
                 URLQueryItem(name: "MobileOS", value: mobileOS),
                 URLQueryItem(name: "MobileApp", value: mobileAppName),
@@ -73,7 +73,7 @@ struct URLKeys: URLKeyConfiguring {
                 print("getQueryItems:: [ERROR] weatherKey.x .y is nil")
                 return []
             }
-            queryItems = [ URLQueryItem(name: "serviceKey", value: APIKEY.getKey()),
+            queryItems = [ URLQueryItem(name: "serviceKey", value: APIKey.getKey()),
                            URLQueryItem(name: "numOfRows", value: "60"),
                            URLQueryItem(name: "pageNo", value: String(page)),
                            URLQueryItem(name: "dataType", value: "JSON"),

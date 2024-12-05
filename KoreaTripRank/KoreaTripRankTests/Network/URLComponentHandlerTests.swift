@@ -13,7 +13,7 @@ final class URLComponentHandlerTests: XCTestCase {
         let mockCalendarCalculation = MockCalendarCalculation()
         let mockAPIKey = MockAPIKEY()
         let urlKeys = URLKeys(calendarCalculation: mockCalendarCalculation,
-                              APIKEY: mockAPIKey)
+                              APIKey: mockAPIKey)
         sut = URLComponentHandler(urlKeys: urlKeys)
     }
 

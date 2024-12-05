@@ -14,7 +14,7 @@ final class URLKeysTests: XCTestCase {
     override func setUpWithError() throws {
         let mockCalendarCal = MockCalendarCalculation()
         let mockAPIKey = MockAPIKEY()
-        sut = URLKeys(calendarCalculation: mockCalendarCal, APIKEY: mockAPIKey)
+        sut = URLKeys(calendarCalculation: mockCalendarCal, APIKey: mockAPIKey)
     }
 
     func test_qetQueryItems호출시_weatherKey가nil인경우() {
