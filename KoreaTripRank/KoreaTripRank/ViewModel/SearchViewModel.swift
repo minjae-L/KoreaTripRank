@@ -40,7 +40,7 @@ final class SearchViewModel {
     //
     var indexPath: IndexPath?
     // JSON파일로 있는 장소데이터
-    var areaDatabase = AreaDatabase()
+    var areaDatabase = JsonLoader().load(type: LocationModel.self, fileName: .areaCode)
     weak var delegate: SearchViewModelDelegate?
     // 주소 검색창에서 주소 선택시 해당 변수에 저장후 네트워크 통신 때 사용함
     var selectedSigungu: LocationDataModel?
@@ -76,8 +76,6 @@ final class SearchViewModel {
         self.locationSearcHandler = locationSearcHandler
         self.calendarCalculation = calendarCalculation
         
-        // 장소 데이터 초기화
-        self.areaDatabase.initDatabase()
     }
     
     private func noticeNeedUpdate() {
@@ -109,7 +107,8 @@ final class SearchViewModel {
     // 주소검색창에서 입력 시 필터링된 데이터를 출력하기 위한 메서드
     func filteringAddress(text: String) {
         var output = [LocationDataModel]()
-        for element in areaDatabase.data {
+        guard let areaData = areaDatabase?.data else { return }
+        for element in areaData {
             let areaArray = String.separatingString(text: element.areaName, length: text.count)
             let signguArray = String.separatingString(text: element.sigunguName, length: text.count)
             if areaArray.contains(text) || signguArray.contains(text) {
