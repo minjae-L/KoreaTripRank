@@ -27,13 +27,15 @@ class NetworkManager {
     let components: URLComponentable
     let decoder: DataDecodable
     
-    static let shared = NetworkManager()
+    let session: Session
     
-    private init(components: URLComponentable = URLComponentHandler(), decoder: DataDecodable = DecodeHandler()) {
+    init(components: URLComponentable = URLComponentHandler(),
+                 decoder: DataDecodable = DecodeHandler(),
+                 session: Session = Session.default) {
         self.components = components
         self.decoder = decoder
+        self.session = session
     }
-    
     func fetchData<T: Decodable>(urlCase URLCase: NetworkURLCase,
                                  tripKey: LocationDataModel? = nil,
                                  weatherKey: ConvertedLocationModel? = nil,
@@ -49,7 +51,7 @@ class NetworkManager {
         guard let url = urlComponents.url else {
             throw(NetworkError.invalidURL)
         }
-        let request = AF.request(url)
+        let request = session.request(url)
         
         let response = await request.serializingDecodable(T.self).response
         

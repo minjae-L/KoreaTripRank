@@ -40,7 +40,7 @@ final class SearchViewModel {
     //
     var indexPath: IndexPath?
     // JSON파일로 있는 장소데이터
-    var areaDatabase = JsonLoader().load(type: LocationModel.self, fileName: .areaCode)
+    var areaDatabase = JsonLoader().load(type: LocationModel.self, fileName: "AreaCode")
     weak var delegate: SearchViewModelDelegate?
     // 주소 검색창에서 주소 선택시 해당 변수에 저장후 네트워크 통신 때 사용함
     var selectedSigungu: LocationDataModel?
@@ -162,7 +162,7 @@ final class SearchViewModel {
                 switch networkType {
                     // 관광지
                 case .trip:
-                    async let tripResponse = NetworkManager.shared.fetchData(urlCase: .trip, tripKey: addressName, type: TripNetworkResponse.self, page: page)
+                    async let tripResponse = NetworkManager().fetchData(urlCase: .trip, tripKey: addressName, type: TripNetworkResponse.self, page: page)
                     let result = try await tripResponse
                     // 불러온 관광지 데이터를 저장
                     print("trip 데이터 저장")
@@ -173,7 +173,7 @@ final class SearchViewModel {
                     
                     // 날씨
                 case .weather:
-                    async let weatherResponse = NetworkManager.shared.fetchData(urlCase: .weather, weatherKey: self.selectedLocationInfo, type: WeatherNetworkResponse.self, page: page)
+                    async let weatherResponse = NetworkManager().fetchData(urlCase: .weather, weatherKey: self.selectedLocationInfo, type: WeatherNetworkResponse.self, page: page)
                     let result = try await weatherResponse
                     // 불러온 날씨 데이터를 저장
                     print("weather 데이터 저장")
