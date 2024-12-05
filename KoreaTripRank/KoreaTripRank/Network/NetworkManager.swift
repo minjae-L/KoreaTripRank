@@ -22,6 +22,91 @@ enum NetworkError: Error {
     case invalidURL
 }
 
+class MockURLProtocol: URLProtocol {
+    
+    enum NetworkType {
+        case trip
+        case weather
+        
+        var fileName: String {
+            switch self {
+            case .trip: return "MockTripData"
+            case .weather: return "MockWeatherData"
+            }
+        }
+    }
+    
+    enum ResponseType {
+        case failure(Error)
+        case success(HTTPURLResponse)
+    }
+    
+    enum MockError: Error {
+        case none
+    }
+    
+    static var mockResponse: ResponseType!
+    static var mockType: NetworkType!
+    
+    
+    static func setMockType(type: NetworkType) {
+        MockURLProtocol.mockType = type
+    }
+    
+    static func setMockResponseWithFailure() {
+        MockURLProtocol.mockResponse = .failure(MockError.none)
+    }
+    
+    static func setMockResponseWithStatusCode(code: Int) {
+        MockURLProtocol.mockResponse = .success(HTTPURLResponse(url: URL(string: "hi/bye")!,
+                                                                statusCode: code,
+                                                                httpVersion: nil,
+                                                                headerFields: nil)!)
+    }
+    override class func canInit(with request: URLRequest) -> Bool {
+        return true
+    }
+    
+    override class func canonicalRequest(for request: URLRequest) -> URLRequest {
+        return request
+    }
+    
+    override func startLoading() {
+        let response = setMockResponse()
+        let mockData = setMockData()
+        
+        client?.urlProtocol(self, didReceive: response!, cacheStoragePolicy: .allowed)
+        
+        client?.urlProtocol(self, didLoad: mockData!)
+        
+        self.client?.urlProtocolDidFinishLoading(self)
+        
+    }
+    
+    override func stopLoading() { }
+    
+    private func setMockResponse() -> HTTPURLResponse? {
+        var response: HTTPURLResponse?
+        
+        switch MockURLProtocol.mockResponse {
+        case .failure(let error):
+            client?.urlProtocol(self, didFailWithError: error)
+        case .success(let successResponse):
+            response = successResponse
+        default: 
+            fatalError("No Mock Response")
+            break
+        }
+        
+        return response!
+    }
+    
+    private func setMockData() -> Data? {
+        return JsonLoader().data(fileName: MockURLProtocol.mockType.fileName)
+    }
+    
+}
+
 // MARK: NetworkManager
 class NetworkManager {
     let components: URLComponentable
