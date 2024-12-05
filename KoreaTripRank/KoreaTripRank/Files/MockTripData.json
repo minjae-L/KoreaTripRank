@@ -1,0 +1,35 @@
+{
+    "response": {
+        "header": {
+            "resultCode": "0000",
+            "resultMsg": "OK"
+        },
+        "body": {
+            "items": {
+                "item": [
+                    {
+                        "baseYm": "202411",
+                        "tAtsNm": "1100고지습지",
+                        "areaCd": "50",
+                        "areaNm": "제주특별자치도",
+                        "signguCd": "50130",
+                        "signguNm": "서귀포시",
+                        "rlteTatsNm": "함덕해수욕장",
+                        "rlteRegnCd": "50",
+                        "rlteRegnNm": "제주특별자치도",
+                        "rlteSignguCd": "50110",
+                        "rlteSignguNm": "제주시",
+                        "rlteBsicAdres": "제주 제주시 조함해안로 525-0",
+                        "rlteCtgryLclsNm": "관광지",
+                        "rlteCtgryMclsNm": "자연관광",
+                        "rlteCtgrySclsNm": "자연경관(하천/해양)",
+                        "rlteRank": "1"
+                    }
+                ]
+            },
+            "numOfRows": 1,
+            "pageNo": 1,
+            "totalCount": 4907
+        }
+    }
+}
