@@ -40,7 +40,7 @@ final class SearchViewModel {
     //
     var indexPath: IndexPath?
     // JSON파일로 있는 장소데이터
-    var areaDatabase = AreaDatabase()
+    var areaDatabase = JsonLoader().load(type: LocationModel.self, fileName: "AreaCode")
     weak var delegate: SearchViewModelDelegate?
     // 주소 검색창에서 주소 선택시 해당 변수에 저장후 네트워크 통신 때 사용함
     var selectedSigungu: LocationDataModel?
@@ -69,31 +69,19 @@ final class SearchViewModel {
     private var tripArray: [TripItem] = []
     // 셀에 뿌려질 데이터로 tripArray에서 필터링하여 저장됨
     var filteredTripArray: [TripItem] = []
+    // 날짜 데이터를 구하는 구조체
+    private var calendarCalculation: CalendarCalculation
+    
+    init(locationSearcHandler: LocationSearchHandler, calendarCalculation: CalendarCalculation) {
+        self.locationSearcHandler = locationSearcHandler
+        self.calendarCalculation = calendarCalculation
+        
+    }
     
     private func noticeNeedUpdate() {
         delegate?.needUpdateCollectionView()
     }
-    // 현재로 부터 1시간 뒤 시간 문자열 구하기
-    private var currentFctsTime: String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "HHmm"
-        let afterhour = Calendar.current.date(byAdding: .hour, value: 1, to: Date())
-        let current = dateFormatter.string(from: afterhour!)
-        var arr = current.map{String($0)}
-        arr[2] = "0"
-        arr[3] = "0"
-        return arr.joined()
-    }
-    // 오늘 날짜 구하기
-    private var currentDate: String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyyMMdd"
-        return dateFormatter.string(from: Date())
-    }
     
-    init(locationSearcHandler: LocationSearchHandler) {
-        self.locationSearcHandler = locationSearcHandler
-    }
     // 랭킹순으로 정렬
     private func sortedTripArray(arr: [TripItem]) -> [TripItem] {
         return arr.sorted { item1, item2 in
@@ -119,7 +107,8 @@ final class SearchViewModel {
     // 주소검색창에서 입력 시 필터링된 데이터를 출력하기 위한 메서드
     func filteringAddress(text: String) {
         var output = [LocationDataModel]()
-        for element in areaDatabase.data {
+        guard let areaData = areaDatabase?.data else { return }
+        for element in areaData {
             let areaArray = String.separatingString(text: element.areaName, length: text.count)
             let signguArray = String.separatingString(text: element.sigunguName, length: text.count)
             if areaArray.contains(text) || signguArray.contains(text) {
@@ -173,7 +162,7 @@ final class SearchViewModel {
                 switch networkType {
                     // 관광지
                 case .trip:
-                    async let tripResponse = NetworkManager.shared.fetchData(urlCase: .trip, tripKey: addressName, type: TripNetworkResponse.self, page: page)
+                    async let tripResponse = NetworkManager().fetchData(urlCase: .trip, tripKey: addressName, type: TripNetworkResponse.self, page: page)
                     let result = try await tripResponse
                     // 불러온 관광지 데이터를 저장
                     print("trip 데이터 저장")
@@ -184,7 +173,7 @@ final class SearchViewModel {
                     
                     // 날씨
                 case .weather:
-                    async let weatherResponse = NetworkManager.shared.fetchData(urlCase: .weather, weatherKey: self.selectedLocationInfo, type: WeatherNetworkResponse.self, page: page)
+                    async let weatherResponse = NetworkManager().fetchData(urlCase: .weather, weatherKey: self.selectedLocationInfo, type: WeatherNetworkResponse.self, page: page)
                     let result = try await weatherResponse
                     // 불러온 날씨 데이터를 저장
                     print("weather 데이터 저장")
@@ -225,7 +214,7 @@ final class SearchViewModel {
         }
         if filteredTripArray[index].weatherModel != nil {
             for element in filteredTripArray[index].weatherModel! {
-                if element.fcstTime == self.currentFctsTime && element.baseDate == currentDate {
+                if element.fcstTime == self.calendarCalculation.getAfterHourDateString(dateFormat: "HHmm") && element.baseDate == calendarCalculation.getCurrentDateString(dateFormat: "yyyyMMdd") {
                     delegate?.noticeWeatherViewNeedUpdateWithAnimate(indexPath: indexPath)
                     return
                 }
