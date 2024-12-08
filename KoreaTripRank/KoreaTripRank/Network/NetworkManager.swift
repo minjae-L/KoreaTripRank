@@ -21,6 +21,7 @@ enum NetworkError: Error {
     case missingData
     case invalidURL
 }
+extension NetworkError: Equatable { }
 
 class MockURLProtocol: URLProtocol {
     
