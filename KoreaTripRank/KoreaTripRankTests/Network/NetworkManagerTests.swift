@@ -126,14 +126,37 @@ final class NetworkManagerTests: XCTestCase {
         sut = NetworkManager(session: mockSession)
         // when
         // then
-        await XCTAssertThrowsError(try await sut.fetchData(urlCase: .trip,
-                                                     tripKey: LocationDataModel(areaName: "",
-                                                                                sigunguName: "",
-                                                                                areaCode: 0,
-                                                                                sigunguCode: 0),
-                                                     type: LocationDataModel.self,
-                                                           page: 0)) { error in
-            XCTAssertEqual(error as! NetworkError, NetworkError.serverError(code: 500))
+        await XCTAssertThrowsError(
+            try await sut.fetchData(urlCase: .trip,
+                                    type: TripNetworkResponse.self,
+                                    page: 0)
+        ) { error in
+            let error = error as! NetworkError
+            XCTAssertEqual(error, NetworkError.invalidURL)
+        }
+    }
+    
+    func test_fetchData호출시_날씨_URL이_올바르게구성이안된경우() async throws {
+        // given
+        MockURLProtocol.setMockResponseWithStatusCode(code: 200)
+        MockURLProtocol.setMockType(type: .weather)
+        
+        let session = URLSessionConfiguration.af.default
+        session.protocolClasses = [MockURLProtocol.self]
+        
+        let mockSession = Session(configuration: session)
+        sut = NetworkManager(session: mockSession)
+        // when
+        // then
+        await XCTAssertThrowsError(
+            try await sut.fetchData(urlCase: .weather,
+                                    type: TripNetworkResponse.self,
+                                    page: 0)
+        ) { error in
+            let error = error as! NetworkError
+            XCTAssertEqual(error, NetworkError.invalidURL)
+        }
+    }
         }
     }
     
