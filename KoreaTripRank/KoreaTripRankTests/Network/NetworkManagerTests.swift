@@ -66,13 +66,57 @@ final class NetworkManagerTests: XCTestCase {
         XCTAssertEqual(result.response.responseBody?.items.item.count,
                        expectationResult?.response.responseBody?.items.item.count)
     }
-        
-        await fulfillment(of: [expectation], timeout: 5)
-    }
     
-    func test_fetchData호출시_관광지데이터서버오류로실패하는지() async throws {
+    func test_fetchData호출시_관광지_서버오류로실패하는지() async throws {
         // given
         MockURLProtocol.setMockResponseWithStatusCode(code: 500)
+        MockURLProtocol.setMockType(type: .trip)
+        
+        let session = URLSessionConfiguration.af.default
+        session.protocolClasses = [MockURLProtocol.self]
+        
+        let mockSession = Session(configuration: session)
+        sut = NetworkManager(session: mockSession)
+        // when
+        // then
+        await XCTAssertThrowsError(
+            try await sut.fetchData(urlCase: .trip,
+                                    tripKey: LocationDataModel(areaName: "",
+                                                               sigunguName: "",
+                                                               areaCode: 0,
+                                                               sigunguCode: 0),
+                                    type: TripNetworkResponse.self,
+                                    page: 1)) { error in
+                                        let error = error as! NetworkError
+                                        XCTAssertEqual(error, NetworkError.serverError(code: 500))
+                                    }
+    }
+    
+    func test_fetchData호출시_날씨_서버오류로실패하는지() async throws {
+        // given
+        MockURLProtocol.setMockResponseWithStatusCode(code: 500)
+        MockURLProtocol.setMockType(type: .weather)
+        
+        let session = URLSessionConfiguration.af.default
+        session.protocolClasses = [MockURLProtocol.self]
+        
+        let mockSession = Session(configuration: session)
+        sut = NetworkManager(session: mockSession)
+        // when
+        // then
+        await XCTAssertThrowsError(
+            try await sut.fetchData(urlCase: .weather,
+                                    weatherKey: ConvertedLocationModel(lat: 0,
+                                                                       lng: 0,
+                                                                       x: 0,
+                                                                       y: 0),
+                                    type: WeatherNetworkResponse.self,
+                                    page: 1)
+        ){ error in
+            let error = error as! NetworkError
+            XCTAssertEqual(error, NetworkError.serverError(code: 500))
+        }
+    }
         MockURLProtocol.setMockType(type: .trip)
         
         let session = URLSessionConfiguration.af.default
