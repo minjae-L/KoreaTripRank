@@ -28,11 +28,13 @@ class MockURLProtocol: URLProtocol {
     enum NetworkType {
         case trip
         case weather
+        case wrong
         
         var fileName: String {
             switch self {
             case .trip: return "MockTripData"
             case .weather: return "MockWeatherData"
+            case .wrong: return "AreaCode"
             }
         }
     }
@@ -49,7 +51,6 @@ class MockURLProtocol: URLProtocol {
     static var mockResponse: ResponseType!
     static var mockType: NetworkType!
     
-    
     static func setMockType(type: NetworkType) {
         MockURLProtocol.mockType = type
     }
@@ -64,6 +65,7 @@ class MockURLProtocol: URLProtocol {
                                                                 httpVersion: nil,
                                                                 headerFields: nil)!)
     }
+    
     override class func canInit(with request: URLRequest) -> Bool {
         return true
     }
@@ -127,13 +129,13 @@ class NetworkManager {
                                  weatherKey: ConvertedLocationModel? = nil,
                                  type: T.Type,
                                  page: Int) async throws -> T {
-        var urlComponents = URLComponents()
-        switch URLCase {
-        case .trip:
-            urlComponents = components.getURLComponents(for: .trip, page: page, tripKey: tripKey)
-        case .weather:
-            urlComponents = components.getURLComponents(for: .weather, page: page, weatherKey: weatherKey)
+        
+        guard (URLCase == .trip && tripKey != nil) ||
+              (URLCase == .weather && weatherKey != nil) else {
+            throw(NetworkError.invalidURL)
         }
+        let urlComponents = components.getURLComponents(for: URLCase, page: page, tripKey: tripKey, weatherKey: weatherKey)
+        
         guard let url = urlComponents.url else {
             throw(NetworkError.invalidURL)
         }
