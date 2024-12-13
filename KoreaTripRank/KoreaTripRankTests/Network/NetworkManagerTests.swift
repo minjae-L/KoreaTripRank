@@ -16,13 +16,12 @@ final class NetworkManagerTests: XCTestCase {
     override func setUpWithError() throws {
     }
     
-    func test_fetchData호출시_관광지데이터가성공적으로불러오는지() async throws {
+    func test_fetchData호출시_관광지_데이터가성공적으로불러오는지() async throws {
         // given
-        let expectation = expectation(description: "비동기 네트워크 작업")
         MockURLProtocol.setMockResponseWithStatusCode(code: 200)
         MockURLProtocol.setMockType(type: .trip)
         
-        var session = URLSessionConfiguration.af.default
+        let session = URLSessionConfiguration.af.default
         session.protocolClasses = [MockURLProtocol.self]
 
         let mockSession = Session(configuration: session)
@@ -36,10 +35,37 @@ final class NetworkManagerTests: XCTestCase {
                                                                         sigunguCode: 0),
                                              type: TripNetworkResponse.self,
                                              page: 1)
-        expectation.fulfill()
         // then
-        XCTAssertNoThrow(result)
+        XCTAssertNotNil(result)
         XCTAssertEqual(result.response.responseBody.items.item.count, expectationResult?.response.responseBody.items.item.count)
+    }
+    
+    func test_fetchData호출시_날씨_데이터가성공적으로불러오는지() async throws {
+        // given
+        MockURLProtocol.setMockResponseWithStatusCode(code: 200)
+        MockURLProtocol.setMockType(type: .weather)
+        
+        let session = URLSessionConfiguration.af.default
+        session.protocolClasses = [MockURLProtocol.self]
+        
+        let mockSession = Session(configuration: session)
+        sut = NetworkManager(session: mockSession)
+        
+        // when
+        let expectationResult = JsonLoader().load(type: WeatherNetworkResponse.self, fileName: "MockWeatherData")
+        let result = try await sut.fetchData(urlCase: .weather,
+                                             weatherKey: ConvertedLocationModel(lat: 0,
+                                                                                lng: 0,
+                                                                                x: 0,
+                                                                                y: 0),
+                                             type: WeatherNetworkResponse.self,
+                                             page: 1)
+        
+        // then
+        XCTAssertNotNil(result)
+        XCTAssertEqual(result.response.responseBody?.items.item.count,
+                       expectationResult?.response.responseBody?.items.item.count)
+    }
         
         await fulfillment(of: [expectation], timeout: 5)
     }
