@@ -31,13 +31,14 @@ enum NetworkingType {
 }
 
 final class SearchViewModel {
+    
     // 주소검색창에 보여지는 데이터배열
     var filteredAddressArray: [LocationDataModel] = [] {
         didSet {
             delegate?.addressSearching()
         }
     }
-    //
+    
     var indexPath: IndexPath?
     // JSON파일로 있는 장소데이터
     var areaDatabase = JsonLoader().load(type: LocationModel.self, fileName: "AreaCode")
@@ -145,7 +146,6 @@ final class SearchViewModel {
     
     // NetworkManager로부터 데이터 불러오기
     private func loadData(page: Int, networkType: NetworkingType, index: Int? = 0) {
-        
         guard let addressName = selectedSigungu else {
             print("data unloaded")
             return
@@ -157,13 +157,13 @@ final class SearchViewModel {
         viewState = .loading
         
         // 네트워킹 시작
-        Task {
+         Task {
             do {
                 switch networkType {
                     // 관광지
                 case .trip:
-                    async let tripResponse = NetworkManager().fetchData(urlCase: .trip, tripKey: addressName, type: TripNetworkResponse.self, page: page)
-                    let result = try await tripResponse
+//                    async let tripResponse = NetworkManager().fetchData(tripKey: addressName, type: TripNetworkResponse.self, page: page)
+                    let result = try await NetworkManager().fetchData(tripKey: addressName, type: TripNetworkResponse.self, page: page)
                     // 불러온 관광지 데이터를 저장
                     print("trip 데이터 저장")
                     tripArray.append(contentsOf: result.response.responseBody.items.item)
@@ -173,8 +173,7 @@ final class SearchViewModel {
                     
                     // 날씨
                 case .weather:
-                    async let weatherResponse = NetworkManager().fetchData(urlCase: .weather, weatherKey: self.selectedLocationInfo, type: WeatherNetworkResponse.self, page: page)
-                    let result = try await weatherResponse
+                    let result = try await NetworkManager().fetchData(weatherKey: self.selectedLocationInfo, type: WeatherNetworkResponse.self, page: page)
                     // 불러온 날씨 데이터를 저장
                     print("weather 데이터 저장")
                     guard let arr = result.response.responseBody?.items.item,

@@ -14,13 +14,7 @@ enum NetworkURL {
 
 // MARK: URLComponentable
 protocol URLComponentable {
-    func getURLComponents(for type: NetworkURLCase, page: Int, tripKey: LocationDataModel?, weatherKey: ConvertedLocationModel?) -> URLComponents
-}
-
-extension URLComponentable {
-    func getURLComponents(for type: NetworkURLCase, page: Int, tripKey: LocationDataModel? = nil, weatherKey: ConvertedLocationModel? = nil) -> URLComponents {
-        return getURLComponents(for: type, page: page, tripKey: tripKey, weatherKey: weatherKey)
-    }
+    func getURLComponents(page: Int, tripKey: LocationDataModel?, weatherKey: ConvertedLocationModel?) -> URLComponents
 }
 
 class URLComponentHandler: URLComponentable {
@@ -31,14 +25,23 @@ class URLComponentHandler: URLComponentable {
         self.urlKeys = urlKeys
     }
     
-    func getURLComponents(for type: NetworkURLCase, page: Int, tripKey: LocationDataModel?, weatherKey: ConvertedLocationModel?) -> URLComponents {
-        let url = URL(string: type.rawValue)!
+    func getURLComponents(page: Int, tripKey: LocationDataModel?, weatherKey: ConvertedLocationModel?) -> URLComponents {
         var components = URLComponents()
-        components.scheme = url.scheme
-        components.host = url.host()
-        components.path = url.path()
-        components.percentEncodedQueryItems = urlKeys.getQueryItems(type: type, page: page, weatherKey: weatherKey, tripKey: tripKey)
-
+        if tripKey != nil && weatherKey == nil {
+            let url = NetworkURL.tripURL
+            components.percentEncodedQueryItems = urlKeys.getQueryItems(page: page, tripKey: tripKey)
+            components.host = url?.host()
+            components.scheme = url?.scheme
+            components.path = url?.path() ?? ""
+        }
+        if weatherKey != nil && tripKey == nil {
+            let url = NetworkURL.weatherURL
+            components.percentEncodedQueryItems = urlKeys.getQueryItems(page: page, weatherKey: weatherKey)
+            components.host = url?.host()
+            components.scheme = url?.scheme
+            components.path = url?.path() ?? ""
+        }
+        
         return components
     }
 }

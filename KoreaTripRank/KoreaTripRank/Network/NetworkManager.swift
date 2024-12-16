@@ -124,17 +124,14 @@ class NetworkManager {
         self.decoder = decoder
         self.session = session
     }
-    func fetchData<T: Decodable>(urlCase URLCase: NetworkURLCase,
+    func fetchData<T: Decodable>(
                                  tripKey: LocationDataModel? = nil,
                                  weatherKey: ConvertedLocationModel? = nil,
                                  type: T.Type,
                                  page: Int) async throws -> T {
-        
-        guard (URLCase == .trip && tripKey != nil) ||
-              (URLCase == .weather && weatherKey != nil) else {
-            throw(NetworkError.invalidURL)
-        }
-        let urlComponents = components.getURLComponents(for: URLCase, page: page, tripKey: tripKey, weatherKey: weatherKey)
+        if tripKey == nil && weatherKey == nil { throw(NetworkError.invalidURL)}
+                                     
+        let urlComponents = components.getURLComponents(page: page, tripKey: tripKey, weatherKey: weatherKey)
         
         guard let url = urlComponents.url else {
             throw(NetworkError.invalidURL)

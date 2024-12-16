@@ -28,8 +28,7 @@ final class NetworkManagerTests: XCTestCase {
         sut = NetworkManager(session: mockSession)
         // when
         let expectationResult = JsonLoader().load(type: TripNetworkResponse.self, fileName: "MockTripData")
-        let result = try await sut.fetchData(urlCase: .trip,
-                                             tripKey: LocationDataModel(areaName: "",
+        let result = try await sut.fetchData(tripKey: LocationDataModel(areaName: "",
                                                                         sigunguName: "",
                                                                         areaCode: 0,
                                                                         sigunguCode: 0),
@@ -53,7 +52,7 @@ final class NetworkManagerTests: XCTestCase {
         
         // when
         let expectationResult = JsonLoader().load(type: WeatherNetworkResponse.self, fileName: "MockWeatherData")
-        let result = try await sut.fetchData(urlCase: .weather,
+        let result = try await sut.fetchData(
                                              weatherKey: ConvertedLocationModel(lat: 0,
                                                                                 lng: 0,
                                                                                 x: 0,
@@ -80,7 +79,7 @@ final class NetworkManagerTests: XCTestCase {
         // when
         // then
         await XCTAssertThrowsError(
-            try await sut.fetchData(urlCase: .trip,
+            try await sut.fetchData(
                                     tripKey: LocationDataModel(areaName: "",
                                                                sigunguName: "",
                                                                areaCode: 0,
@@ -105,7 +104,7 @@ final class NetworkManagerTests: XCTestCase {
         // when
         // then
         await XCTAssertThrowsError(
-            try await sut.fetchData(urlCase: .weather,
+            try await sut.fetchData(
                                     weatherKey: ConvertedLocationModel(lat: 0,
                                                                        lng: 0,
                                                                        x: 0,
@@ -131,7 +130,7 @@ final class NetworkManagerTests: XCTestCase {
         // when
         // then
         await XCTAssertThrowsError(
-            try await sut.fetchData(urlCase: .trip,
+            try await sut.fetchData(
                                     type: TripNetworkResponse.self,
                                     page: 0)
         ) { error in
@@ -153,7 +152,7 @@ final class NetworkManagerTests: XCTestCase {
         // when
         // then
         await XCTAssertThrowsError(
-            try await sut.fetchData(urlCase: .weather,
+            try await sut.fetchData(
                                     type: TripNetworkResponse.self,
                                     page: 0)
         ) { error in
@@ -175,7 +174,7 @@ final class NetworkManagerTests: XCTestCase {
         // when
         // then
         await XCTAssertThrowsError(
-            try await sut.fetchData(urlCase: .weather,
+            try await sut.fetchData(
                                     weatherKey: ConvertedLocationModel(lat: 0,
                                                                        lng: 0,
                                                                        x: 0,
@@ -201,7 +200,7 @@ final class NetworkManagerTests: XCTestCase {
         // when
         // then
         await XCTAssertThrowsError(
-            try await sut.fetchData(urlCase: .trip,
+            try await sut.fetchData(
                                     tripKey: LocationDataModel(areaName: "",
                                                                sigunguName: "",
                                                                areaCode: 0,
