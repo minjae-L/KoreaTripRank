@@ -7,11 +7,11 @@
 
 import Foundation
 
-
-enum NetworkURLCase: String {
-    case trip = "http://apis.data.go.kr/B551011/TarRlteTarService/areaBasedList"
-    case weather = "https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtFcst"
+enum NetworkURL {
+    static let tripURL = URL(string: "http://apis.data.go.kr/B551011/TarRlteTarService/areaBasedList")
+    static let weatherURL = URL(string: "https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtFcst")
 }
+
 // MARK: URLComponentable
 protocol URLComponentable {
     func getURLComponents(for type: NetworkURLCase, page: Int, tripKey: LocationDataModel?, weatherKey: ConvertedLocationModel?) -> URLComponents
