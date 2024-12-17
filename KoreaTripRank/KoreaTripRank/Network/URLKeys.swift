@@ -22,7 +22,7 @@ extension URLKeyConfiguring {
 }
 	
 struct MockURLKeys: URLKeyConfiguring {
-    func getQueryItems(page: Int, weatherKey: ConvertedLocationModel?, tripKey: LocationDataModel?) -> [URLQueryItem] {
+    func getQueryItems(page: Int, weatherKey: ConvertedLocationModel? = nil, tripKey: LocationDataModel? = nil) -> [URLQueryItem] {
         return []
     }
 }
@@ -46,8 +46,8 @@ struct URLKeys: URLKeyConfiguring {
         
         var queryItems = [URLQueryItem]()
         
-        if weatherKey != nil { queryItems = getWeatherQueryItems(page: page, weatherKey: weatherKey!)}
-        if tripKey != nil { queryItems = getTripQueryItems(page: page, tripKey: tripKey!)}
+        if weatherKey != nil && tripKey == nil { queryItems = getWeatherQueryItems(page: page, weatherKey: weatherKey!)}
+        if tripKey != nil && weatherKey == nil { queryItems = getTripQueryItems(page: page, tripKey: tripKey!)}
         
         return queryItems
     }

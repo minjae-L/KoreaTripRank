@@ -15,61 +15,60 @@ final class URLKeysTests: XCTestCase {
         let mockCalendarCal = MockCalendarCalculation()
         sut = URLKeys(calendarCalculation: mockCalendarCal)
     }
-
-    func test_qetQueryItems호출시_weatherKey가nil인경우() {
-        // given
-        let dummyWeatherKey: ConvertedLocationModel? = nil
-        // when
-        let result = sut.getQueryItems(page: 1, weatherKey: dummyWeatherKey)
-        // then
-        XCTAssertEqual(result.count, 0)
-    }
     
-    func test_getQueryItems호출시_weatherKey의xy값이Nil인경우() {
-        // given
-        let dummyWeatherKey = ConvertedLocationModel(lat: 0, lng: 0)
+    func test_getQueryItems호출시_두개의key모두nil인경우_빈배열리턴() {
         // when
-        let result = sut.getQueryItems(page: 1, weatherKey: dummyWeatherKey)
+        let result = sut.getQueryItems(page: 0)
         // then
         XCTAssertEqual(result, [])
     }
     
-    func test_getQueryItems호출시_weatherKey의xy값이Nil이아닌경우() {
-        // given
-        let dummyWeatherKey = ConvertedLocationModel(lat: 0, lng: 0, x: 0, y: 0)
+    func test_getQueryItems호출시_두개의Key모두입력받는경우_빈배열리턴() {
         // when
-        let result = sut.getQueryItems(page: 1, weatherKey: dummyWeatherKey)
-        // then
-        XCTAssertNotEqual(result, [])
-    }
-    
-    func test_getQueryItems호출시_tripKey가nil인경우() {
-        // given
-        // when
-        let result = sut.getQueryItems(page: 1)
+        let result = sut.getQueryItems(page: 0,
+                                       weatherKey: ConvertedLocationModel(lat: 0,
+                                                                          lng: 0),
+                                       tripKey: LocationDataModel(areaName: "",
+                                                                  sigunguName: "",
+                                                                  areaCode: 0,
+                                                                  sigunguCode: 0))
         // then
         XCTAssertEqual(result, [])
     }
     
-    func test_getQueryItems호출시_tripKey가_정상적으로전달한경우() {
+    func test_getQueryItems호출시_weatherKey의xy값이_nil이면_빈배열리턴() {
         // given
-        let dummyTripKey = LocationDataModel(areaName: "dummy", sigunguName: "dummy", areaCode: 30, sigunguCode: 30)
+        let dummyWrongWeatherKey = ConvertedLocationModel(lat: 0, lng: 0)
         // when
-        let result = sut.getQueryItems(page: 1, tripKey: dummyTripKey)
-        // given
-        XCTAssertNotEqual(result, [])
+        let result = sut.getQueryItems(page: 0, weatherKey: dummyWrongWeatherKey)
+        // then
+        XCTAssertEqual(result, [])
     }
     
-    func test_getQueryItems호출시_QueryItem의배열크기가정상적으로리턴되는지() {
-        // given
-        let dummyTripKey = LocationDataModel(areaName: "dummy", sigunguName: "dummy", areaCode: 30, sigunguCode: 30)
-        let dummyWeatherKey = ConvertedLocationModel(lat: 0, lng: 0, x: 0, y: 0)
+    func test_getQueryItems호출시_tripKey가Nil인경우_빈배열리턴() {
         // when
-        let tripResult = sut.getQueryItems(page: 1, tripKey: dummyTripKey)
-        let weatherResult = sut.getQueryItems(page: 1, weatherKey: dummyWeatherKey)
+        let result = sut.getQueryItems(page: 0, tripKey: nil)
         // then
-        XCTAssertEqual(tripResult.count, 9)
+        XCTAssertEqual(result, [])
+    }
+    
+    func test_getQueryItems호출시_Key값이전달되면_정상적으로리턴() {
+        // given
+        let dummyWeatherKey = ConvertedLocationModel(lat: 0,
+                                                           lng: 0,
+                                                           x: 0,
+                                                           y: 0)
+        let dummyTripKey = LocationDataModel(areaName: "",
+                                             sigunguName: "",
+                                             areaCode: 0,
+                                             sigunguCode: 0)
+        // when
+        let weatherResult = sut.getQueryItems(page: 0, weatherKey: dummyWeatherKey)
+        let tripResult = sut.getQueryItems(page: 0, tripKey: dummyTripKey)
+        // then
         XCTAssertEqual(weatherResult.count, 8)
+        XCTAssertEqual(tripResult.count, 9)
+        
     }
     
     override func tearDownWithError() throws {

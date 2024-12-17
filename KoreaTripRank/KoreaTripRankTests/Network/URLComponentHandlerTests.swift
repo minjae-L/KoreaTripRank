@@ -8,12 +8,12 @@
 import XCTest
 @testable import KoreaTripRank
 final class URLComponentHandlerTests: XCTestCase {
+    
     private var sut: URLComponentHandler!
+    
     override func setUpWithError() throws {
         let mockCalendarCalculation = MockCalendarCalculation()
-        let mockAPIKey = MockAPIKEY()
-        let urlKeys = URLKeys(calendarCalculation: mockCalendarCalculation,
-                              APIKey: mockAPIKey)
+        let urlKeys = URLKeys(calendarCalculation: mockCalendarCalculation)
         sut = URLComponentHandler(urlKeys: urlKeys)
     }
 
@@ -21,29 +21,61 @@ final class URLComponentHandlerTests: XCTestCase {
         sut = nil
     }
     
-    func test_getURLComponents호출시_베이스URL을가져오는지() {
-        // given
-        let weatherType = NetworkURLCase.weather
-        let tripType = NetworkURLCase.trip
-        // given
-        let weatherResult = sut.getURLComponents(for: weatherType, page: 1)
-        let tripResult = sut.getURLComponents(for: tripType, page: 1)
-        //then
-        XCTAssertNotNil(weatherResult.url)
-        XCTAssertNotNil(tripResult.url)
+    func test_생성확인() {
+        XCTAssertNotNil(sut)
+        XCTAssertNotNil(sut.urlKeys)
     }
     
-    func test_getURLComponents호출시_QueryItems가구성되는지() {
+    func test_getURLComponents호출시_Key값이모두Nil인경우_빈Components리턴() {
+        // when
+        let result = sut.getURLComponents(page: 0, tripKey: nil, weatherKey: nil)
+        // then
+        XCTAssertNil(result.queryItems)
+    }
+    
+    func test_getURLComponents호출시_Key값이모두전달되면_빈Components리턴() {
         // given
-        let weatherType = NetworkURLCase.weather
-        let weatherKey = ConvertedLocationModel(lat: 0, lng: 0, x: 0, y: 0)
-        let tripType = NetworkURLCase.trip
-        let tripKey = LocationDataModel(areaName: "", sigunguName: "", areaCode: 0, sigunguCode: 0)
+        let dummyWeatherKey = ConvertedLocationModel(lat: 0,
+                                                     lng: 0,
+                                                     x: 0,
+                                                     y: 0)
+        let dummyTripKey = LocationDataModel(areaName: "",
+                                             sigunguName: "",
+                                             areaCode: 0,
+                                             sigunguCode: 0)
+        // when
+        let result = sut.getURLComponents(page: 0, tripKey: dummyTripKey, weatherKey: dummyWeatherKey)
+        // then
+        XCTAssertNil(result.queryItems)
+    }
+    
+    func test_getURLComponents호출시_weatherKey의xy가nil인경우_빈배열리턴() {
         // given
-        let weatherResult = sut.getURLComponents(for: weatherType, page: 1, weatherKey: weatherKey)
-        let tripResult = sut.getURLComponents(for: tripType, page: 1, tripKey: tripKey)
-        //then
-        XCTAssertEqual(tripResult.queryItems!.count , 9)
-        XCTAssertEqual(weatherResult.queryItems!.count, 8)
+        let dummyWrongWeatherKey = ConvertedLocationModel(lat: 0, lng: 0)
+        
+        // when
+        let result = sut.getURLComponents(page: 0, tripKey: nil, weatherKey: dummyWrongWeatherKey)
+        // then
+        XCTAssertEqual(result.queryItems, [])
+    }
+    
+    func test_getURLComponents호출시_Key전달시_정상적인값리턴() {
+        // given
+        let dummyWeatherKey = ConvertedLocationModel(lat: 0,
+                                                     lng: 0,
+                                                     x: 0,
+                                                     y: 0)
+        let dummyTripKey = LocationDataModel(areaName: "",
+                                             sigunguName: "",
+                                             areaCode: 0,
+                                             sigunguCode: 0)
+        // when
+        let weatherResult = sut.getURLComponents(page: 0, tripKey: nil, weatherKey: dummyWeatherKey)
+        let tripResult = sut.getURLComponents(page: 0, tripKey: dummyTripKey, weatherKey: nil)
+        // then
+        XCTAssertNotNil(weatherResult.queryItems)
+        XCTAssertNotNil(tripResult.queryItems)
+        XCTAssertEqual(weatherResult.queryItems?.count, 8)
+        XCTAssertEqual(tripResult.queryItems?.count, 9)
     }
 }

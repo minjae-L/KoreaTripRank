@@ -52,11 +52,12 @@
 		B59124AB2CD62378008A13F2 /* KoreaTripRankTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59124AA2CD62378008A13F2 /* KoreaTripRankTests.swift */; };
 		B59124B52CD62378008A13F2 /* KoreaTripRankUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59124B42CD62378008A13F2 /* KoreaTripRankUITests.swift */; };
 		B59124B72CD62378008A13F2 /* KoreaTripRankUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59124B62CD62378008A13F2 /* KoreaTripRankUITestsLaunchTests.swift */; };
+		B5A5FD0B2D104B3C0006DF8A /* SearchViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A5FD0A2D104B3C0006DF8A /* SearchViewModelTests.swift */; };
 		B5BA4DC52CDB108400477410 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BA4DC42CDB108400477410 /* NetworkManager.swift */; };
 		B5CA8CC02CFD8E4200BF6001 /* ConvertedLocationModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5CA8CBF2CFD8E4200BF6001 /* ConvertedLocationModelTests.swift */; };
 		B5D6A9C92CF713E900B7F7AF /* CalendarCalculation.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D6A9C82CF713E900B7F7AF /* CalendarCalculation.swift */; };
 		B5D6A9CB2CF71ED200B7F7AF /* CalendarCalculationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D6A9CA2CF71ED200B7F7AF /* CalendarCalculationTests.swift */; };
-		B5D6A9D22CF74ABE00B7F7AF /* NetworkServiceKeyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D6A9D12CF74ABE00B7F7AF /* NetworkServiceKeyTests.swift */; };
+		B5D6A9D22CF74ABE00B7F7AF /* APIKEYTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D6A9D12CF74ABE00B7F7AF /* APIKEYTests.swift */; };
 		B5EC3AB92CF8817C00532A7D /* CalendarCalculation.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D6A9C82CF713E900B7F7AF /* CalendarCalculation.swift */; };
 		B5EC3ABB2CF8884B00532A7D /* URLComponentHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5EC3ABA2CF8884B00532A7D /* URLComponentHandlerTests.swift */; };
 		B5EC3ABD2CF88B1D00532A7D /* APIKEY.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5EC3ABC2CF88B1D00532A7D /* APIKEY.swift */; };
@@ -124,11 +125,12 @@
 		B59124B02CD62378008A13F2 /* KoreaTripRankUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = KoreaTripRankUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B59124B42CD62378008A13F2 /* KoreaTripRankUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KoreaTripRankUITests.swift; sourceTree = "<group>"; };
 		B59124B62CD62378008A13F2 /* KoreaTripRankUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KoreaTripRankUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		B5A5FD0A2D104B3C0006DF8A /* SearchViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModelTests.swift; sourceTree = "<group>"; };
 		B5BA4DC42CDB108400477410 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		B5CA8CBF2CFD8E4200BF6001 /* ConvertedLocationModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConvertedLocationModelTests.swift; sourceTree = "<group>"; };
 		B5D6A9C82CF713E900B7F7AF /* CalendarCalculation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarCalculation.swift; sourceTree = "<group>"; };
 		B5D6A9CA2CF71ED200B7F7AF /* CalendarCalculationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarCalculationTests.swift; sourceTree = "<group>"; };
-		B5D6A9D12CF74ABE00B7F7AF /* NetworkServiceKeyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkServiceKeyTests.swift; sourceTree = "<group>"; };
+		B5D6A9D12CF74ABE00B7F7AF /* APIKEYTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIKEYTests.swift; sourceTree = "<group>"; };
 		B5EC3ABA2CF8884B00532A7D /* URLComponentHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLComponentHandlerTests.swift; sourceTree = "<group>"; };
 		B5EC3ABC2CF88B1D00532A7D /* APIKEY.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIKEY.swift; sourceTree = "<group>"; };
 		DC4644F2A2FAEF5EC94675E8 /* Pods-KoreaTripRank-KoreaTripRankUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KoreaTripRank-KoreaTripRankUITests.debug.xcconfig"; path = "Target Support Files/Pods-KoreaTripRank-KoreaTripRankUITests/Pods-KoreaTripRank-KoreaTripRankUITests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -169,7 +171,7 @@
 			isa = PBXGroup;
 			children = (
 				B5D6A9CA2CF71ED200B7F7AF /* CalendarCalculationTests.swift */,
-				B5D6A9D12CF74ABE00B7F7AF /* NetworkServiceKeyTests.swift */,
+				B5D6A9D12CF74ABE00B7F7AF /* APIKEYTests.swift */,
 				B5EC3ABA2CF8884B00532A7D /* URLComponentHandlerTests.swift */,
 				B5663DF72CFB49CF00E68D05 /* URLKeysTests.swift */,
 				B5248F192CFF3CFA003B3DED /* NetworkManagerTests.swift */,
@@ -340,6 +342,7 @@
 				B5248F182CFF3A5B003B3DED /* Network */,
 				B5CA8CBC2CFD848800BF6001 /* ModelTests */,
 				B59124AA2CD62378008A13F2 /* KoreaTripRankTests.swift */,
+				B5A5FD0A2D104B3C0006DF8A /* SearchViewModelTests.swift */,
 			);
 			path = KoreaTripRankTests;
 			sourceTree = "<group>";
@@ -697,10 +700,11 @@
 				B5EC3ABB2CF8884B00532A7D /* URLComponentHandlerTests.swift in Sources */,
 				B57EAEA72CFC6C6C002FFF71 /* URLComponentHandler.swift in Sources */,
 				B57EAEA52CFC6C23002FFF71 /* APIKEY.swift in Sources */,
+				B5A5FD0B2D104B3C0006DF8A /* SearchViewModelTests.swift in Sources */,
 				B5248F172CFE9CD0003B3DED /* ConvertedLocationModel.swift in Sources */,
 				B5663DF82CFB49CF00E68D05 /* URLKeysTests.swift in Sources */,
 				B5CA8CC02CFD8E4200BF6001 /* ConvertedLocationModelTests.swift in Sources */,
-				B5D6A9D22CF74ABE00B7F7AF /* NetworkServiceKeyTests.swift in Sources */,
+				B5D6A9D22CF74ABE00B7F7AF /* APIKEYTests.swift in Sources */,
 				B57EAEAC2CFC6D06002FFF71 /* DecodeHandler.swift in Sources */,
 				B57EAEA92CFC6CC7002FFF71 /* LocationSearchHandler.swift in Sources */,
 				B5EC3AB92CF8817C00532A7D /* CalendarCalculation.swift in Sources */,
