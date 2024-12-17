@@ -162,7 +162,6 @@ final class SearchViewModel {
                 switch networkType {
                     // 관광지
                 case .trip:
-//                    async let tripResponse = NetworkManager().fetchData(tripKey: addressName, type: TripNetworkResponse.self, page: page)
                     let result = try await NetworkManager().fetchData(tripKey: addressName, type: TripNetworkResponse.self, page: page)
                     // 불러온 관광지 데이터를 저장
                     print("trip 데이터 저장")
@@ -262,7 +261,7 @@ final class SearchViewModel {
         let time = item[0].fcstTime
         let currentWeather = item.filter{$0.fcstTime == time}
         let firstFcstTime = item[0].fcstTime
-        let fcstTimes = self.getFcstTimes(fctsTime: firstFcstTime)
+        let fcstTimes = calendarCalculation.getSixHourStringArray(fcstTime:  firstFcstTime)
         let baseDate = item[0].baseDate
         let temperatures = item.filter{$0.category == "T1H"}
         let winds = item.filter{$0.category == "WSD"}
@@ -281,18 +280,6 @@ final class SearchViewModel {
                                            rainState: rainStates[i].fcstValue,
                                            skyState: skyStates[i].fcstValue,
                                            wind: winds[i].fcstValue))
-        }
-        return output
-    }
-    // 기준시간으로 부터 6시간 뒤까지 시간 문자열 배열로 구하기
-    private func getFcstTimes(fctsTime: String) -> [String] {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "HHmm"
-        let time = dateFormatter.date(from: fctsTime)
-        var output = [String]()
-        for i in 0..<6 {
-            let t = Calendar.current.date(byAdding: .hour, value: i, to: time!)
-            output.append(dateFormatter.string(from: t!))
         }
         return output
     }

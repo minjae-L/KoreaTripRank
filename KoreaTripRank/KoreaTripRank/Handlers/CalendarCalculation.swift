@@ -12,9 +12,11 @@ protocol CalendarCalculating {
     func getAfterHourDateString(dateFormat: String) -> String
     func getBeforeHalfHourDateString(dateFormat: String) -> String
     func getBeforeMonthDateString(dateFormat: String) -> String
+    func getSixHourStringArray(fcstTime: String) -> [String]
 }
 
 struct CalendarCalculation: CalendarCalculating {
+    
     private static var dateFormatter = DateFormatter()
     
     func getCurrentDateString(dateFormat: String) -> String {
@@ -39,9 +41,25 @@ struct CalendarCalculation: CalendarCalculating {
         CalendarCalculation.dateFormatter.dateFormat = dateFormat
         return CalendarCalculation.dateFormatter.string(from: beforeMonthDate)
     }
+    // 기준시간으로 부터 6시간 뒤까지 시간 문자열 배열로 구하기
+    func getSixHourStringArray(fcstTime: String) -> [String] {
+        var output = [String]()
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "HHmm"
+        guard let baseTime = dateFormatter.date(from: fcstTime) else { return [] }
+        for i in 0..<6 {
+            let time = Calendar.current.date(byAdding: .hour, value: i, to: baseTime)
+            output.append(dateFormatter.string(from: time!))
+        }
+        return output
+    }
 }
 
 struct MockCalendarCalculation: CalendarCalculating {
+    func getSixHourStringArray(fcstTime: String) -> [String] {
+        return []
+    }
+    
     func getCurrentDateString(dateFormat: String) -> String {
         return ""
     }
