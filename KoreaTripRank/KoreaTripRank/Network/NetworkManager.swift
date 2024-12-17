@@ -21,49 +21,122 @@ enum NetworkError: Error {
     case missingData
     case invalidURL
 }
+extension NetworkError: Equatable { }
 
-enum NetworkURLCase {
-    case trip
-    case weather
-}
-
-struct APIKEY {
-    func getKey() -> String? {
-        guard let url = Bundle.main.url(forResource: "Info", withExtension: "plist"),
-              let dict = NSDictionary(contentsOf: url) 
-        else {
-            return nil
+class MockURLProtocol: URLProtocol {
+    
+    enum NetworkType {
+        case trip
+        case weather
+        case wrong
+        
+        var fileName: String {
+            switch self {
+            case .trip: return "MockTripData"
+            case .weather: return "MockWeatherData"
+            case .wrong: return "AreaCode"
+            }
         }
-        return dict["APIKEY"] as? String
     }
+    
+    enum ResponseType {
+        case failure(Error)
+        case success(HTTPURLResponse)
+    }
+    
+    enum MockError: Error {
+        case none
+    }
+    
+    static var mockResponse: ResponseType!
+    static var mockType: NetworkType!
+    
+    static func setMockType(type: NetworkType) {
+        MockURLProtocol.mockType = type
+    }
+    
+    static func setMockResponseWithFailure() {
+        MockURLProtocol.mockResponse = .failure(MockError.none)
+    }
+    
+    static func setMockResponseWithStatusCode(code: Int) {
+        MockURLProtocol.mockResponse = .success(HTTPURLResponse(url: URL(string: "hi/bye")!,
+                                                                statusCode: code,
+                                                                httpVersion: nil,
+                                                                headerFields: nil)!)
+    }
+    
+    override class func canInit(with request: URLRequest) -> Bool {
+        return true
+    }
+    
+    override class func canonicalRequest(for request: URLRequest) -> URLRequest {
+        return request
+    }
+    
+    override func startLoading() {
+        let response = setMockResponse()
+        let mockData = setMockData()
+        
+        client?.urlProtocol(self, didReceive: response!, cacheStoragePolicy: .allowed)
+        
+        client?.urlProtocol(self, didLoad: mockData!)
+        
+        self.client?.urlProtocolDidFinishLoading(self)
+        
+    }
+    
+    override func stopLoading() { }
+    
+    private func setMockResponse() -> HTTPURLResponse? {
+        var response: HTTPURLResponse?
+        
+        switch MockURLProtocol.mockResponse {
+        case .failure(let error):
+            client?.urlProtocol(self, didFailWithError: error)
+        case .success(let successResponse):
+            response = successResponse
+        default: 
+            fatalError("No Mock Response")
+            break
+        }
+        
+        return response!
+    }
+    
+    private func setMockData() -> Data? {
+        return JsonLoader().data(fileName: MockURLProtocol.mockType.fileName)
+    }
+    
 }
+
 // MARK: NetworkManager
 class NetworkManager {
     let components: URLComponentable
     let decoder: DataDecodable
-    static let shared = NetworkManager(components: URLComponentHandler(), decoder: DecodeHandler())
     
-    private init(components: URLComponentable, decoder: DataDecodable) {
+    let session: Session
+    
+    init(components: URLComponentable = URLComponentHandler(),
+                 decoder: DataDecodable = DecodeHandler(),
+                 session: Session = Session.default) {
         self.components = components
         self.decoder = decoder
+        self.session = session
     }
-    
-    func fetchData<T: Decodable>(urlCase URLCase: NetworkURLCase,
+    func fetchData<T: Decodable>(
                                  tripKey: LocationDataModel? = nil,
                                  weatherKey: ConvertedLocationModel? = nil,
                                  type: T.Type,
                                  page: Int) async throws -> T {
-        var urlComponents = URLComponents()
-        switch URLCase {
-        case .trip:
-            urlComponents = components.getURLComponents(for: .trip, page: page, tripKey: tripKey)
-        case .weather:
-            urlComponents = components.getURLComponents(for: .weather, page: page, weatherKey: weatherKey)
-        }
+        if tripKey == nil && weatherKey == nil { throw(NetworkError.invalidURL)}
+                                     
+        let urlComponents = components.getURLComponents(page: page, tripKey: tripKey, weatherKey: weatherKey)
+        
         guard let url = urlComponents.url else {
             throw(NetworkError.invalidURL)
         }
-        let request = AF.request(url)
+        let request = session.request(url)
         
         let response = await request.serializingDecodable(T.self).response
         
