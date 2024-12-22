@@ -71,9 +71,10 @@ final class SearchViewModel {
     // 셀에 뿌려질 데이터로 tripArray에서 필터링하여 저장됨
     var filteredTripArray: [TripItem] = []
     // 날짜 데이터를 구하는 구조체
-    private var calendarCalculation: CalendarCalculation
+    private var calendarCalculation: CalendarCalculating
     
-    init(locationSearcHandler: LocationSearchHandler, calendarCalculation: CalendarCalculation) {
+    init(locationSearcHandler: LocationSearchHandler = LocationSearch(),
+         calendarCalculation: CalendarCalculating = CalendarCalculation()) {
         self.locationSearcHandler = locationSearcHandler
         self.calendarCalculation = calendarCalculation
         
