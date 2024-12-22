@@ -32,5 +32,20 @@ final class KoreaTripRankTests: XCTestCase {
             // Put the code you want to measure the time of here.
         }
     }
-
+    
+    func test_ci() throws {
+        // given
+        let data = (str: "data", condition: true)
+        
+        // when
+        let result: String
+        if data.condition {
+            result = data.str
+        } else {
+            result = "failed"
+        }
+        
+        // then
+        XCTAssertEqual(data.str, result)
+    }
 }
