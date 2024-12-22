@@ -6,7 +6,7 @@
 //
 
 import XCTest
-import Alamofire
+@testable import Alamofire
 @testable import KoreaTripRank
 
 final class NetworkManagerTests: XCTestCase {
