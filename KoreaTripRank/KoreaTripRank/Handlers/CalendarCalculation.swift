@@ -25,19 +25,19 @@ struct CalendarCalculation: CalendarCalculating {
     }
     
     func getAfterHourDateString(dateFormat: String) -> String {
-        let afterHourDate = Calendar.current.date(byAdding: .hour, value: 1, to: Date())
+        guard let afterHourDate = Calendar.current.date(byAdding: .hour, value: 1, to: Date()) else { return "" }
         CalendarCalculation.dateFormatter.dateFormat = dateFormat
-        return CalendarCalculation.dateFormatter.string(from: afterHourDate!) + "00"
+        return CalendarCalculation.dateFormatter.string(from: afterHourDate) + "00"
     }
     
     func getBeforeHalfHourDateString(dateFormat: String) -> String {
-        let beforeHalfHour = Calendar.current.date(byAdding: .minute, value: -30, to: Date())!
+        guard let beforeHalfHour = Calendar.current.date(byAdding: .minute, value: -30, to: Date()) else { return "" }
         CalendarCalculation.dateFormatter.dateFormat = dateFormat
         return CalendarCalculation.dateFormatter.string(from: beforeHalfHour)
     }
     
     func getBeforeMonthDateString(dateFormat: String) -> String {
-        let beforeMonthDate = Calendar.current.date(byAdding: .month, value: -1, to: Date())!
+        guard let beforeMonthDate = Calendar.current.date(byAdding: .month, value: -1, to: Date()) else { return "" }
         CalendarCalculation.dateFormatter.dateFormat = dateFormat
         return CalendarCalculation.dateFormatter.string(from: beforeMonthDate)
     }
@@ -52,27 +52,5 @@ struct CalendarCalculation: CalendarCalculating {
             output.append(dateFormatter.string(from: time!))
         }
         return output
-    }
-}
-
-struct MockCalendarCalculation: CalendarCalculating {
-    func getSixHourStringArray(fcstTime: String) -> [String] {
-        return []
-    }
-    
-    func getCurrentDateString(dateFormat: String) -> String {
-        return ""
-    }
-    
-    func getAfterHourDateString(dateFormat: String) -> String {
-        return ""
-    }
-    
-    func getBeforeHalfHourDateString(dateFormat: String) -> String {
-        return ""
-    }
-    
-    func getBeforeMonthDateString(dateFormat: String) -> String {
-        return ""
     }
 }
