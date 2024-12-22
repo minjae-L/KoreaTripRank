@@ -12,8 +12,7 @@ final class URLKeysTests: XCTestCase {
     var sut: URLKeys!
     
     override func setUpWithError() throws {
-        let mockCalendarCal = MockCalendarCalculation()
-        sut = URLKeys(calendarCalculation: mockCalendarCal)
+        sut = URLKeys()
     }
     
     func test_getQueryItems호출시_두개의key모두nil인경우_빈배열리턴() {

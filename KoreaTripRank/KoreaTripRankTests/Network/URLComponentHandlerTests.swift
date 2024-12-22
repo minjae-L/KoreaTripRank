@@ -12,8 +12,7 @@ final class URLComponentHandlerTests: XCTestCase {
     private var sut: URLComponentHandler!
     
     override func setUpWithError() throws {
-        let mockCalendarCalculation = MockCalendarCalculation()
-        let urlKeys = URLKeys(calendarCalculation: mockCalendarCalculation)
+        let urlKeys = URLKeys()
         sut = URLComponentHandler(urlKeys: urlKeys)
     }
 
