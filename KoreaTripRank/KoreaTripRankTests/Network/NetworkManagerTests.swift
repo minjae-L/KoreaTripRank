@@ -14,6 +14,11 @@ final class NetworkManagerTests: XCTestCase {
     var sut: NetworkManager!
     
     override func setUpWithError() throws {
+        let session = URLSessionConfiguration.af.default
+        session.protocolClasses = [MockURLProtocol.self]
+        
+        let mockSession = Session(configuration: session)
+        sut = NetworkManager(session: mockSession)
     }
     
     func test_fetchData호출시_관광지_데이터가성공적으로불러오는지() async throws {
@@ -21,11 +26,6 @@ final class NetworkManagerTests: XCTestCase {
         MockURLProtocol.setMockResponseWithStatusCode(code: 200)
         MockURLProtocol.setMockType(type: .trip)
         
-        let session = URLSessionConfiguration.af.default
-        session.protocolClasses = [MockURLProtocol.self]
-
-        let mockSession = Session(configuration: session)
-        sut = NetworkManager(session: mockSession)
         // when
         let expectationResult = JsonLoader().load(type: TripNetworkResponse.self, fileName: "MockTripData")
         let result = try await sut.fetchData(tripKey: LocationDataModel(areaName: "",
@@ -43,12 +43,6 @@ final class NetworkManagerTests: XCTestCase {
         // given
         MockURLProtocol.setMockResponseWithStatusCode(code: 200)
         MockURLProtocol.setMockType(type: .weather)
-        
-        let session = URLSessionConfiguration.af.default
-        session.protocolClasses = [MockURLProtocol.self]
-        
-        let mockSession = Session(configuration: session)
-        sut = NetworkManager(session: mockSession)
         
         // when
         let expectationResult = JsonLoader().load(type: WeatherNetworkResponse.self, fileName: "MockWeatherData")
@@ -71,11 +65,6 @@ final class NetworkManagerTests: XCTestCase {
         MockURLProtocol.setMockResponseWithStatusCode(code: 500)
         MockURLProtocol.setMockType(type: .trip)
         
-        let session = URLSessionConfiguration.af.default
-        session.protocolClasses = [MockURLProtocol.self]
-        
-        let mockSession = Session(configuration: session)
-        sut = NetworkManager(session: mockSession)
         // when
         // then
         await XCTAssertThrowsError(
@@ -96,11 +85,6 @@ final class NetworkManagerTests: XCTestCase {
         MockURLProtocol.setMockResponseWithStatusCode(code: 500)
         MockURLProtocol.setMockType(type: .weather)
         
-        let session = URLSessionConfiguration.af.default
-        session.protocolClasses = [MockURLProtocol.self]
-        
-        let mockSession = Session(configuration: session)
-        sut = NetworkManager(session: mockSession)
         // when
         // then
         await XCTAssertThrowsError(
@@ -122,11 +106,6 @@ final class NetworkManagerTests: XCTestCase {
         MockURLProtocol.setMockResponseWithStatusCode(code: 200)
         MockURLProtocol.setMockType(type: .trip)
         
-        let session = URLSessionConfiguration.af.default
-        session.protocolClasses = [MockURLProtocol.self]
-        
-        let mockSession = Session(configuration: session)
-        sut = NetworkManager(session: mockSession)
         // when
         // then
         await XCTAssertThrowsError(
@@ -144,11 +123,6 @@ final class NetworkManagerTests: XCTestCase {
         MockURLProtocol.setMockResponseWithStatusCode(code: 200)
         MockURLProtocol.setMockType(type: .weather)
         
-        let session = URLSessionConfiguration.af.default
-        session.protocolClasses = [MockURLProtocol.self]
-        
-        let mockSession = Session(configuration: session)
-        sut = NetworkManager(session: mockSession)
         // when
         // then
         await XCTAssertThrowsError(
@@ -166,11 +140,6 @@ final class NetworkManagerTests: XCTestCase {
         MockURLProtocol.setMockResponseWithStatusCode(code: 200)
         MockURLProtocol.setMockType(type: .wrong)
         
-        let session = URLSessionConfiguration.af.default
-        session.protocolClasses = [MockURLProtocol.self]
-        
-        let mockSession = Session(configuration: session)
-        sut = NetworkManager(session: mockSession)
         // when
         // then
         await XCTAssertThrowsError(
@@ -192,11 +161,6 @@ final class NetworkManagerTests: XCTestCase {
         MockURLProtocol.setMockResponseWithStatusCode(code: 200)
         MockURLProtocol.setMockType(type: .wrong)
         
-        let session = URLSessionConfiguration.af.default
-        session.protocolClasses = [MockURLProtocol.self]
-        
-        let mockSession = Session(configuration: session)
-        sut = NetworkManager(session: mockSession)
         // when
         // then
         await XCTAssertThrowsError(
