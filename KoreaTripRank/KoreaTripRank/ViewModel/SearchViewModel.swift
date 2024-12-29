@@ -31,16 +31,17 @@ enum NetworkingType {
 }
 
 final class SearchViewModel {
+    
     // 주소검색창에 보여지는 데이터배열
     var filteredAddressArray: [LocationDataModel] = [] {
         didSet {
             delegate?.addressSearching()
         }
     }
-    //
+    
     var indexPath: IndexPath?
     // JSON파일로 있는 장소데이터
-    var areaDatabase = AreaDatabase()
+    var areaDatabase = JsonLoader().load(type: LocationModel.self, fileName: "AreaCode")
     weak var delegate: SearchViewModelDelegate?
     // 주소 검색창에서 주소 선택시 해당 변수에 저장후 네트워크 통신 때 사용함
     var selectedSigungu: LocationDataModel?
@@ -69,31 +70,20 @@ final class SearchViewModel {
     private var tripArray: [TripItem] = []
     // 셀에 뿌려질 데이터로 tripArray에서 필터링하여 저장됨
     var filteredTripArray: [TripItem] = []
+    // 날짜 데이터를 구하는 구조체
+    private var calendarCalculation: CalendarCalculating
+    
+    init(locationSearcHandler: LocationSearchHandler = LocationSearch(),
+         calendarCalculation: CalendarCalculating = CalendarCalculation()) {
+        self.locationSearcHandler = locationSearcHandler
+        self.calendarCalculation = calendarCalculation
+        
+    }
     
     private func noticeNeedUpdate() {
         delegate?.needUpdateCollectionView()
     }
-    // 현재로 부터 1시간 뒤 시간 문자열 구하기
-    private var currentFctsTime: String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "HHmm"
-        let afterhour = Calendar.current.date(byAdding: .hour, value: 1, to: Date())
-        let current = dateFormatter.string(from: afterhour!)
-        var arr = current.map{String($0)}
-        arr[2] = "0"
-        arr[3] = "0"
-        return arr.joined()
-    }
-    // 오늘 날짜 구하기
-    private var currentDate: String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyyMMdd"
-        return dateFormatter.string(from: Date())
-    }
     
-    init(locationSearcHandler: LocationSearchHandler) {
-        self.locationSearcHandler = locationSearcHandler
-    }
     // 랭킹순으로 정렬
     private func sortedTripArray(arr: [TripItem]) -> [TripItem] {
         return arr.sorted { item1, item2 in
@@ -119,7 +109,8 @@ final class SearchViewModel {
     // 주소검색창에서 입력 시 필터링된 데이터를 출력하기 위한 메서드
     func filteringAddress(text: String) {
         var output = [LocationDataModel]()
-        for element in areaDatabase.data {
+        guard let areaData = areaDatabase?.data else { return }
+        for element in areaData {
             let areaArray = String.separatingString(text: element.areaName, length: text.count)
             let signguArray = String.separatingString(text: element.sigunguName, length: text.count)
             if areaArray.contains(text) || signguArray.contains(text) {
@@ -156,7 +147,6 @@ final class SearchViewModel {
     
     // NetworkManager로부터 데이터 불러오기
     private func loadData(page: Int, networkType: NetworkingType, index: Int? = 0) {
-        
         guard let addressName = selectedSigungu else {
             print("data unloaded")
             return
@@ -168,13 +158,12 @@ final class SearchViewModel {
         viewState = .loading
         
         // 네트워킹 시작
-        Task {
+         Task {
             do {
                 switch networkType {
                     // 관광지
                 case .trip:
-                    async let tripResponse = NetworkManager.shared.fetchData(urlCase: .trip, tripKey: addressName, type: TripNetworkResponse.self, page: page)
-                    let result = try await tripResponse
+                    let result = try await NetworkManager().fetchData(tripKey: addressName, type: TripNetworkResponse.self, page: page)
                     // 불러온 관광지 데이터를 저장
                     print("trip 데이터 저장")
                     tripArray.append(contentsOf: result.response.responseBody.items.item)
@@ -184,8 +173,7 @@ final class SearchViewModel {
                     
                     // 날씨
                 case .weather:
-                    async let weatherResponse = NetworkManager.shared.fetchData(urlCase: .weather, weatherKey: self.selectedLocationInfo, type: WeatherNetworkResponse.self, page: page)
-                    let result = try await weatherResponse
+                    let result = try await NetworkManager().fetchData(weatherKey: self.selectedLocationInfo, type: WeatherNetworkResponse.self, page: page)
                     // 불러온 날씨 데이터를 저장
                     print("weather 데이터 저장")
                     guard let arr = result.response.responseBody?.items.item,
@@ -225,7 +213,7 @@ final class SearchViewModel {
         }
         if filteredTripArray[index].weatherModel != nil {
             for element in filteredTripArray[index].weatherModel! {
-                if element.fcstTime == self.currentFctsTime && element.baseDate == currentDate {
+                if element.fcstTime == self.calendarCalculation.getAfterHourDateString(dateFormat: "HHmm") && element.baseDate == calendarCalculation.getCurrentDateString(dateFormat: "yyyyMMdd") {
                     delegate?.noticeWeatherViewNeedUpdateWithAnimate(indexPath: indexPath)
                     return
                 }
@@ -274,7 +262,7 @@ final class SearchViewModel {
         let time = item[0].fcstTime
         let currentWeather = item.filter{$0.fcstTime == time}
         let firstFcstTime = item[0].fcstTime
-        let fcstTimes = self.getFcstTimes(fctsTime: firstFcstTime)
+        let fcstTimes = calendarCalculation.getSixHourStringArray(fcstTime:  firstFcstTime)
         let baseDate = item[0].baseDate
         let temperatures = item.filter{$0.category == "T1H"}
         let winds = item.filter{$0.category == "WSD"}
@@ -293,18 +281,6 @@ final class SearchViewModel {
                                            rainState: rainStates[i].fcstValue,
                                            skyState: skyStates[i].fcstValue,
                                            wind: winds[i].fcstValue))
-        }
-        return output
-    }
-    // 기준시간으로 부터 6시간 뒤까지 시간 문자열 배열로 구하기
-    private func getFcstTimes(fctsTime: String) -> [String] {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "HHmm"
-        let time = dateFormatter.date(from: fctsTime)
-        var output = [String]()
-        for i in 0..<6 {
-            let t = Calendar.current.date(byAdding: .hour, value: i, to: time!)
-            output.append(dateFormatter.string(from: t!))
         }
         return output
     }

@@ -12,7 +12,8 @@ class SearchViewController: UIViewController {
     
     // 뷰모델
     private lazy var viewModel: SearchViewModel = {
-        let vm = SearchViewModel(locationSearcHandler: LocationSearch())
+        let vm = SearchViewModel(locationSearcHandler: LocationSearch(),
+                                 calendarCalculation: CalendarCalculation())
         vm.delegate = self
         return vm
     }()
